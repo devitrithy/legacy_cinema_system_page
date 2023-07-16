@@ -1,10 +1,12 @@
 import { fail, type Actions } from "@sveltejs/kit";
 import axios from "axios";
+import type { PageServerLoad } from "./$types";
 
-export const load = async () => {
-  const data = await axios.get("https://cinemaapi.serveo.net/movie");
+export const load: PageServerLoad = async () => {
+  const data = await fetch("https://cinemaapi.serveo.net/movie");
+  const res = data.json();
   return {
-    data: data.data,
+    data: res,
   };
 };
 
@@ -19,7 +21,10 @@ export const actions = {
           console.log(response);
         })
         .catch(function (error) {
-          console.log(error);
+          return {
+            success: false,
+            message: "Fail to add movie",
+          };
         });
     } catch (error: any) {
       return fail(422, {
@@ -27,6 +32,10 @@ export const actions = {
         error: error.message,
       });
     }
+    return {
+      success: true,
+      message: "Added movie successfully",
+    };
   },
 
   delete: async ({ request }) => {
@@ -36,10 +45,16 @@ export const actions = {
       axios
         .delete("https://cinemaapi.serveo.net/movie/" + data.get("id"))
         .then((response) => {
-          return response;
+          return {
+            success: true,
+            message: "Deleted successfully",
+          };
         })
         .catch((err) => {
-          return err;
+          return {
+            success: false,
+            message: "Some problem occurred while deleting the movie",
+          };
         });
     } catch (error: any) {
       return fail(422, {

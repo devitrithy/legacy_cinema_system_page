@@ -45,6 +45,7 @@
     TableHead,
     TableHeadCell,
     Textarea,
+    Toast,
   } from "flowbite-svelte";
   import {
     EditOutline,
@@ -73,7 +74,7 @@
       ><span class="mr-5">Add Movie</span><PlusOutline />
     </Button>
   </div>
-  <Table divClass="z-10">
+  <Table divClass="z-10 m-5 ">
     <TableHead>
       <TableHeadCell>Poster</TableHeadCell>
       <TableHeadCell>Title</TableHeadCell>
@@ -93,7 +94,11 @@
             /></TableBodyCell
           >
           <TableBodyCell>{movie.title}</TableBodyCell>
-          <TableBodyCell>{movie.description}</TableBodyCell>
+          <TableBodyCell
+            >{movie.description.length > 50
+              ? movie.description.substring(1, 50) + "..."
+              : movie.description}</TableBodyCell
+          >
           <TableBodyCell>{movie.time}</TableBodyCell>
           <TableBodyCell>{movie.trailer}</TableBodyCell>
           <TableBodyCell tdClass="w-40">
@@ -181,7 +186,14 @@
       <Button type="button" color="red" on:click={resetValue} class="w-full"
         >Reset</Button
       >
-      <Button type="submit" color="green" class="w-full">Submit</Button>
+      <Button
+        type="submit"
+        color="green"
+        on:click={() => {
+          formModal = false;
+        }}
+        class="w-full">Submit</Button
+      >
     </div>
   </form>
 </Modal>
@@ -205,7 +217,22 @@
       Are you sure you want to delete this movie?
     </h3>
     <form action="?/delete" method="post" use:enhance>
-      <Button type="submit" color="red" class="mr-2">Yes, I'm sure</Button>
+      <Button
+        type="submit"
+        on:click={() => {
+          popupModal = false;
+        }}
+        color="red"
+        class="mr-2">Yes, I'm sure</Button
+      >
+      <Button
+        type="button"
+        on:click={() => {
+          popupModal = false;
+        }}
+        color="alternative"
+        class="mr-2">Cancel</Button
+      >
       <input type="hidden" name="id" bind:value={ids} />
     </form>
   </div>
