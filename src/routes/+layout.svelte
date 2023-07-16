@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="self-top w-full">
-    <div class="">
+    <div>
       <Navbar />
     </div>
     <slot />

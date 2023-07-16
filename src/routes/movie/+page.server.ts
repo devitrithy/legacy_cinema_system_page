@@ -4,7 +4,6 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ url }) => {
   let page = Number(url.searchParams.get("page")) || 1;
-  console.log(page);
   const data = await fetch(`http://cinemaapi.serveo.net/movie?page=${page}`);
   const res = data.json();
   return {

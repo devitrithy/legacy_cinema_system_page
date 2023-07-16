@@ -48,7 +48,6 @@
     TableHead,
     TableHeadCell,
     Textarea,
-    Toast,
   } from "flowbite-svelte";
   import {
     EditOutline,
@@ -105,7 +104,7 @@
   };
 </script>
 
-<main class="m-5 z-10 scroll-smooth">
+<main class="m-5 z-10">
   <h1 class="text-black dark:text-white text-2xl m-4">
     {$page.url.pathname === "/movie" ? "Movie" : "Add Movie"}
   </h1>

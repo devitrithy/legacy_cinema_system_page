@@ -18,7 +18,7 @@
 </script>
 
 <div
-  class="pt-5 bg-white dark:bg-gray-900 w-[240px] h-screen flex flex-col items-center gap-10"
+  class="pt-5 bg-white dark:bg-gray-900 h-screen flex flex-col items-center gap-10 w-full z-30"
 >
   <NavBrand href="/">
     <img src={Logo} class="ml-3 w-40" alt="Legacy Cinema Logo" />

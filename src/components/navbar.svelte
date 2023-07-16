@@ -20,7 +20,7 @@
   export let email = "devit@gmail.com";
 </script>
 
-<Navbar let:hidden let:toggle class="z-20">
+<Navbar let:hidden let:toggle class="z-20 ">
   <div />
   <div class="flex items-center md:order-2 gap-5">
     <DarkMode />
