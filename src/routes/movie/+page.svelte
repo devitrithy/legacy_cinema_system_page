@@ -1,5 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
+  import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import type { Snapshot } from "@sveltejs/kit";
   export let data;
@@ -86,6 +87,22 @@
   }
 
   let p = Number($page.url.searchParams.get("page"));
+  let previous = () => {
+    p -= 1;
+    if (p >= 1) {
+      goto(`/movie?page=${p}`);
+    } else {
+      p += 1;
+    }
+  };
+  let next = () => {
+    p += 1;
+    if (p <= pages.length) {
+      goto(`/movie?page=${p}`);
+    } else {
+      p -= 1;
+    }
+  };
 </script>
 
 <main class="m-5 z-10 scroll-smooth">
@@ -146,7 +163,7 @@
     </TableBody>
   </Table>
   <div class="flex justify-center items-center mt-5">
-    <Pagination {pages} large />
+    <Pagination {pages} on:previous={previous} on:next={next} large />
   </div>
 </main>
 <Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
