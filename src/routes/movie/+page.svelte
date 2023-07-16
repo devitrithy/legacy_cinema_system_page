@@ -3,6 +3,7 @@
   import { page } from "$app/stores";
   import type { Snapshot } from "@sveltejs/kit";
   export let data;
+  console.log(data.data);
   let endpoint = "https://cinemaapi.serveo.net/";
   let popupModal = false;
   let ids: any;
@@ -38,6 +39,7 @@
     Input,
     Label,
     Modal,
+    Pagination,
     Table,
     TableBody,
     TableBodyCell,
@@ -58,6 +60,32 @@
     capture: () => formInput,
     restore: (value) => (formInput = value),
   };
+  // Pagination
+  $: activeUrl = $page.url.searchParams.get("page");
+  let pages = [];
+  for (let i = 0; i < data.data.movies.length - 1; i++) {
+    pages.push({ name: i + 1, href: `/movie?page=${i + 1}` });
+  }
+
+  $: {
+    pages.forEach((page) => {
+      let splitUrl = page.href.split("?");
+      let queryString = splitUrl.slice(1).join("?");
+      const hrefParams = new URLSearchParams(queryString);
+      let hrefValue = hrefParams.get("page");
+      if (hrefValue === activeUrl) {
+        page.active = true;
+      } else if (activeUrl === null) {
+        page.active = true;
+        activeUrl = "1";
+      } else {
+        page.active = false;
+      }
+    });
+    pages = pages;
+  }
+
+  let p = Number($page.url.searchParams.get("page"));
 </script>
 
 <main class="m-5 z-10 scroll-smooth">
@@ -117,6 +145,9 @@
       {/each}
     </TableBody>
   </Table>
+  <div class="flex justify-center items-center mt-5">
+    <Pagination {pages} large />
+  </div>
 </main>
 <Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
   <form
