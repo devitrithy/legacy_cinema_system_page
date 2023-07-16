@@ -3,11 +3,12 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import type { Snapshot } from "@sveltejs/kit";
+  import axios from "axios";
   export let data;
-  console.log(data.data);
   let endpoint = "https://cinemaapi.serveo.net/";
   let popupModal = false;
   let ids: any;
+  let edit = false;
 
   const deleteModal = (id: any) => {
     popupModal = true;
@@ -63,8 +64,12 @@
   // Pagination
   $: activeUrl = $page.url.searchParams.get("page");
   let pages = [];
-  for (let i = 0; i < data.data.movies.length - 1; i++) {
-    pages.push({ name: i + 1, href: `/movie?page=${i + 1}` });
+  let count = data.data.count / 5 + 1;
+  if (data.data.count % 5 == 0) {
+    count -= 1;
+  }
+  for (let i = 1; i <= count; i++) {
+    pages.push({ name: i, href: `/movie?page=${i}` });
   }
 
   $: {
@@ -96,10 +101,39 @@
   };
   let next = () => {
     p += 1;
+    if (activeUrl === null) {
+      goto(`/movie?page=2`);
+    }
     if (p <= pages.length) {
       goto(`/movie?page=${p}`);
     } else {
       p -= 1;
+    }
+  };
+
+  //Edit Form
+  let editForm = async (id) => {
+    ids = id;
+    edit = true;
+    const editData = await axios.get(endpoint + "movie/" + id);
+    let d = editData.data.movie[0];
+    if (editData) {
+      formInput.title = d.title;
+      formInput.description = d.description;
+      formInput.time = d.time;
+      formInput.trailer = d.trailer;
+
+      formModal = true;
+    }
+  };
+  let editClose = () => {
+    if (edit) {
+      formInput = {
+        title: "",
+        time: "",
+        description: "",
+        trailer: "",
+      };
     }
   };
 </script>
@@ -147,8 +181,10 @@
           <TableBodyCell>{movie.trailer}</TableBodyCell>
           <TableBodyCell tdClass="w-40">
             <div class="flex gap-5">
-              <a href="#"><EyeOutline /></a>
-              <a href="#"><EditOutline /></a>
+              <a href="/movie/{movie.movie_id}"><EyeOutline /></a>
+              <button on:click={() => editForm(movie.movie_id)}
+                ><EditOutline /></button
+              >
               <button
                 type="submit"
                 on:click={() => {
@@ -168,13 +204,17 @@
 <Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
   <form
     class="flex flex-col space-y-6"
-    action="?/create"
+    action="?/{edit ? 'edit' : 'create'}"
     method="POST"
     enctype="multipart/form-data"
     use:enhance
   >
+    {#if edit}
+      <input type="hidden" name="id" value={ids} />
+    {/if}
+
     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-      Add Movie
+      {edit ? "Edit" : "Add"} Movie
     </h3>
     <Label class="space-y-2">
       <span>Title</span>
