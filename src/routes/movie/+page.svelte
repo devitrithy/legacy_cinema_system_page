@@ -147,7 +147,7 @@
     formModal = true;
   };
   let formSumbit: SubmitFunction = ({ form, data, action, cancel }) => {
-    const { title, description, time, trailer, genre } =
+    const { title, description, time, trailer, genre, poster } =
       Object.fromEntries(data);
     if (title.length < 1) {
       iTitle = false;
@@ -180,6 +180,7 @@
       iGenre = true;
     }
     return async ({ result, update }) => {
+      console.log(result);
       switch (result.type) {
         case "success":
           resetValue();
