@@ -31,12 +31,14 @@
   $: console.log(activeUrl.substring(1, 6));
 </script>
 
-<div
-  class="pt-5 bg-white dark:bg-gray-900 h-screen flex flex-col items-center gap-10 z-30 overflow-y-auto"
->
+<div class="bg-gray-900 p-8">
   <NavBrand href="/">
     <img src={Logo} class="ml-3 w-40" alt="Legacy Cinema Logo" />
   </NavBrand>
+</div>
+<div
+  class="pt-5 bg-white dark:bg-gray-900 h-screen flex flex-col items-center gap-10 z-30 overflow-y-auto"
+>
   <Sidebar>
     <SidebarWrapper divClass="px-3 ">
       <SidebarGroup>
@@ -162,31 +164,31 @@
         <SidebarItem
           label="Report"
           {spanClass}
-          href="/employee"
-          active={activeUrl === "/employee" ||
-            activeUrl.substring(1, 6) === "employee"}
+          href="/report"
+          active={activeUrl === "/report" ||
+            activeUrl.substring(1, 6) === "report"}
         >
           <svelte:fragment slot="icon">
             <FolderDuplicateOutline />
           </svelte:fragment>
         </SidebarItem>
         <SidebarItem
-          label="Report"
+          label="Reports"
           {spanClass}
-          href="/employee"
-          active={activeUrl === "/employee" ||
-            activeUrl.substring(1, 6) === "employee"}
+          href="/reports"
+          active={activeUrl === "/reports" ||
+            activeUrl.substring(1, 6) === "reports"}
         >
           <svelte:fragment slot="icon">
             <FileCsvSolid />
           </svelte:fragment>
         </SidebarItem>
         <SidebarItem
-          label="Report"
+          label="Reportss"
           {spanClass}
-          href="/employee"
-          active={activeUrl === "/employee" ||
-            activeUrl.substring(1, 6) === "employee"}
+          href="/reportss"
+          active={activeUrl === "/reportss" ||
+            activeUrl.substring(1, 6) === "reportss"}
         >
           <svelte:fragment slot="icon">
             <FilePdfOutline />
@@ -194,13 +196,7 @@
         </SidebarItem>
       </SidebarGroup>
       <SidebarGroup border>
-        <SidebarItem
-          label="Sign Out"
-          {spanClass}
-          href="/employee"
-          active={activeUrl === "/employee" ||
-            activeUrl.substring(1, 6) === "employee"}
-        >
+        <SidebarItem label="Sign Out" {spanClass}>
           <svelte:fragment slot="icon">
             <ArrowRightToBracketOutline />
           </svelte:fragment>

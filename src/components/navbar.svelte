@@ -15,7 +15,7 @@
 </script>
 
 <div
-  class="flex p-3 fixed top-0 bg-white dark:bg-gray-900 w-full justify-around"
+  class="flex p-3 fixed bg-white dark:bg-gray-900 w-[88%] px-20 justify-between"
 >
   <div class="flex items-center md:order-2 gap-5">
     <DarkMode />
@@ -35,7 +35,7 @@
     <DropdownItem>Sign out</DropdownItem>
   </Dropdown>
   <div class="hidden relative md:block">
-    <form class="flex gap-2 w-full lg:w-[500px]">
+    <form class="flex gap-2 w-full lg:w-[300px]">
       <Search size="md" placeholder="Search...." />
       <Button class="!p-2.5">
         <svg
