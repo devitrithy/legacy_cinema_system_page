@@ -13,7 +13,7 @@
   let endpoint = "https://cinemaapi.serveo.net/";
 </script>
 
-<main class="m-5 container text-black dark:text-white">
+<main class="m-5 container text-black dark:text-white mt-20">
   <h1 class="text-black dark:text-white text-2xl m-4">
     {$page.url.pathname === "/movie" ? "Movie" : "Add Movie"}
   </h1>

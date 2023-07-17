@@ -1,17 +1,11 @@
 <script lang="ts">
   import {
-    Navbar,
-    NavBrand,
-    NavHamburger,
-    NavUl,
-    NavLi,
     DarkMode,
     Avatar,
     Dropdown,
     DropdownDivider,
     DropdownHeader,
     DropdownItem,
-    Input,
     Button,
     Search,
   } from "flowbite-svelte";
@@ -20,15 +14,12 @@
   export let email = "devit@gmail.com";
 </script>
 
-<Navbar let:hidden let:toggle class="z-20 ">
-  <div />
+<div
+  class="flex p-3 fixed top-0 bg-white dark:bg-gray-900 w-full justify-evenly"
+>
   <div class="flex items-center md:order-2 gap-5">
     <DarkMode />
     <Avatar id="avatar-menu" src={profile} />
-    <NavHamburger
-      on:click={toggle}
-      class1="w-full md:flex md:w-auto md:order-1"
-    />
   </div>
   <Dropdown placement="bottom" triggeredBy="#avatar-menu">
     <DropdownHeader>
@@ -62,7 +53,7 @@
       >
     </div>
     <form class="flex gap-2 w-[500px]">
-      <Search size="md" placeholder="Search..." />
+      <Search size="md" placeholder="Search...." />
       <Button class="!p-2.5">
         <svg
           class="w-5 h-5"
@@ -80,4 +71,4 @@
       </Button>
     </form>
   </div>
-</Navbar>
+</div>

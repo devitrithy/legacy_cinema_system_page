@@ -142,7 +142,6 @@
     if (title.length < 1) {
       cancel();
     }
-
     return async ({ result, update }) => {
       switch (result.type) {
         case "success":
@@ -153,7 +152,9 @@
             time: "",
             trailer: "",
           };
-          toast.success("Successfully added the movie.");
+          toast.success("Successfully added the movie.", {
+            style: "border-radius: 200px; background: #333; color: #fff;",
+          });
           formModal = false;
           break;
         default:
@@ -166,7 +167,9 @@
     return async ({ result, update }) => {
       switch (result.type) {
         case "success":
-          toast.success("Successfully remove the movie.");
+          toast.success("Successfully remove the movie.", {
+            style: "border-radius: 200px; background: #333; color: #fff;",
+          });
           formModal = false;
           break;
         default:
@@ -177,7 +180,7 @@
   };
 </script>
 
-<main class="m-5 z-10">
+<main class=" z-10 mt-32 container mx-auto">
   <h1 class="text-black dark:text-white text-2xl m-4">
     {$page.url.pathname === "/movie" ? "Movie" : "Add Movie"}
   </h1>
@@ -192,7 +195,10 @@
     </Button>
   </div>
   {#if data.data.count > 0}
-    <Table divClass="z-10 m-5 ">
+    <Table
+      divClass="z-10 m-5 overflow-x-scroll xl:overflow-x-hidden"
+      hoverable={true}
+    >
       <TableHead>
         <TableHeadCell>Poster</TableHeadCell>
         <TableHeadCell>Title</TableHeadCell>

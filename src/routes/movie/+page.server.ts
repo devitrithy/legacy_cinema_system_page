@@ -71,34 +71,7 @@ export const actions = {
   },
   edit: async ({ request }) => {
     const data = await request.formData();
-    if (data.get("title").toString().length < 1) {
-      return {
-        error: true,
-        data: data,
-        errorMsg: "Title is required",
-      };
-    }
-    if (data.get("description").toString().length < 1) {
-      return {
-        error: true,
-        data: data,
-        errorMsg: "Description is required",
-      };
-    }
-    if (data.get("trailer").toString().length < 1) {
-      return {
-        error: true,
-        data: data,
-        errorMsg: "Trailer Link is required",
-      };
-    }
-    if (data.get("genre").toString().length < 1) {
-      return {
-        error: true,
-        data: data,
-        errorMsg: "Genre is required",
-      };
-    }
+
     try {
       axios
         .put(`https://cinemaapi.serveo.net/movie/${data.get("id")}`, data)
