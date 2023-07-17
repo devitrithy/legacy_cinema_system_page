@@ -3,8 +3,21 @@
   import { page } from "$app/stores";
   import {
     AddressCardSolid,
-    TagOutline,
+    ArrowRightArrowLeftOutline,
+    ArrowRightToBracketOutline,
+    BookOpenOutline,
+    ClockOutline,
+    FileCsvSolid,
+    FilePdfOutline,
+    FolderDuplicateOutline,
+    LockOpenOutline,
+    MapLocationOutline,
+    TicketOutline,
+    UserGroupSolid,
+    UserOutline,
+    UserSettingsOutline,
     VideoCameraOutline,
+    WindowOutline,
   } from "flowbite-svelte-icons";
   import {
     Sidebar,
@@ -19,7 +32,7 @@
 </script>
 
 <div
-  class="pt-5 bg-white dark:bg-gray-900 h-screen flex flex-col items-center gap-10 z-30"
+  class="pt-5 bg-white dark:bg-gray-900 h-screen flex flex-col items-center gap-10 z-30 overflow-y-auto"
 >
   <NavBrand href="/">
     <img src={Logo} class="ml-3 w-40" alt="Legacy Cinema Logo" />
@@ -43,60 +56,153 @@
             <VideoCameraOutline />
           </svelte:fragment>
         </SidebarItem>
-        <SidebarItem label="Genre" {spanClass}>
+
+        <SidebarItem
+          label="Showing Time"
+          {spanClass}
+          href="/showingtime"
+          active={activeUrl === "/showingtime" ||
+            activeUrl.substring(1, 12) === "showingtime"}
+        >
           <svelte:fragment slot="icon">
-            <TagOutline />
+            <ClockOutline />
           </svelte:fragment>
         </SidebarItem>
-        <SidebarItem label="Users">
+        <SidebarItem
+          label="Tickets"
+          {spanClass}
+          href="/ticket"
+          active={activeUrl === "/ticket" ||
+            activeUrl.substring(1, 6) === "ticket"}
+        >
           <svelte:fragment slot="icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-              /></svg
-            >
+            <TicketOutline />
           </svelte:fragment>
         </SidebarItem>
-        <SidebarItem label="Sign In">
+        <SidebarItem
+          label="Booking"
+          {spanClass}
+          href="/booking"
+          active={activeUrl === "/booking" ||
+            activeUrl.substring(1, 8) === "booking"}
+        >
           <svelte:fragment slot="icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
-              /></svg
-            >
+            <BookOpenOutline />
           </svelte:fragment>
         </SidebarItem>
-        <SidebarItem label="Sign UP">
+      </SidebarGroup>
+      <SidebarGroup border>
+        <SidebarItem
+          label="Hall"
+          {spanClass}
+          href="/hall"
+          active={activeUrl === "/hall" || activeUrl.substring(1, 5) === "hall"}
+        >
           <svelte:fragment slot="icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077l1.41-.513m14.095-5.13l1.41-.513M5.106 17.785l1.15-.964m11.49-9.642l1.149-.964M7.501 19.795l.75-1.3m7.5-12.99l.75-1.3m-6.063 16.658l.26-1.477m2.605-14.772l.26-1.477m0 17.726l-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205L12 12m6.894 5.785l-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864l-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495"
-              /></svg
-            >
+            <WindowOutline />
+          </svelte:fragment>
+        </SidebarItem>
+        <SidebarItem
+          label="Location"
+          {spanClass}
+          href="/location"
+          active={activeUrl === "/location" ||
+            activeUrl.substring(1, 9) === "location"}
+        >
+          <svelte:fragment slot="icon">
+            <MapLocationOutline />
+          </svelte:fragment>
+        </SidebarItem>
+      </SidebarGroup>
+      <SidebarGroup border>
+        <SidebarItem
+          label="User"
+          {spanClass}
+          href="/user"
+          active={activeUrl === "/user" || activeUrl.substring(1, 6) === "user"}
+        >
+          <svelte:fragment slot="icon">
+            <UserOutline />
+          </svelte:fragment>
+        </SidebarItem>
+        <SidebarItem
+          label="Job"
+          {spanClass}
+          href="/job"
+          active={activeUrl === "/job" || activeUrl.substring(1, 6) === "job"}
+        >
+          <svelte:fragment slot="icon">
+            <UserSettingsOutline />
+          </svelte:fragment>
+        </SidebarItem>
+        <SidebarItem
+          label="Permission"
+          {spanClass}
+          href="/permission"
+          active={activeUrl === "/permission" ||
+            activeUrl.substring(1, 6) === "permission"}
+        >
+          <svelte:fragment slot="icon">
+            <LockOpenOutline />
+          </svelte:fragment>
+        </SidebarItem>
+        <SidebarItem
+          label="Employee"
+          {spanClass}
+          href="/employee"
+          active={activeUrl === "/employee" ||
+            activeUrl.substring(1, 6) === "employee"}
+        >
+          <svelte:fragment slot="icon">
+            <UserGroupSolid />
+          </svelte:fragment>
+        </SidebarItem>
+      </SidebarGroup>
+      <SidebarGroup border>
+        <SidebarItem
+          label="Report"
+          {spanClass}
+          href="/employee"
+          active={activeUrl === "/employee" ||
+            activeUrl.substring(1, 6) === "employee"}
+        >
+          <svelte:fragment slot="icon">
+            <FolderDuplicateOutline />
+          </svelte:fragment>
+        </SidebarItem>
+        <SidebarItem
+          label="Report"
+          {spanClass}
+          href="/employee"
+          active={activeUrl === "/employee" ||
+            activeUrl.substring(1, 6) === "employee"}
+        >
+          <svelte:fragment slot="icon">
+            <FileCsvSolid />
+          </svelte:fragment>
+        </SidebarItem>
+        <SidebarItem
+          label="Report"
+          {spanClass}
+          href="/employee"
+          active={activeUrl === "/employee" ||
+            activeUrl.substring(1, 6) === "employee"}
+        >
+          <svelte:fragment slot="icon">
+            <FilePdfOutline />
+          </svelte:fragment>
+        </SidebarItem>
+      </SidebarGroup>
+      <SidebarGroup border>
+        <SidebarItem
+          label="Sign Out"
+          {spanClass}
+          href="/employee"
+          active={activeUrl === "/employee" ||
+            activeUrl.substring(1, 6) === "employee"}
+        >
+          <svelte:fragment slot="icon">
+            <ArrowRightToBracketOutline />
           </svelte:fragment>
         </SidebarItem>
       </SidebarGroup>

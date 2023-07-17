@@ -285,10 +285,7 @@
     </Button>
   </div>
   {#if data.data.count > 0}
-    <Table
-      divClass="z-10 m-5 overflow-x-scroll xl:overflow-x-hidden"
-      hoverable={true}
-    >
+    <Table divClass="z-10 m-5 overflow-x-auto " hoverable={true}>
       <TableHead>
         <TableHeadCell>Poster</TableHeadCell>
         <TableHeadCell>Title</TableHeadCell>
@@ -461,44 +458,46 @@
         {/if}
       </Label>
     </div>
-    <Label class="space-y-2">
-      <span>Time</span>
-      <Input
-        color={iTime == 0 ? "base" : iTime == 1 ? "red" : "green"}
-        type="text"
-        name="time"
-        bind:value={formInput.time}
-        placeholder="2h40min"
-      />
-      {#if iTime == 1}
-        <Helper class="mt-2" color="red"
-          ><span class="font-medium">Invalid!</span> Time is required!</Helper
-        >
-      {:else if iTime === 2}
-        <Helper class="mt-2" color="green"
-          ><span class="font-medium">Well done!</span> Time is valid.</Helper
-        >
-      {/if}
-    </Label>
-    <Label class="space-y-2">
-      <span>Trailer Link</span>
-      <Input
-        color={iTrailer == 0 ? "base" : iTrailer == 1 ? "red" : "green"}
-        type="text"
-        name="trailer"
-        bind:value={formInput.trailer}
-        placeholder="Trailer video link..."
-      />
-      {#if iTrailer == 1}
-        <Helper class="mt-2" color="red"
-          ><span class="font-medium">Invalid!</span> Trailer is required!</Helper
-        >
-      {:else if iTrailer === 2}
-        <Helper class="mt-2" color="green"
-          ><span class="font-medium">Well done!</span> Trailer is valid.</Helper
-        >
-      {/if}
-    </Label>
+    <div class="grid gap-6 mb-6 md:grid-cols-2">
+      <Label class="space-y-2">
+        <span>Time</span>
+        <Input
+          color={iTime == 0 ? "base" : iTime == 1 ? "red" : "green"}
+          type="text"
+          name="time"
+          bind:value={formInput.time}
+          placeholder="2h40min"
+        />
+        {#if iTime == 1}
+          <Helper class="mt-2" color="red"
+            ><span class="font-medium">Invalid!</span> Time is required!</Helper
+          >
+        {:else if iTime === 2}
+          <Helper class="mt-2" color="green"
+            ><span class="font-medium">Well done!</span> Time is valid.</Helper
+          >
+        {/if}
+      </Label>
+      <Label class="space-y-2">
+        <span>Trailer Link</span>
+        <Input
+          color={iTrailer == 0 ? "base" : iTrailer == 1 ? "red" : "green"}
+          type="text"
+          name="trailer"
+          bind:value={formInput.trailer}
+          placeholder="Trailer video link..."
+        />
+        {#if iTrailer == 1}
+          <Helper class="mt-2" color="red"
+            ><span class="font-medium">Invalid!</span> Trailer is required!</Helper
+          >
+        {:else if iTrailer === 2}
+          <Helper class="mt-2" color="green"
+            ><span class="font-medium">Well done!</span> Trailer is valid.</Helper
+          >
+        {/if}
+      </Label>
+    </div>
     <Label for="with_helper" class="pb-2">Upload file</Label>
     <Fileupload
       bind:files
