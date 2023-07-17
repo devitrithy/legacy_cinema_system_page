@@ -7,7 +7,7 @@
 <title>Legacy Cinema | Admin Page</title>
 
 <div class="flex">
-  <div class="w-72 container hidden 2xl:block">
+  <div class="w-72 container hidden 2xl:block z-50">
     <div class="fixed">
       <Sidebar />
     </div>
