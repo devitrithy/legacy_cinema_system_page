@@ -1,17 +1,11 @@
 <script lang="ts">
+  import moment from "moment";
   import { page } from "$app/stores";
+  import { Breadcrumb, BreadcrumbItem } from "flowbite-svelte";
   import {
-    Breadcrumb,
-    BreadcrumbItem,
-    DescriptionList,
-    InformationCircle,
-    Timeline,
-  } from "flowbite-svelte";
-  import {
+    CalendarMonthOutline,
     ClockOutline,
-    DesktopPcOutline,
     TagOutline,
-    VideoCameraOutline,
   } from "flowbite-svelte-icons";
 
   export let data;
@@ -39,16 +33,22 @@
       alt={movie.title}
     />
     <div class="flex gap-10 flex-col">
-      <p>{movie.title}</p>
+      <p class="text-2xl text-bold">{movie.title}</p>
+      <p class="flex items-center gap-5">
+        <CalendarMonthOutline />{moment(movie.create_at, [
+          "YYYY-MM-DD",
+          "DD-MM-YYYY",
+        ]).format("DD MMMM YYYY")}
+      </p>
+      <p class="flex items-center gap-5"><ClockOutline />{movie.time}</p>
+      <p class="flex items-center gap-5"><TagOutline />{movie.genre}</p>
       <p class="w-[50vw]">{movie.description}</p>
-      <p>{movie.time}</p>
-      <p>{movie.genre}</p>
       <iframe
         class="h-full"
         src="https://www.youtube.com/embed/{movie.trailer}?autoplay=1&mute=1"
         title={movie.title}
         frameborder="0"
-        allow="accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allow="accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; loop;"
         allowfullscreen
       />
     </div>
