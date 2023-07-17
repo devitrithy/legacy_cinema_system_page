@@ -146,6 +146,13 @@
     return async ({ result, update }) => {
       switch (result.type) {
         case "success":
+          formInput = {
+            title: "",
+            genre: "",
+            description: "",
+            time: "",
+            trailer: "",
+          };
           toast.success("Successfully added the movie.");
           formModal = false;
           break;
@@ -184,56 +191,62 @@
       ><span class="mr-5">Add Movie</span><PlusOutline />
     </Button>
   </div>
-  <Table divClass="z-10 m-5 ">
-    <TableHead>
-      <TableHeadCell>Poster</TableHeadCell>
-      <TableHeadCell>Title</TableHeadCell>
-      <TableHeadCell>Description</TableHeadCell>
-      <TableHeadCell>Genre</TableHeadCell>
-      <TableHeadCell>Time</TableHeadCell>
-      <TableHeadCell>Trailer</TableHeadCell>
-      <TableHeadCell>Action</TableHeadCell>
-    </TableHead>
-    <TableBody tableBodyClass="divide-y">
-      {#each data.data.movies as movie}
-        <TableBodyRow>
-          <TableBodyCell
-            ><img
-              width="50"
-              src={endpoint + movie.poster}
-              alt=""
-            /></TableBodyCell
-          >
-          <TableBodyCell>{movie.title}</TableBodyCell>
-          <TableBodyCell
-            >{movie.description.length > 50
-              ? movie.description.substring(1, 50) + "..."
-              : movie.description}</TableBodyCell
-          >
-          <TableBodyCell>{movie.genre}</TableBodyCell>
-          <TableBodyCell>{movie.time}</TableBodyCell>
-          <TableBodyCell>{movie.trailer}</TableBodyCell>
-          <TableBodyCell tdClass="w-40">
-            <div class="flex gap-5">
-              <a href="/movie/{movie.movie_id}"><EyeOutline /></a>
-              <button on:click={() => editForm(movie.movie_id)}
-                ><EditOutline /></button
-              >
-              <button
-                type="submit"
-                on:click={() => {
-                  deleteModal(movie.movie_id);
-                }}><TrashBinOutline /></button
-              >
-            </div>
-          </TableBodyCell>
-        </TableBodyRow>
-      {/each}
-    </TableBody>
-  </Table>
-  <div class="flex justify-center items-center mt-5">
-    <Pagination {pages} on:previous={previous} on:next={next} large />
-  </div>
+  {#if data.data.count > 0}
+    <Table divClass="z-10 m-5 ">
+      <TableHead>
+        <TableHeadCell>Poster</TableHeadCell>
+        <TableHeadCell>Title</TableHeadCell>
+        <TableHeadCell>Description</TableHeadCell>
+        <TableHeadCell>Genre</TableHeadCell>
+        <TableHeadCell>Time</TableHeadCell>
+        <TableHeadCell>Trailer</TableHeadCell>
+        <TableHeadCell>Action</TableHeadCell>
+      </TableHead>
+      <TableBody tableBodyClass="divide-y">
+        {#each data.data.movies as movie}
+          <TableBodyRow>
+            <TableBodyCell
+              ><img
+                width="50"
+                src={endpoint + movie.poster}
+                alt=""
+              /></TableBodyCell
+            >
+            <TableBodyCell>{movie.title}</TableBodyCell>
+            <TableBodyCell
+              >{movie.description.length > 50
+                ? movie.description.substring(1, 50) + "..."
+                : movie.description}</TableBodyCell
+            >
+            <TableBodyCell>{movie.genre}</TableBodyCell>
+            <TableBodyCell>{movie.time}</TableBodyCell>
+            <TableBodyCell>{movie.trailer}</TableBodyCell>
+            <TableBodyCell tdClass="w-40">
+              <div class="flex gap-5">
+                <a href="/movie/{movie.movie_id}"><EyeOutline /></a>
+                <button on:click={() => editForm(movie.movie_id)}
+                  ><EditOutline /></button
+                >
+                <button
+                  type="submit"
+                  on:click={() => {
+                    deleteModal(movie.movie_id);
+                  }}><TrashBinOutline /></button
+                >
+              </div>
+            </TableBodyCell>
+          </TableBodyRow>
+        {/each}
+      </TableBody>
+    </Table>
+  {:else}
+    <p class="text-2xl text-black dark:text-white">No Movie's availble yet!</p>
+  {/if}
+  {#if data.data.count > 5}
+    <div class="flex justify-center items-center mt-5">
+      <Pagination {pages} on:previous={previous} on:next={next} large />
+    </div>
+  {/if}
 </main>
 <Modal bind:open={formModal} autoclose={false} class="w-full">
   <form
