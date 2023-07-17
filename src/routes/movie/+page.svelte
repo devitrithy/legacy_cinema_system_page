@@ -1,10 +1,12 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
+  import toast, { Toaster } from "svelte-french-toast";
   import { page } from "$app/stores";
   import type { Snapshot } from "@sveltejs/kit";
   import axios from "axios";
   export let data;
+  export let form;
   let endpoint = "https://cinemaapi.serveo.net/";
   let popupModal = false;
   let ids: any;
@@ -18,6 +20,7 @@
   let files: any, fileInput: Fileupload;
   let formInput = {
     title: "",
+    genre: "",
     description: "",
     trailer: "",
     time: "",
@@ -49,6 +52,7 @@
     TableHead,
     TableHeadCell,
     Textarea,
+    Toast,
   } from "flowbite-svelte";
   import {
     EditOutline,
@@ -56,6 +60,7 @@
     PlusOutline,
     TrashBinOutline,
   } from "flowbite-svelte-icons";
+  import type { SubmitFunction } from "./$types.js";
   let formModal = false;
   export const snapshot: Snapshot = {
     capture: () => formInput,
@@ -119,6 +124,7 @@
     let d = editData.data.movie[0];
     if (editData) {
       formInput.title = d.title;
+      formInput.genre = d.genre;
       formInput.description = d.description;
       formInput.time = d.time;
       formInput.trailer = d.trailer;
@@ -126,15 +132,41 @@
       formModal = true;
     }
   };
-  let editClose = () => {
-    if (edit) {
-      formInput = {
-        title: "",
-        time: "",
-        description: "",
-        trailer: "",
-      };
+  let addMovie = () => {
+    edit = false;
+    formModal = true;
+  };
+  let formSumbit: SubmitFunction = ({ form, data, action, cancel }) => {
+    const { title, description, time, trailer, genre } =
+      Object.fromEntries(data);
+    if (title.length < 1) {
+      cancel();
     }
+
+    return async ({ result, update }) => {
+      switch (result.type) {
+        case "success":
+          toast.success("Successfully added the movie.");
+          formModal = false;
+          break;
+        default:
+          break;
+      }
+      await update();
+    };
+  };
+  let deleteMovie: SubmitFunction = ({ form, data, action, cancel }) => {
+    return async ({ result, update }) => {
+      switch (result.type) {
+        case "success":
+          toast.success("Successfully remove the movie.");
+          formModal = false;
+          break;
+        default:
+          break;
+      }
+      await update();
+    };
   };
 </script>
 
@@ -148,7 +180,7 @@
       <BreadcrumbItem href="/movie">Movie</BreadcrumbItem>
     </Breadcrumb>
 
-    <Button on:click={() => (formModal = true)} outline pill
+    <Button on:click={addMovie} outline pill
       ><span class="mr-5">Add Movie</span><PlusOutline />
     </Button>
   </div>
@@ -157,6 +189,7 @@
       <TableHeadCell>Poster</TableHeadCell>
       <TableHeadCell>Title</TableHeadCell>
       <TableHeadCell>Description</TableHeadCell>
+      <TableHeadCell>Genre</TableHeadCell>
       <TableHeadCell>Time</TableHeadCell>
       <TableHeadCell>Trailer</TableHeadCell>
       <TableHeadCell>Action</TableHeadCell>
@@ -177,6 +210,7 @@
               ? movie.description.substring(1, 50) + "..."
               : movie.description}</TableBodyCell
           >
+          <TableBodyCell>{movie.genre}</TableBodyCell>
           <TableBodyCell>{movie.time}</TableBodyCell>
           <TableBodyCell>{movie.trailer}</TableBodyCell>
           <TableBodyCell tdClass="w-40">
@@ -201,13 +235,13 @@
     <Pagination {pages} on:previous={previous} on:next={next} large />
   </div>
 </main>
-<Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
+<Modal bind:open={formModal} autoclose={false} class="w-full">
   <form
     class="flex flex-col space-y-6"
     action="?/{edit ? 'edit' : 'create'}"
     method="POST"
     enctype="multipart/form-data"
-    use:enhance
+    use:enhance={formSumbit}
   >
     {#if edit}
       <input type="hidden" name="id" value={ids} />
@@ -224,6 +258,9 @@
         bind:value={formInput.title}
         placeholder="John Wick 4"
       />
+      {#if form?.error}
+        <small>{form.errorMsg}</small>
+      {/if}
     </Label>
     <Label class="space-y-2">
       <span>Description</span>
@@ -232,6 +269,16 @@
         name="description"
         bind:value={formInput.description}
         placeholder="John Wick 4 is an action movie..."
+        required
+      />
+    </Label>
+    <Label class="space-y-2">
+      <span>Genre</span>
+      <Input
+        type="text"
+        name="genre"
+        bind:value={formInput.genre}
+        placeholder="Action"
         required
       />
     </Label>
@@ -273,14 +320,7 @@
       <Button type="button" color="red" on:click={resetValue} class="w-full"
         >Reset</Button
       >
-      <Button
-        type="submit"
-        color="green"
-        on:click={() => {
-          formModal = false;
-        }}
-        class="w-full">Submit</Button
-      >
+      <Button type="submit" color="green" class="w-full">Submit</Button>
     </div>
   </form>
 </Modal>
@@ -303,7 +343,7 @@
     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
       Are you sure you want to delete this movie?
     </h3>
-    <form action="?/delete" method="post" use:enhance>
+    <form action="?/delete" method="post" use:enhance={deleteMovie}>
       <Button
         type="submit"
         on:click={() => {
@@ -324,3 +364,4 @@
     </form>
   </div>
 </Modal>
+<Toaster />
