@@ -15,6 +15,7 @@
     Label,
     Modal,
     Pagination,
+    Spinner,
     Table,
     TableBody,
     TableBodyCell,
@@ -38,11 +39,12 @@
   let ids: any;
   let edit = false;
 
-  let iTitle = true;
-  let iDescription = true;
-  let iTrailer = true;
-  let iTime = true;
-  let iGenre = true;
+  let iTitle = 0;
+  let iDescription = 0;
+  let iTrailer = 0;
+  let iTime = 0;
+  let iGenre = 0;
+  let loading = false;
 
   const deleteModal = (id: any) => {
     popupModal = true;
@@ -73,6 +75,10 @@
     capture: () => formInput,
     restore: (value) => (formInput = value),
   };
+
+  if ($page.url.searchParams.get("add")) {
+    formModal = true;
+  }
   // Pagination
   $: activeUrl = $page.url.searchParams.get("page");
   let pages: any[] = [];
@@ -149,38 +155,44 @@
   let formSumbit: SubmitFunction = ({ form, data, action, cancel }) => {
     const { title, description, time, trailer, genre, poster } =
       Object.fromEntries(data);
+    loading = true;
     if (title.length < 1) {
-      iTitle = false;
+      iTitle = 1;
+      loading = false;
       cancel();
     } else {
-      iTitle = true;
+      iTitle = 2;
     }
     if (description.length < 1) {
-      iDescription = false;
+      iDescription = 1;
+      loading = false;
       cancel();
     } else {
-      iDescription = true;
+      iDescription = 2;
     }
     if (time.length < 1) {
-      iTime = false;
+      iTime = 1;
+      loading = false;
       cancel();
     } else {
-      iTime = true;
+      iTime = 2;
     }
     if (trailer.length < 1) {
-      iTrailer = false;
+      iTrailer = 1;
+      loading = false;
       cancel();
     } else {
-      iTrailer = true;
+      iTrailer = 2;
     }
     if (genre.length < 1) {
-      iGenre = false;
+      loading = false;
+      iGenre = 1;
       cancel();
     } else {
-      iGenre = true;
+      iGenre = 2;
     }
     return async ({ result, update }) => {
-      console.log(result);
+      loading = false;
       switch (result.type) {
         case "success":
           resetValue();
@@ -314,11 +326,11 @@
     </h3>
     <Label class="space-y-2">
       <span>Title</span>
-      {#if !iTitle}
+      {#if iTitle == 1}
         <small class="text-red-500 float-right"> *Required</small>
       {/if}
       <Input
-        color={iTitle ? "green" : "red"}
+        color={iTitle == 0 ? "base" : iTitle == 1 ? "red" : "green"}
         type="text"
         name="title"
         bind:value={formInput.title}
@@ -327,11 +339,10 @@
     </Label>
     <Label class="space-y-2">
       <span>Description</span>
-      {#if !iDescription}
+      {#if iDescription == 1}
         <small class="text-red-500 float-right"> *Required</small>
       {/if}
       <Textarea
-        color={iDescription ? "green" : "red"}
         type="text"
         name="description"
         bind:value={formInput.description}
@@ -340,11 +351,11 @@
     </Label>
     <Label class="space-y-2">
       <span>Genre</span>
-      {#if !iGenre}
+      {#if iGenre == 1}
         <small class="text-red-500 float-right">*Required</small>
       {/if}
       <Input
-        color={iGenre ? "green" : "red"}
+        color={iGenre == 0 ? "base" : iGenre == 1 ? "red" : "green"}
         type="text"
         name="genre"
         bind:value={formInput.genre}
@@ -353,11 +364,11 @@
     </Label>
     <Label class="space-y-2">
       <span>Time</span>
-      {#if !iTime}
+      {#if iTime == 1}
         <small class="text-red-500 float-right">*Required</small>
       {/if}
       <Input
-        color={iTime ? "green" : "red"}
+        color={iTime == 0 ? "base" : iTime == 1 ? "red" : "green"}
         type="text"
         name="time"
         bind:value={formInput.time}
@@ -366,11 +377,11 @@
     </Label>
     <Label class="space-y-2">
       <span>Trailer Link</span>
-      {#if !iTrailer}
+      {#if iTrailer == 1}
         <small class="text-red-500 float-right">*Required</small>
       {/if}
       <Input
-        color={iTrailer ? "green" : "red"}
+        color={iTrailer == 0 ? "base" : iTrailer == 1 ? "red" : "green"}
         type="text"
         name="trailer"
         bind:value={formInput.trailer}
@@ -395,7 +406,9 @@
       <Button type="button" color="red" on:click={resetValue} class="w-full"
         >Reset</Button
       >
-      <Button type="submit" color="green" class="w-full">Submit</Button>
+      <Button type="submit" color="green" class="w-full">
+        {#if loading}<Spinner class="mr-3" size="4" color="white" /> Submitting{:else}Submit{/if}
+      </Button>
     </div>
   </form>
 </Modal>

@@ -22,9 +22,11 @@
   </div>
 </div>
 <SpeedDial defaultClass="absolute right-6 bottom-6">
-  <SpeedDialButton name="Movie">
-    <VideoCameraOutline />
-  </SpeedDialButton>
+  <a href="/movie?add=1">
+    <SpeedDialButton name="Movie">
+      <VideoCameraOutline />
+    </SpeedDialButton>
+  </a>
   <SpeedDialButton name="Print">
     <svg
       aria-hidden="true"
