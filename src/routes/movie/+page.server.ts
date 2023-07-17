@@ -4,12 +4,12 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ url }) => {
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("http://cinemaapi.serveo.net/movie");
+  const count = await axios.get("https://cinemaapi.serveo.net/movie");
 
   if (page > count.data.count / 5 + 1) {
     throw redirect(302, "/movie");
   }
-  const data = await fetch(`http://cinemaapi.serveo.net/movie?page=${page}`);
+  const data = await fetch(`https://cinemaapi.serveo.net/movie?page=${page}`);
   const res = data.json();
   return {
     data: res,
