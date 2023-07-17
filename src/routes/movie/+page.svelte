@@ -5,36 +5,6 @@
   import { page } from "$app/stores";
   import type { Snapshot } from "@sveltejs/kit";
   import axios from "axios";
-  export let data;
-  export let form;
-  let endpoint = "https://cinemaapi.serveo.net/";
-  let popupModal = false;
-  let ids: any;
-  let edit = false;
-
-  const deleteModal = (id: any) => {
-    popupModal = true;
-    ids = id;
-    console.log(ids);
-  };
-  let files: any, fileInput: Fileupload;
-  let formInput = {
-    title: "",
-    genre: "",
-    description: "",
-    trailer: "",
-    time: "",
-  };
-  let resetValue = () => {
-    formInput = {
-      title: "",
-      description: "",
-      trailer: "",
-      time: "",
-    };
-    files = null;
-    fileInput.value = "";
-  };
   import {
     Breadcrumb,
     BreadcrumbItem,
@@ -60,6 +30,43 @@
     PlusOutline,
     TrashBinOutline,
   } from "flowbite-svelte-icons";
+
+  export let data;
+  export let form;
+  let endpoint = "https://cinemaapi.serveo.net/";
+  let popupModal = false;
+  let ids: any;
+  let edit = false;
+
+  let iTitle = true;
+  let iDescription = true;
+  let iTrailer = true;
+  let iTime = true;
+  let iGenre = true;
+
+  const deleteModal = (id: any) => {
+    popupModal = true;
+    ids = id;
+    console.log(ids);
+  };
+  let files: any, fileInput: Fileupload;
+  let formInput = {
+    title: "",
+    genre: "",
+    description: "",
+    trailer: "",
+    time: "",
+  };
+  let resetValue = () => {
+    formInput = {
+      genre: "",
+      title: "",
+      description: "",
+      trailer: "",
+      time: "",
+    };
+  };
+
   import type { SubmitFunction } from "./$types.js";
   let formModal = false;
   export const snapshot: Snapshot = {
@@ -68,7 +75,7 @@
   };
   // Pagination
   $: activeUrl = $page.url.searchParams.get("page");
-  let pages = [];
+  let pages: any[] = [];
   let count = data.data.count / 5 + 1;
   if (data.data.count % 5 == 0) {
     count -= 1;
@@ -117,7 +124,7 @@
   };
 
   //Edit Form
-  let editForm = async (id) => {
+  let editForm = async (id: string) => {
     ids = id;
     edit = true;
     const editData = await axios.get(endpoint + "movie/" + id);
@@ -133,6 +140,9 @@
     }
   };
   let addMovie = () => {
+    if (edit) {
+      resetValue();
+    }
     edit = false;
     formModal = true;
   };
@@ -140,23 +150,55 @@
     const { title, description, time, trailer, genre } =
       Object.fromEntries(data);
     if (title.length < 1) {
+      iTitle = false;
       cancel();
+    } else {
+      iTitle = true;
+    }
+    if (description.length < 1) {
+      iDescription = false;
+      cancel();
+    } else {
+      iDescription = true;
+    }
+    if (time.length < 1) {
+      iTime = false;
+      cancel();
+    } else {
+      iTime = true;
+    }
+    if (trailer.length < 1) {
+      iTrailer = false;
+      cancel();
+    } else {
+      iTrailer = true;
+    }
+    if (genre.length < 1) {
+      iGenre = false;
+      cancel();
+    } else {
+      iGenre = true;
     }
     return async ({ result, update }) => {
       switch (result.type) {
         case "success":
-          formInput = {
-            title: "",
-            genre: "",
-            description: "",
-            time: "",
-            trailer: "",
-          };
+          resetValue();
           toast.success("Successfully added the movie.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           formModal = false;
           break;
+        case "error":
+          toast.error("Error while added the movie.", {
+            style: "border-radius: 200px; background: #333; color: #fff;",
+          });
+          break;
+        case "failure":
+          toast.error("Failed added the movie.", {
+            style: "border-radius: 200px; background: #333; color: #fff;",
+          });
+          break;
+
         default:
           break;
       }
@@ -271,54 +313,67 @@
     </h3>
     <Label class="space-y-2">
       <span>Title</span>
+      {#if !iTitle}
+        <small class="text-red-500 float-right"> *Required</small>
+      {/if}
       <Input
+        color={iTitle ? "green" : "red"}
         type="text"
         name="title"
         bind:value={formInput.title}
         placeholder="John Wick 4"
       />
-      {#if form?.error}
-        <small>{form.errorMsg}</small>
-      {/if}
     </Label>
     <Label class="space-y-2">
       <span>Description</span>
+      {#if !iDescription}
+        <small class="text-red-500 float-right"> *Required</small>
+      {/if}
       <Textarea
+        color={iDescription ? "green" : "red"}
         type="text"
         name="description"
         bind:value={formInput.description}
         placeholder="John Wick 4 is an action movie..."
-        required
       />
     </Label>
     <Label class="space-y-2">
       <span>Genre</span>
+      {#if !iGenre}
+        <small class="text-red-500 float-right">*Required</small>
+      {/if}
       <Input
+        color={iGenre ? "green" : "red"}
         type="text"
         name="genre"
         bind:value={formInput.genre}
         placeholder="Action"
-        required
       />
     </Label>
     <Label class="space-y-2">
       <span>Time</span>
+      {#if !iTime}
+        <small class="text-red-500 float-right">*Required</small>
+      {/if}
       <Input
+        color={iTime ? "green" : "red"}
         type="text"
         name="time"
         bind:value={formInput.time}
         placeholder="2h40min"
-        required
       />
     </Label>
     <Label class="space-y-2">
       <span>Trailer Link</span>
+      {#if !iTrailer}
+        <small class="text-red-500 float-right">*Required</small>
+      {/if}
       <Input
+        color={iTrailer ? "green" : "red"}
         type="text"
         name="trailer"
         bind:value={formInput.trailer}
         placeholder="Trailer video link..."
-        required
       />
     </Label>
     <Label for="with_helper" class="pb-2">Upload file</Label>
