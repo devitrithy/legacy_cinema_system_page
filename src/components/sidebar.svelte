@@ -15,6 +15,7 @@
   } from "flowbite-svelte";
   let spanClass = "flex-1 ml-3 whitespace-nowrap";
   $: activeUrl = $page.url.pathname;
+  $: console.log(activeUrl.substring(1, 6));
 </script>
 
 <div
@@ -35,7 +36,8 @@
           label="Movie"
           {spanClass}
           href="/movie"
-          active={activeUrl === "/movie"}
+          active={activeUrl === "/movie" ||
+            activeUrl.substring(1, 6) === "movie"}
         >
           <svelte:fragment slot="icon">
             <VideoCameraOutline />

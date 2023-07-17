@@ -215,7 +215,7 @@
             <TableBodyCell>{movie.title}</TableBodyCell>
             <TableBodyCell
               >{movie.description.length > 50
-                ? movie.description.substring(1, 50) + "..."
+                ? movie.description.substring(0, 50) + "..."
                 : movie.description}</TableBodyCell
             >
             <TableBodyCell>{movie.genre}</TableBodyCell>
