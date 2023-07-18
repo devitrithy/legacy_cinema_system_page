@@ -46,7 +46,6 @@
   let iTrailer = 0;
   let iTime = 0;
   let iGenre = 0;
-  let iPrice = 0;
   let iImportCost = 0;
   let loading = false;
 
@@ -63,7 +62,6 @@
     trailer: "",
     time: "",
     import_cost: "",
-    price: "",
   };
   let resetValue = () => {
     formInput = {
@@ -73,7 +71,6 @@
       trailer: "",
       time: "",
       import_cost: "",
-      price: "",
     };
     iTime = 0;
     iTitle = 0;
@@ -81,7 +78,6 @@
     iTrailer = 0;
     iGenre = 0;
     iImportCost = 0;
-    iPrice = 0;
   };
 
   import type { SubmitFunction } from "./$types.js";
@@ -174,7 +170,7 @@
     formModal = true;
   };
   let formSumbit: SubmitFunction = ({ form, data, action, cancel }) => {
-    const { title, description, time, trailer, genre, price, import_cost } =
+    const { title, description, time, trailer, genre, import_cost } =
       Object.fromEntries(data);
     loading = true;
     if (title.length < 1) {
@@ -190,13 +186,6 @@
       cancel();
     } else {
       iDescription = 2;
-    }
-    if (price.length < 1) {
-      iPrice = 1;
-      loading = false;
-      cancel();
-    } else {
-      iPrice = 2;
     }
     if (import_cost.length < 1) {
       iImportCost = 1;
@@ -235,6 +224,7 @@
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           formModal = false;
+          await update();
           break;
         case "error":
           toast.error("Error while added the movie.", {
@@ -250,7 +240,6 @@
         default:
           break;
       }
-      await update();
     };
   };
   let deleteMovie: SubmitFunction = ({ form, data, action, cancel }) => {
@@ -263,11 +252,11 @@
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           popupModal = false;
+          await update();
           break;
         default:
           break;
       }
-      await update();
     };
   };
 </script>
@@ -293,7 +282,6 @@
         <TableHeadCell>Title</TableHeadCell>
         <TableHeadCell>Description</TableHeadCell>
         <TableHeadCell>Import Cost</TableHeadCell>
-        <TableHeadCell>Price</TableHeadCell>
         <TableHeadCell>Genre</TableHeadCell>
         <TableHeadCell>Time</TableHeadCell>
         <TableHeadCell>Trailer</TableHeadCell>
@@ -316,7 +304,6 @@
                 : movie.description}</TableBodyCell
             >
             <TableBodyCell>${movie.import_cost}</TableBodyCell>
-            <TableBodyCell>${movie.price}</TableBodyCell>
             <TableBodyCell>{movie.genre}</TableBodyCell>
             <TableBodyCell>{movie.time}</TableBodyCell>
             <TableBodyCell>{movie.trailer}</TableBodyCell>
@@ -420,56 +407,28 @@
         >
       {/if}
     </Label>
-    <div class="grid gap-6 mb-6 md:grid-cols-2">
-      <Label class="space-y-2">
-        <span>Import Cost</span>
-        <ButtonGroup class="w-full">
-          <InputAddon>$</InputAddon>
-          <Input
-            color={iImportCost == 0
-              ? "base"
-              : iImportCost == 1
-              ? "red"
-              : "green"}
-            type="number"
-            name="import_cost"
-            bind:value={formInput.import_cost}
-            placeholder="100000"
-          />
-        </ButtonGroup>
-        {#if iImportCost == 1}
-          <Helper class="mt-2" color="red"
-            ><span class="font-medium">Invalid!</span> Import Cost is required!</Helper
-          >
-        {:else if iImportCost === 2}
-          <Helper class="mt-2" color="green"
-            ><span class="font-medium">Well done!</span> Import Cost is valid.</Helper
-          >
-        {/if}
-      </Label>
-      <Label class="space-y-2">
-        <span>Price</span>
-        <ButtonGroup class="w-full">
-          <InputAddon>$</InputAddon>
-          <Input
-            color={iPrice == 0 ? "base" : iPrice == 1 ? "red" : "green"}
-            type="number"
-            name="price"
-            bind:value={formInput.price}
-            placeholder="5"
-          /></ButtonGroup
+    <Label class="space-y-2">
+      <span>Import Cost</span>
+      <ButtonGroup class="w-full">
+        <InputAddon>$</InputAddon>
+        <Input
+          color={iImportCost == 0 ? "base" : iImportCost == 1 ? "red" : "green"}
+          type="number"
+          name="import_cost"
+          bind:value={formInput.import_cost}
+          placeholder="100000"
+        />
+      </ButtonGroup>
+      {#if iImportCost == 1}
+        <Helper class="mt-2" color="red"
+          ><span class="font-medium">Invalid!</span> Import Cost is required!</Helper
         >
-        {#if iPrice == 1}
-          <Helper class="mt-2" color="red"
-            ><span class="font-medium">Invalid!</span> Price is required!</Helper
-          >
-        {:else if iPrice === 2}
-          <Helper class="mt-2" color="green"
-            ><span class="font-medium">Well done!</span> Price is valid.</Helper
-          >
-        {/if}
-      </Label>
-    </div>
+      {:else if iImportCost === 2}
+        <Helper class="mt-2" color="green"
+          ><span class="font-medium">Well done!</span> Import Cost is valid.</Helper
+        >
+      {/if}
+    </Label>
     <div class="grid gap-6 mb-6 md:grid-cols-2">
       <Label class="space-y-2">
         <span>Time</span>

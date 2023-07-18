@@ -44,7 +44,7 @@
       <p class="flex items-center gap-5"><TagOutline />{movie.genre}</p>
       <p class="w-[50vw]">{movie.description}</p>
       <iframe
-        class="h-full"
+        class="h-full aspect-auto"
         src="https://www.youtube.com/embed/{movie.trailer}?autoplay=1&mute=1"
         title={movie.title}
         frameborder="0"
