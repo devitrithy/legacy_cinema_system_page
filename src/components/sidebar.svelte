@@ -31,7 +31,7 @@
   $: console.log(activeUrl.substring(1, 6));
 </script>
 
-<div class="bg-gray-900 p-8">
+<div class="bg-white dark:bg-gray-900 p-8">
   <NavBrand href="/">
     <img src={Logo} class="ml-3 w-40" alt="Legacy Cinema Logo" />
   </NavBrand>

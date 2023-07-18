@@ -9,9 +9,11 @@
     Breadcrumb,
     BreadcrumbItem,
     Button,
+    ButtonGroup,
     Fileupload,
     Helper,
     Input,
+    InputAddon,
     Label,
     Modal,
     Pagination,
@@ -77,7 +79,7 @@
     iTitle = 0;
     iDescription = 0;
     iTrailer = 0;
-    iTrailer = 0;
+    iGenre = 0;
     iImportCost = 0;
     iPrice = 0;
   };
@@ -421,13 +423,20 @@
     <div class="grid gap-6 mb-6 md:grid-cols-2">
       <Label class="space-y-2">
         <span>Import Cost</span>
-        <Input
-          color={iImportCost == 0 ? "base" : iImportCost == 1 ? "red" : "green"}
-          type="text"
-          name="import_cost"
-          bind:value={formInput.import_cost}
-          placeholder="John Wick 4"
-        />
+        <ButtonGroup class="w-full">
+          <InputAddon>$</InputAddon>
+          <Input
+            color={iImportCost == 0
+              ? "base"
+              : iImportCost == 1
+              ? "red"
+              : "green"}
+            type="number"
+            name="import_cost"
+            bind:value={formInput.import_cost}
+            placeholder="100000"
+          />
+        </ButtonGroup>
         {#if iImportCost == 1}
           <Helper class="mt-2" color="red"
             ><span class="font-medium">Invalid!</span> Import Cost is required!</Helper
@@ -440,13 +449,16 @@
       </Label>
       <Label class="space-y-2">
         <span>Price</span>
-        <Input
-          color={iPrice == 0 ? "base" : iPrice == 1 ? "red" : "green"}
-          type="text"
-          name="price"
-          bind:value={formInput.price}
-          placeholder="Action"
-        />
+        <ButtonGroup class="w-full">
+          <InputAddon>$</InputAddon>
+          <Input
+            color={iPrice == 0 ? "base" : iPrice == 1 ? "red" : "green"}
+            type="number"
+            name="price"
+            bind:value={formInput.price}
+            placeholder="5"
+          /></ButtonGroup
+        >
         {#if iPrice == 1}
           <Helper class="mt-2" color="red"
             ><span class="font-medium">Invalid!</span> Price is required!</Helper
