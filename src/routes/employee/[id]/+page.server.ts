@@ -4,7 +4,7 @@ import { error } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ params }) => {
   let id = params.id;
-  const data = await fetch("http://localhost:3000/movie/" + id);
+  const data = await fetch("https://cinemaapi.serveo.net/movie/" + id);
   console.log(data.status);
   if (data.status === 404) {
     console.log("error loading");

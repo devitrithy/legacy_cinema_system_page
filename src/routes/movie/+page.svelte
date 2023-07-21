@@ -36,7 +36,7 @@
 
   export let data;
   export let form;
-  let endpoint = "http://localhost:3000/thumbnail/";
+  let endpoint = "https://cinemaapi.serveo.net/thumbnail/";
   let popupModal = false;
   let ids: any;
   let edit = false;
