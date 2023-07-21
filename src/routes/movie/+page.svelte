@@ -36,7 +36,7 @@
 
   export let data;
   export let form;
-  let endpoint = "https://cinemaapi.serveo.net/";
+  let endpoint = "http://localhost:3000/thumbnail/";
   let popupModal = false;
   let ids: any;
   let edit = false;
@@ -157,6 +157,7 @@
       formInput.genre = d.genre;
       formInput.description = d.description;
       formInput.time = d.time;
+      formInput.import_cost = d.import_cost;
       formInput.trailer = d.trailer;
 
       formModal = true;
@@ -245,14 +246,14 @@
   let deleteMovie: SubmitFunction = ({ form, data, action, cancel }) => {
     loading = true;
     return async ({ result, update }) => {
-      loading = false;
       switch (result.type) {
         case "success":
+          await update();
           toast.success("Successfully remove the movie.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
+          loading = false;
           popupModal = false;
-          await update();
           break;
         default:
           break;
@@ -293,7 +294,7 @@
             <TableBodyCell
               ><img
                 width="50"
-                src={endpoint + movie.poster}
+                src={endpoint + movie.poster.substring(8) + "?h=96&w=54"}
                 alt=""
               /></TableBodyCell
             >
