@@ -10,7 +10,7 @@
 
   export let data;
   let movie = data.data.movie[0];
-  let endpoint = "https://cinemaapi.serveo.net/";
+  let endpoint = "http://localhost:3000/";
 </script>
 
 <main class="m-5 container text-black dark:text-white mt-20">

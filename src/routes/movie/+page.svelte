@@ -36,7 +36,7 @@
 
   export let data;
   export let form;
-  let endpoint = "https://cinemaapi.serveo.net/thumbnail/";
+  let endpoint = "http://localhost:3000/";
   let popupModal = false;
   let ids: any;
   let edit = false;
@@ -152,6 +152,7 @@
     edit = true;
     const editData = await axios.get(endpoint + "movie/" + id);
     let d = editData.data.movie[0];
+    console.log(editData);
     if (editData) {
       formInput.title = d.title;
       formInput.genre = d.genre;
@@ -294,7 +295,10 @@
             <TableBodyCell
               ><img
                 width="50"
-                src={endpoint + movie.poster.substring(8) + "?h=96&w=54"}
+                src={endpoint +
+                  "thumbnail/" +
+                  movie.poster.substring(8) +
+                  "?h=96&w=54"}
                 alt=""
               /></TableBodyCell
             >
