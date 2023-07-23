@@ -9,12 +9,12 @@
     Breadcrumb,
     BreadcrumbItem,
     Button,
-    Fileupload,
     Helper,
     Input,
     Label,
     Modal,
     Pagination,
+    Select,
     Spinner,
     Table,
     TableBody,
@@ -22,7 +22,6 @@
     TableBodyRow,
     TableHead,
     TableHeadCell,
-    Textarea,
   } from "flowbite-svelte";
   import {
     EditOutline,
@@ -30,6 +29,7 @@
     PlusOutline,
     TrashBinOutline,
   } from "flowbite-svelte-icons";
+  import { onMount } from "svelte";
 
   export let data;
   export let form;
@@ -38,27 +38,38 @@
   let ids: any;
   let edit = false;
   let loading = false;
+  let select;
+  let locationItems = [];
+  let l;
+  onMount(async () => {
+    l = await axios.get(endpoint + "location");
+    l.data.locations.forEach((lo) => {
+      locationItems.push({
+        value: lo.location_id,
+        name: lo.location_name,
+      });
+    });
+  });
 
-  let iLocationName = 0;
-  let iAddress = 0;
+  let iHallName = 0;
+  let iSelect = 0;
 
   const deleteModal = (id: any) => {
     popupModal = true;
     ids = id;
     console.log(ids);
   };
-  let files: any, fileInput: Fileupload;
   let formInput = {
-    location_id: "",
     hall_name: "",
+    location: select,
   };
   let resetValue = () => {
     formInput = {
       hall_name: "",
-      location_id: "",
+      location: undefined,
     };
-    iLocationName = 0;
-    iAddress = 0;
+
+    iHallName = 0;
   };
 
   let formModal = false;
@@ -78,7 +89,7 @@
     count -= 1;
   }
   for (let i = 1; i <= count; i++) {
-    pages.push({ name: i, href: `/location?page=${i}` });
+    pages.push({ name: i, href: `/hall?page=${i}` });
   }
 
   $: {
@@ -103,7 +114,7 @@
   let previous = () => {
     p -= 1;
     if (p >= 1) {
-      goto(`/location?page=${p}`);
+      goto(`/hall?page=${p}`);
     } else {
       p += 1;
     }
@@ -111,10 +122,10 @@
   let next = () => {
     p += 1;
     if (activeUrl === null) {
-      goto(`/location?page=2`);
+      goto(`/hall?page=2`);
     }
     if (p <= pages.length) {
-      goto(`/location?page=${p}`);
+      goto(`/hall?page=${p}`);
     } else {
       p -= 1;
     }
@@ -122,61 +133,61 @@
 
   //Edit Form
   let editForm = async (id: string) => {
-    iLocationName = 0;
-    iAddress = 0;
+    iHallName = 0;
     ids = id;
     edit = true;
     formModal = true;
-    const editData = await axios.get(endpoint + "location/" + id);
-    let d = editData.data.location[0];
-    console.log(editData.data);
-    if (editData) {
-      formInput.location_id = d.location_id;
-      formInput.hall_name = d.hall_name;
-    }
+    const editData = await axios.get(endpoint + "hall/" + id);
+    let d = editData.data.movie[0];
+    console.log(d);
+    formInput.hall_name = d.hall_name;
+    select = d.location_id;
   };
-  let addLocation = () => {
+  let addHall = async () => {
     if (edit) {
       resetValue();
     }
+
     edit = false;
     formModal = true;
   };
   let formSumbit: SubmitFunction = ({ form, data, action, cancel }) => {
-    const { location_id, hall_name } = Object.fromEntries(data);
+    const { hall_name, id } = Object.fromEntries(data);
     loading = true;
-    if (location_id.length < 1) {
-      iLocationName = 1;
-      loading = false;
-      cancel();
-    } else {
-      iLocationName = 2;
-    }
+    console.log(hall_name.length);
     if (hall_name.length < 1) {
-      iAddress = 1;
+      iHallName = 1;
       loading = false;
       cancel();
     } else {
-      iAddress = 2;
+      iHallName = 2;
     }
+    if (!id) {
+      iSelect = 1;
+      loading = false;
+      cancel();
+    } else {
+      iSelect = 2;
+    }
+
     return async ({ result, update }) => {
       switch (result.type) {
         case "success":
           await update();
           loading = false;
           formModal = false;
-          toast.success("Successfully added the location.", {
+          toast.success("Successfully added the hall.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           resetValue();
           break;
         case "error":
-          toast.error("Error while added the location.", {
+          toast.error("Error while added the hall.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           break;
         case "failure":
-          toast.error("Failed added the location.", {
+          toast.error("Failed added the hall.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           break;
@@ -186,14 +197,14 @@
       }
     };
   };
-  let deleteLocation: SubmitFunction = ({ form, data, action, cancel }) => {
+  let deleteHall: SubmitFunction = ({ form, data, action, cancel }) => {
     loading = true;
     return async ({ result, update }) => {
       loading = false;
       switch (result.type) {
         case "success":
           await update();
-          toast.success("Successfully remove the location.", {
+          toast.success("Successfully remove the hall.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           popupModal = false;
@@ -206,66 +217,47 @@
 </script>
 
 <main class=" z-10 mt-32 container mx-auto">
-  <h1 class="text-black dark:text-white text-2xl m-4">
-    {$page.url.pathname === "/location" ? "Location" : "Add Location"}
-  </h1>
+  <h1 class="text-black dark:text-white text-2xl m-4">Hall</h1>
   <div class="m-4 flex justify-between items-center">
     <Breadcrumb aria-label="Default breadcrumb example">
       <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
-      <BreadcrumbItem href="/location">Location</BreadcrumbItem>
+      <BreadcrumbItem href="/hall">Hall</BreadcrumbItem>
     </Breadcrumb>
 
-    <Button on:click={addLocation} outline pill
-      ><span class="mr-5">Add Location</span><PlusOutline />
+    <Button on:click={addHall} outline pill
+      ><span class="mr-5">Add Hall</span><PlusOutline />
     </Button>
   </div>
-  {#if data.data.count > 0}
-    <Table divClass="z-10 m-5 overflow-x-auto " hoverable={true}>
-      <TableHead>
-        <TableHeadCell>Image</TableHeadCell>
-        <TableHeadCell>Location Name</TableHeadCell>
-        <TableHeadCell>Address</TableHeadCell>
-        <TableHeadCell>Action</TableHeadCell>
-      </TableHead>
-      <TableBody tableBodyClass="divide-y">
-        {#each data.data.locations as location}
-          <TableBodyRow>
-            <TableBodyCell
-              ><img
-                width="50"
-                src={endpoint + location.picture}
-                alt=""
-              /></TableBodyCell
-            >
-            <TableBodyCell>{location.location_id}</TableBodyCell>
-            <TableBodyCell
-              >{location.hall_name.length > 50
-                ? location.hall_name.substring(0, 50) + "..."
-                : location.hall_name}</TableBodyCell
-            >
-            <TableBodyCell tdClass="w-40">
-              <div class="flex gap-5">
-                <a href="/location/{location.movie_id}"><EyeOutline /></a>
-                <button on:click={() => editForm(location.location_id)}
-                  ><EditOutline /></button
-                >
-                <button
-                  type="submit"
-                  on:click={() => {
-                    deleteModal(location.location_id);
-                  }}><TrashBinOutline /></button
-                >
-              </div>
-            </TableBodyCell>
-          </TableBodyRow>
-        {/each}
-      </TableBody>
-    </Table>
-  {:else}
-    <p class="text-2xl text-black dark:text-white">
-      No Location's availble yet!
-    </p>
-  {/if}
+  <Table divClass="z-10 m-5 overflow-x-auto " hoverable={true}>
+    <TableHead>
+      <TableHeadCell>Hall Name</TableHeadCell>
+      <TableHeadCell>Location Name</TableHeadCell>
+      <TableHeadCell>Action</TableHeadCell>
+    </TableHead>
+    <TableBody tableBodyClass="divide-y">
+      {#each data.data.halls as hall}
+        <TableBodyRow>
+          <TableBodyCell>{hall.hall_name}</TableBodyCell>
+          <TableBodyCell>{hall.location.location_name}</TableBodyCell>
+          <TableBodyCell tdClass="w-40">
+            <div class="flex gap-5">
+              <a href="/hall/{hall.movie_id}"><EyeOutline /></a>
+              <button on:click={() => editForm(hall.hall_id)}
+                ><EditOutline /></button
+              >
+              <button
+                type="submit"
+                on:click={() => {
+                  deleteModal(hall.hall_id);
+                }}><TrashBinOutline /></button
+              >
+            </div>
+          </TableBodyCell>
+        </TableBodyRow>
+      {/each}
+    </TableBody>
+  </Table>
+
   {#if data.data.count > 5}
     <div class="flex justify-center items-center mt-5">
       <Pagination {pages} on:previous={previous} on:next={next} large />
@@ -281,67 +273,46 @@
     use:enhance={formSumbit}
   >
     {#if edit}
-      <input type="hidden" name="id" value={ids} />
+      <input type="hidden" name="h_id" value={ids} />
     {/if}
 
     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-      {edit ? "Edit" : "Add"} Location
+      {edit ? "Edit" : "Add"} Hall
     </h3>
     <Label class="space-y-2">
-      <span>Location Name</span>
+      <span>Hall Name</span>
       <Input
-        color={iLocationName == 0
-          ? "base"
-          : iLocationName == 1
-          ? "red"
-          : "green"}
-        type="text"
-        name="location_id"
-        bind:value={formInput.location_id}
-        placeholder="AEON MALL 3"
-      />
-      {#if iLocationName == 1}
-        <Helper class="mt-2" color="red"
-          ><span class="font-medium">Invalid!</span> Location Name is required!</Helper
-        >
-      {:else if iLocationName === 2}
-        <Helper class="mt-2" color="green"
-          ><span class="font-medium">Well done!</span> Location Name is valid.</Helper
-        >
-      {/if}
-    </Label>
-    <Label class="space-y-2">
-      <span>Address</span>
-      <Textarea
+        color={iHallName == 0 ? "base" : iHallName == 1 ? "red" : "green"}
         type="text"
         name="hall_name"
         bind:value={formInput.hall_name}
-        placeholder="Takhmao, Kandal, Cambodia"
+        placeholder="Hall Name"
       />
-      {#if iAddress == 1}
+      {#if iHallName == 1}
         <Helper class="mt-2" color="red"
-          ><span class="font-medium">Invalid!</span> Address is required!</Helper
+          ><span class="font-medium">Invalid!</span> Hall Name is required!</Helper
         >
-      {:else if iAddress === 2}
+      {:else if iHallName === 2}
         <Helper class="mt-2" color="green"
-          ><span class="font-medium">Well done!</span> Address is valid.</Helper
+          ><span class="font-medium">Well done!</span> Hall Name is valid.</Helper
         >
       {/if}
     </Label>
-    <Label for="with_helper" class="pb-2">Upload file</Label>
-    <Fileupload
-      bind:files
-      bind:this={fileInput}
-      id="with_helper"
-      class="mb-2"
-      name="poster"
-    />
-    {#if files?.[0]}
-      <p>
-        {files[0].name}
-      </p>
-    {/if}
-    <Helper>SVG, PNG, JPG or GIF (MAX. 800x400px).</Helper>
+    <Label class="space-y-2">
+      <!-- // -->
+      Select An Option
+      <Select class="mt-2" items={locationItems} bind:value={select} />
+      {#if iSelect == 1}
+        <Helper class="mt-2" color="red"
+          ><span class="font-medium">Invalid!</span> Please select the location</Helper
+        >
+      {:else if iSelect === 2}
+        <Helper class="mt-2" color="green"
+          ><span class="font-medium">Well done!</span> Hall Name is valid.</Helper
+        >
+      {/if}
+    </Label>
+    <input type="hidden" name="id" bind:value={select} />
     <div class="flex gap-10">
       <Button type="button" color="red" on:click={resetValue} class="w-full"
         >Reset</Button
@@ -356,7 +327,7 @@
   <div class="text-center">
     {#if loading}
       <div class="my-5">
-        <Spinner color="gray" size={8} />
+        <Spinner color="gray" size="8" />
       </div>
     {:else}
       <svg
@@ -375,9 +346,9 @@
       >
     {/if}
     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-      Are you sure you want to delete this location?
+      Are you sure you want to delete this hall?
     </h3>
-    <form action="?/delete" method="post" use:enhance={deleteLocation}>
+    <form action="?/delete" method="post" use:enhance={deleteHall}>
       <Button type="submit" color="red" class="mr-2">Yes, I'm sure</Button>
       <Button
         type="button"

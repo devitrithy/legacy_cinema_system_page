@@ -1,4 +1,3 @@
-import axios from "axios";
 import type { PageServerLoad } from "./$types";
 import { error } from "@sveltejs/kit";
 

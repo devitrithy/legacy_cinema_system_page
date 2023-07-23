@@ -4,6 +4,7 @@
   import Navbar from "../components/navbar.svelte";
   import Sidebar from "../components/sidebar.svelte";
   import { VideoCameraOutline } from "flowbite-svelte-icons";
+  import Footer from "../components/footer.svelte";
 </script>
 
 <title>Legacy Cinema | Admin Page</title>

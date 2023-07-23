@@ -9,10 +9,10 @@ export const load: PageServerLoad = async ({ url }) => {
   if (page > count.data.count / 5 + 1) {
     throw redirect(302, "/hall");
   }
-  const data = await fetch(`https://cinemaapi.serveo.net/hall?page=${page}`);
-  const res = data.json();
+  const hall = await fetch(`https://cinemaapi.serveo.net/hall`);
+  let halls = hall.json();
   return {
-    data: res,
+    data: halls,
   };
 };
 
@@ -22,7 +22,10 @@ export const actions = {
 
     try {
       axios
-        .post("https://cinemaapi.serveo.net/hall", data)
+        .post("https://cinemaapi.serveo.net/hall", {
+          hall_name: data.get("hall_name"),
+          id: data.get("id"),
+        })
         .then(function (response) {
           console.log(response);
         })
@@ -74,7 +77,10 @@ export const actions = {
 
     try {
       axios
-        .put(`https://cinemaapi.serveo.net/hall/${data.get("id")}`, data)
+        .put(`https://cinemaapi.serveo.net/hall/${data.get("h_id")}`, {
+          hall_name: data.get("hall_name"),
+          id: data.get("id"),
+        })
         .then(function (response) {
           console.log(response);
         })

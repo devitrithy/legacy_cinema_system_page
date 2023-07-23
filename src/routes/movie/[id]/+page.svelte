@@ -10,7 +10,7 @@
 
   export let data;
   let movie = data.data.movie[0];
-  let endpoint = "https://cinemaapi.serveo.net/";
+  let endpoint = "https://cinemaapi.serveo.net/thumbnail/";
 </script>
 
 <main class="m-5 container text-black dark:text-white mt-20">
@@ -28,8 +28,8 @@
   </div>
   <div class="flex gap-10 mx-10 mt-5">
     <img
-      src={endpoint + movie.poster}
-      class="h-[80vh] rounded-lg shadow-lg shadow-red-900"
+      src={endpoint + movie.poster.substring(8) + "?w=432&h=768"}
+      class=" rounded-lg shadow-lg shadow-red-900"
       alt={movie.title}
     />
     <div class="flex gap-10 flex-col">
