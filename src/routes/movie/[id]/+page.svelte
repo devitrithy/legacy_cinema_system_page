@@ -13,7 +13,7 @@
   let endpoint = "https://cinemaapi.serveo.net/thumbnail/";
 </script>
 
-<main class="m-5 container text-black dark:text-white mt-20">
+<main class="m-5 container text-black dark:text-white mt-32 mx-auto">
   <h1 class="text-black dark:text-white text-2xl m-4">
     {$page.url.pathname === "/movie" ? "Movie" : "Add Movie"}
   </h1>
@@ -28,7 +28,7 @@
   </div>
   <div class="flex gap-10 mx-10 mt-5">
     <img
-      src={endpoint + movie.poster.substring(8) + "?w=432&h=768"}
+      src={endpoint + movie.poster.substring(8) + "?w=432&h=708"}
       class=" rounded-lg shadow-lg shadow-red-900"
       alt={movie.title}
     />
