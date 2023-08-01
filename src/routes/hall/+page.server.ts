@@ -4,12 +4,12 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ url }) => {
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("http://localhost:3000/hall");
+  const count = await axios.get("https://cinemaapi.serveo.net/hall");
 
   if (page > count.data.count / 5 + 1) {
     throw redirect(302, "/hall");
   }
-  const hall = await fetch(`http://localhost:3000/hall`);
+  const hall = await fetch(`https://cinemaapi.serveo.net/hall`);
   let halls = hall.json();
   return {
     data: halls,
@@ -22,7 +22,7 @@ export const actions = {
 
     try {
       axios
-        .post("http://localhost:3000/hall", {
+        .post("https://cinemaapi.serveo.net/hall", {
           hall_name: data.get("hall_name"),
           id: data.get("id"),
         })
@@ -52,7 +52,7 @@ export const actions = {
 
     try {
       axios
-        .delete("http://localhost:3000/hall/" + data.get("id"))
+        .delete("https://cinemaapi.serveo.net/hall/" + data.get("id"))
         .then((response) => {
           return {
             success: true,
@@ -77,7 +77,7 @@ export const actions = {
 
     try {
       axios
-        .put(`http://localhost:3000/hall/${data.get("h_id")}`, {
+        .put(`https://cinemaapi.serveo.net/hall/${data.get("h_id")}`, {
           hall_name: data.get("hall_name"),
           id: data.get("id"),
         })
