@@ -118,16 +118,6 @@
       </SidebarGroup>
       <SidebarGroup border>
         <SidebarItem
-          label="User"
-          {spanClass}
-          href="/user"
-          active={activeUrl === "/user" || activeUrl.substring(1, 6) === "user"}
-        >
-          <svelte:fragment slot="icon">
-            <UserOutline />
-          </svelte:fragment>
-        </SidebarItem>
-        <SidebarItem
           label="Departments"
           {spanClass}
           href="/department"

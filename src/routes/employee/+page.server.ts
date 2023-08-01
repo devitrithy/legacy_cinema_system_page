@@ -4,12 +4,14 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ url }) => {
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("https://cinemaapi.serveo.net/user");
+  const count = await axios.get("https://cinemaapi.serveo.net/employee");
 
   if (page > count.data.count / 5 + 1) {
-    throw redirect(302, "/user");
+    throw redirect(302, "/employee");
   }
-  const data = await fetch(`https://cinemaapi.serveo.net/user?page=${page}`);
+  const data = await fetch(
+    `https://cinemaapi.serveo.net/employee?page=${page}`
+  );
   const res = data.json();
   return {
     data: res,
@@ -22,14 +24,14 @@ export const actions = {
 
     try {
       axios
-        .post("https://cinemaapi.serveo.net/user", data)
+        .post("https://cinemaapi.serveo.net/employee", data)
         .then(function (response) {
           console.log(response);
         })
         .catch(function (error) {
           return {
             success: false,
-            message: "Fail to add user",
+            message: "Fail to add employee",
           };
         });
     } catch (error: any) {
@@ -40,7 +42,7 @@ export const actions = {
     }
     return {
       success: true,
-      message: "Added user successfully",
+      message: "Added employee successfully",
     };
   },
 
@@ -49,7 +51,7 @@ export const actions = {
 
     try {
       axios
-        .delete("https://cinemaapi.serveo.net/user/" + data.get("id"))
+        .delete("https://cinemaapi.serveo.net/employee/" + data.get("id"))
         .then((response) => {
           return {
             success: true,
@@ -59,7 +61,7 @@ export const actions = {
         .catch((err) => {
           return {
             success: false,
-            message: "Some problem occurred while deleting the user",
+            message: "Some problem occurred while deleting the employee",
           };
         });
     } catch (error: any) {
@@ -74,14 +76,14 @@ export const actions = {
 
     try {
       axios
-        .put(`https://cinemaapi.serveo.net/user/${data.get("id")}`, data)
+        .put(`https://cinemaapi.serveo.net/employee/${data.get("id")}`, data)
         .then(function (response) {
           console.log(response);
         })
         .catch(function (error) {
           return {
             success: false,
-            message: "Fail to add user",
+            message: "Fail to add employee",
           };
         });
     } catch (error: any) {
@@ -92,7 +94,7 @@ export const actions = {
     }
     return {
       success: true,
-      message: "Added user successfully",
+      message: "Added employee successfully",
     };
   },
 } satisfies Actions;

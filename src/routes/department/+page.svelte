@@ -55,6 +55,7 @@
     };
     iName = 0;
     iDescription = 0;
+    txtDescription = "";
   };
 
   import type { SubmitFunction } from "./$types.js";

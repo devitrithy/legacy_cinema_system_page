@@ -5,12 +5,14 @@
   import { page } from "$app/stores";
   import type { Snapshot } from "@sveltejs/kit";
   import axios from "axios";
+  import { onMount } from "svelte";
   import {
     Breadcrumb,
     BreadcrumbItem,
     Button,
     Fileupload,
     Helper,
+    Input,
     Label,
     Modal,
     Pagination,
@@ -32,8 +34,33 @@
     TrashBinOutline,
   } from "flowbite-svelte-icons";
 
+  let locations = [];
+  let departments = [];
+  let lo: any[] = [];
+  let de: any[] = [];
+  let selectLoc: any[];
+  let selectDep: any[];
+  onMount(async () => {
+    const loc = await fetch(`${endpoint}location`);
+    const dep = await fetch(`${endpoint}department`);
+    locations = await loc.json();
+    departments = await dep.json();
+
+    locations.locations.forEach((l) => {
+      lo.push({
+        value: l.location_id,
+        name: l.location_name,
+      });
+    });
+    departments.departments.forEach((l) => {
+      de.push({
+        value: l.department_id,
+        name: l.department_name,
+      });
+    });
+  });
+
   export let data;
-  export let form;
   let endpoint = "https://cinemaapi.serveo.net/";
   let popupModal = false;
   let ids: any;
@@ -45,6 +72,7 @@
   let iEmail = 0;
   let iUsername = 0;
   let iPassword = 0;
+  let iSalary = 0;
   let iConfirmPassword = 0;
   let iPhoneNumber = 0;
   let selectedGen;
@@ -60,6 +88,7 @@
     console.log(ids);
   };
   let files: any, fileInput: Fileupload;
+  let iHireDate = 0;
   let formInput = {
     name: "",
     gender: "",
@@ -71,7 +100,9 @@
     address: "",
     role: "",
     phone_number: "",
+    salary: 0,
   };
+  let date = new Date().toISOString().slice(0, 10);
   let resetValue = () => {
     formInput = {
       name: "",
@@ -84,19 +115,24 @@
       address: "",
       role: "",
       phone_number: "",
+      salary: 0,
     };
     iName = 0;
     iAge = 0;
     iEmail = 0;
+    iSalary = 0;
     iUsername = 0;
     iPassword = 0;
     iConfirmPassword = 0;
     iPhoneNumber = 0;
+    iHireDate = 0;
     address = "";
+    date = new Date().toISOString().slice(0, 10);
   };
 
   import type { SubmitFunction } from "./$types.js";
   import TextField from "$lib/ui/textField.svelte";
+  import moment from "moment";
   let formModal = false;
   export const snapshot: Snapshot = {
     capture: () => formInput,
@@ -114,7 +150,7 @@
     count -= 1;
   }
   for (let i = 1; i <= count; i++) {
-    pages.push({ name: i, href: `/user?page=${i}` });
+    pages.push({ name: i, href: `/employee?page=${i}` });
   }
 
   $: {
@@ -139,7 +175,7 @@
   let previous = () => {
     p -= 1;
     if (p >= 1) {
-      goto(`/user?page=${p}`);
+      goto(`/employee?page=${p}`);
     } else {
       p += 1;
     }
@@ -147,10 +183,10 @@
   let next = () => {
     p += 1;
     if (activeUrl === null) {
-      goto(`/user?page=2`);
+      goto(`/employee?page=2`);
     }
     if (p <= pages.length) {
-      goto(`/user?page=${p}`);
+      goto(`/employee?page=${p}`);
     } else {
       p -= 1;
     }
@@ -161,20 +197,23 @@
     resetValue();
     ids = id;
     edit = true;
-    const editData = await axios.get(endpoint + "user/" + id);
+    const editData = await axios.get(endpoint + "employee/" + id);
     let d = editData.data.user[0];
     console.log(d);
     if (editData) {
-      formInput.name = d.name;
-      formInput.gender = d.gender;
-      formInput.age = d.age;
-      formInput.email = d.email;
-      formInput.username = d.username;
-      formInput.password = d.password;
-      formInput.confirm_password = d.password;
-      address = d.address;
-      formInput.phone_number = d.phone_number;
-      selectedGen = d.gender;
+      formInput.name = d.users.name;
+      formInput.gender = d.users.gender;
+      formInput.salary = d.salary;
+      formInput.age = d.users.age;
+      formInput.email = d.users.email;
+      formInput.username = d.users.username;
+      formInput.password = d.users.password;
+      formInput.confirm_password = d.users.password;
+      address = d.users.address;
+      formInput.phone_number = d.users.phone_number;
+      selectedGen = d.users.gender;
+      selectDep = d.departments.department_id;
+      selectLoc = d.locations.location_id;
 
       formModal = true;
     }
@@ -196,6 +235,7 @@
       username,
       phone_number,
       address,
+      salary,
     } = Object.fromEntries(data);
     loading = true;
     console.log(name);
@@ -307,16 +347,16 @@
 
 <main class=" z-10 mt-32 container mx-auto">
   <h1 class="text-black dark:text-white text-2xl m-4">
-    {$page.url.pathname === "/user" ? "User" : "Add User"}
+    {$page.url.pathname === "/employee" ? "Employee" : "Add Employee"}
   </h1>
   <div class="m-4 flex justify-between items-center">
     <Breadcrumb aria-label="Default breadcrumb example">
       <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
-      <BreadcrumbItem href="/user">Users</BreadcrumbItem>
+      <BreadcrumbItem href="/employee">Employees</BreadcrumbItem>
     </Breadcrumb>
 
     <Button on:click={addMovie} outline pill
-      ><span class="mr-5">Add User</span><PlusOutline />
+      ><span class="mr-5">Add Employee</span><PlusOutline />
     </Button>
   </div>
   {#if data.data.count > 0}
@@ -324,13 +364,12 @@
       <TableHead>
         <TableHeadCell>Profile</TableHeadCell>
         <TableHeadCell>Name</TableHeadCell>
-        <TableHeadCell>Age</TableHeadCell>
-        <TableHeadCell>Email</TableHeadCell>
         <TableHeadCell>Gender</TableHeadCell>
-        <TableHeadCell>Username</TableHeadCell>
         <TableHeadCell>Phone Number</TableHeadCell>
-        <TableHeadCell>Address</TableHeadCell>
-        <TableHeadCell>Role</TableHeadCell>
+        <TableHeadCell>Salary</TableHeadCell>
+        <TableHeadCell>Hire Date</TableHeadCell>
+        <TableHeadCell>Department</TableHeadCell>
+        <TableHeadCell>Location</TableHeadCell>
         <TableHeadCell>Action</TableHeadCell>
       </TableHead>
       <TableBody tableBodyClass="divide-y">
@@ -342,41 +381,38 @@
                 width="50"
                 src={endpoint +
                   "thumbnail/" +
-                  user.profile_picture.substring(8) +
+                  user.users.profile_picture.substring(8) +
                   "?w=50&h=50"}
                 alt=""
               /></TableBodyCell
             >
-            <TableBodyCell>{user.name}</TableBodyCell>
-            <TableBodyCell>${user.age}</TableBodyCell>
+            <TableBodyCell>{user.users.name}</TableBodyCell>
             <TableBodyCell
-              >{user.email.length > 50
-                ? user.email.substring(0, 50) + "..."
-                : user.email}</TableBodyCell
-            >
-            <TableBodyCell
-              >{user.gender === "o"
+              >{user.users.gender === "o"
                 ? "Other"
-                : user.gender === "m"
+                : user.users.gender === "m"
                 ? "Male"
                 : "Female"}</TableBodyCell
             >
-            <TableBodyCell>{user.username}</TableBodyCell>
-            <TableBodyCell>{user.phone_number}</TableBodyCell>
-            <TableBodyCell>{user.address}</TableBodyCell>
-            <TableBodyCell
-              >{user.role === 0 ? "Customer" : "Employee"}</TableBodyCell
-            >
+            <TableBodyCell>{user.users.phone_number}</TableBodyCell>
+            <TableBodyCell>${user.salary}</TableBodyCell>
+            <TableBodyCell>
+              {moment(user.hire_date, ["YYYY-MM-DD", "DD-MM-YYYY"]).format(
+                "DD MMMM YYYY"
+              )}
+            </TableBodyCell>
+            <TableBodyCell>{user.departments.department_name}</TableBodyCell>
+            <TableBodyCell>{user.locations.location_name}</TableBodyCell>
             <TableBodyCell tdClass="w-40">
               <div class="flex gap-5">
-                <a href="/user/{user.user_id}"><EyeOutline /></a>
-                <button on:click={() => editForm(user.user_id)}
+                <a href="/employee/{user.employee_id}"><EyeOutline /></a>
+                <button on:click={() => editForm(user.employee_id)}
                   ><EditOutline /></button
                 >
                 <button
                   type="submit"
                   on:click={() => {
-                    deleteModal(user.user_id);
+                    deleteModal(user.employee_id);
                   }}><TrashBinOutline /></button
                 >
               </div>
@@ -386,7 +422,9 @@
       </TableBody>
     </Table>
   {:else}
-    <p class="text-2xl text-black dark:text-white">No User's availble yet!</p>
+    <p class="text-2xl text-black dark:text-white">
+      No Employee's availble yet!
+    </p>
   {/if}
   {#if data.data.count > 5}
     <div class="flex justify-center items-center mt-5">
@@ -407,7 +445,7 @@
     {/if}
 
     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-      {edit ? "Edit" : "Add"} User
+      {edit ? "Edit" : "Add"} Employee
     </h3>
     <div class="grid gap-6 mb-6 md:grid-cols-2">
       <TextField
@@ -438,6 +476,40 @@
       rows="2"
       name="address"
     />
+    <div class="grid gap-6 mb-6 md:grid-cols-2">
+      <Label
+        >Location
+        <Select class="mt-2" items={lo} bind:value={selectLoc} />
+      </Label>
+      <Label
+        >Department
+        <Select class="mt-2" items={de} bind:value={selectDep} />
+      </Label>
+      <input type="hidden" name="location_id" bind:value={selectLoc} />
+      <input bind:value={selectDep} type="hidden" name="department_id" />
+    </div>
+    <div class="grid gap-6 mb-6 md:grid-cols-2">
+      <TextField
+        fieldName="Salary"
+        name="salary"
+        value={formInput.salary}
+        type="number"
+        iFieldName={iSalary}
+        holder="Salary..."
+      />
+      <div>
+        <Label class="block mb-2">Hire Date</Label>
+        <Input
+          label="Hire Date"
+          id="date"
+          name="hire_date"
+          required
+          bind:value={date}
+          type="date"
+        />
+      </div>
+    </div>
+
     <div class="grid gap-6 mb-6 md:grid-cols-2">
       <TextField
         fieldName="Email"
