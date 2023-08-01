@@ -4,14 +4,12 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ url }) => {
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("https://cinemaapi.serveo.net/employee");
+  const count = await axios.get("http://localhost:3000/employee");
 
   if (page > count.data.count / 5 + 1) {
     throw redirect(302, "/employee");
   }
-  const data = await fetch(
-    `https://cinemaapi.serveo.net/employee?page=${page}`
-  );
+  const data = await fetch(`http://localhost:3000/employee?page=${page}`);
   const res = data.json();
   return {
     data: res,
@@ -24,7 +22,7 @@ export const actions = {
 
     try {
       axios
-        .post("https://cinemaapi.serveo.net/employee", data)
+        .post("http://localhost:3000/employee", data)
         .then(function (response) {
           console.log(response);
         })
@@ -51,7 +49,7 @@ export const actions = {
 
     try {
       axios
-        .delete("https://cinemaapi.serveo.net/employee/" + data.get("id"))
+        .delete("http://localhost:3000/employee/" + data.get("id"))
         .then((response) => {
           return {
             success: true,
@@ -76,7 +74,7 @@ export const actions = {
 
     try {
       axios
-        .put(`https://cinemaapi.serveo.net/employee/${data.get("id")}`, data)
+        .put(`http://localhost:3000/employee/${data.get("id")}`, data)
         .then(function (response) {
           console.log(response);
         })

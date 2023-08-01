@@ -61,7 +61,7 @@
   });
 
   export let data;
-  let endpoint = "https://cinemaapi.serveo.net/";
+  let endpoint = "http://localhost:3000/";
   let popupModal = false;
   let ids: any;
   let edit = false;
@@ -69,6 +69,8 @@
   let iName = 0;
   let address = "";
   let iAge = 0;
+  let iDepartment = 0;
+  let iLocation = 0;
   let iEmail = 0;
   let iUsername = 0;
   let iPassword = 0;
@@ -88,10 +90,8 @@
     console.log(ids);
   };
   let files: any, fileInput: Fileupload;
-  let iHireDate = 0;
   let formInput = {
     name: "",
-    gender: "",
     age: "",
     email: "",
     username: "",
@@ -106,7 +106,6 @@
   let resetValue = () => {
     formInput = {
       name: "",
-      gender: "",
       age: "",
       email: "",
       username: "",
@@ -124,8 +123,9 @@
     iUsername = 0;
     iPassword = 0;
     iConfirmPassword = 0;
+    iDepartment = 0;
+    iLocation = 0;
     iPhoneNumber = 0;
-    iHireDate = 0;
     address = "";
     date = new Date().toISOString().slice(0, 10);
   };
@@ -193,16 +193,19 @@
   };
 
   //Edit Form
+  let emp_id;
   let editForm = async (id: string) => {
     resetValue();
-    ids = id;
     edit = true;
     const editData = await axios.get(endpoint + "employee/" + id);
-    let d = editData.data.user[0];
-    console.log(d);
+    let d = editData.data.movie[0];
+    ids = d.users.user_id;
+    emp_id = d.employee_id;
+
     if (editData) {
+      console.log(d);
       formInput.name = d.users.name;
-      formInput.gender = d.users.gender;
+      selectedGen = d.users.gender;
       formInput.salary = d.salary;
       formInput.age = d.users.age;
       formInput.email = d.users.email;
@@ -212,8 +215,8 @@
       address = d.users.address;
       formInput.phone_number = d.users.phone_number;
       selectedGen = d.users.gender;
-      selectDep = d.departments.department_id;
-      selectLoc = d.locations.location_id;
+      selectDep = d.department_id;
+      selectLoc = d.location_id;
 
       formModal = true;
     }
@@ -236,6 +239,8 @@
       phone_number,
       address,
       salary,
+      department_id,
+      location_id,
     } = Object.fromEntries(data);
     loading = true;
     console.log(name);
@@ -299,24 +304,38 @@
         cancel();
       }
     }
-    return async ({ result, update }) => {
+    if (department_id == "") {
+      iDepartment = 1;
       loading = false;
+      cancel();
+    } else {
+      iDepartment = 2;
+    }
+    if (location_id == "") {
+      iLocation = 1;
+      loading = false;
+      cancel();
+    } else {
+      iLocation = 2;
+    }
+    return async ({ result, update }) => {
       switch (result.type) {
         case "success":
-          resetValue();
-          toast.success("Successfully added the user.", {
+          await update();
+          loading = false;
+          formModal = false;
+          toast.success("Successfully added the employee.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
-          formModal = false;
-          await update();
+          resetValue();
           break;
         case "error":
-          toast.error("Error while added the user.", {
+          toast.error("Error while added the employee.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           break;
         case "failure":
-          toast.error("Failed added the user.", {
+          toast.error("Failed added the employee.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           break;
@@ -405,14 +424,14 @@
             <TableBodyCell>{user.locations.location_name}</TableBodyCell>
             <TableBodyCell tdClass="w-40">
               <div class="flex gap-5">
-                <a href="/employee/{user.employee_id}"><EyeOutline /></a>
+                <a href="/employee/{user.users.user_id}"><EyeOutline /></a>
                 <button on:click={() => editForm(user.employee_id)}
                   ><EditOutline /></button
                 >
                 <button
                   type="submit"
                   on:click={() => {
-                    deleteModal(user.employee_id);
+                    deleteModal(user.users.user_id);
                   }}><TrashBinOutline /></button
                 >
               </div>
@@ -468,7 +487,7 @@
       <Select class="mt-2" items={gender} bind:value={selectedGen} />
     </Label>
     <input type="hidden" name="gender" bind:value={selectedGen} />
-    <Label for="textarea-id" class="mb-2">Your message</Label>
+    <Label for="textarea-id" class="mb-2">Address</Label>
     <Textarea
       id="textarea-id"
       placeholder="Address..."
@@ -528,6 +547,7 @@
         holder="Phone Number..."
       />
     </div>
+    <input type="hidden" name="employee_id" bind:value={emp_id} />
     <TextField
       fieldName="Username"
       name="username"

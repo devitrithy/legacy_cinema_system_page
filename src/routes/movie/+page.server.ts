@@ -4,12 +4,12 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ url }) => {
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("https://cinemaapi.serveo.net/movie");
+  const count = await axios.get("http://localhost:3000/movie");
 
   if (page > count.data.count / 5 + 1) {
     throw redirect(302, "/movie");
   }
-  const data = await fetch(`https://cinemaapi.serveo.net/movie?page=${page}`);
+  const data = await fetch(`http://localhost:3000/movie?page=${page}`);
   const res = data.json();
   return {
     data: res,
@@ -22,7 +22,7 @@ export const actions = {
 
     try {
       axios
-        .post("https://cinemaapi.serveo.net/movie", data)
+        .post("http://localhost:3000/movie", data)
         .then(function (response) {
           console.log(response);
         })
@@ -49,7 +49,7 @@ export const actions = {
 
     try {
       axios
-        .delete("https://cinemaapi.serveo.net/movie/" + data.get("id"))
+        .delete("http://localhost:3000/movie/" + data.get("id"))
         .then((response) => {
           return {
             success: true,
@@ -74,7 +74,7 @@ export const actions = {
 
     try {
       axios
-        .put(`https://cinemaapi.serveo.net/movie/${data.get("id")}`, data)
+        .put(`http://localhost:3000/movie/${data.get("id")}`, data)
         .then(function (response) {
           console.log(response);
         })

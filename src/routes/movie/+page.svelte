@@ -36,7 +36,7 @@
 
   export let data;
   export let form;
-  let endpoint = "https://cinemaapi.serveo.net/";
+  let endpoint = "http://localhost:3000/";
   let popupModal = false;
   let ids: any;
   let edit = false;
@@ -218,15 +218,15 @@
       iGenre = 2;
     }
     return async ({ result, update }) => {
-      loading = false;
       switch (result.type) {
         case "success":
-          resetValue();
+          await update();
+          loading = false;
+          formModal = false;
           toast.success("Successfully added the movie.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
-          formModal = false;
-          await update();
+          resetValue();
           break;
         case "error":
           toast.error("Error while added the movie.", {
@@ -250,11 +250,11 @@
       switch (result.type) {
         case "success":
           await update();
+          loading = false;
+          popupModal = false;
           toast.success("Successfully remove the movie.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
-          loading = false;
-          popupModal = false;
           break;
         default:
           break;

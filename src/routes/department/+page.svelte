@@ -31,7 +31,7 @@
 
   export let data;
   export let form;
-  let endpoint = "https://cinemaapi.serveo.net/";
+  let endpoint = "http://localhost:3000/";
   let popupModal = false;
   let ids: any;
   let edit = false;
@@ -158,15 +158,15 @@
       iDescription = 2;
     }
     return async ({ result, update }) => {
-      loading = false;
       switch (result.type) {
         case "success":
-          resetValue();
+          await update();
+          loading = false;
+          formModal = false;
           toast.success("Successfully added the department.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
-          formModal = false;
-          await update();
+          resetValue();
           break;
         case "error":
           toast.error("Error while added the department.", {

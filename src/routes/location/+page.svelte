@@ -36,7 +36,7 @@
 
   export let data;
   export let form;
-  let endpoint = "https://cinemaapi.serveo.net/thumbnail/";
+  let endpoint = "http://localhost:3000/";
   let popupModal = false;
   let ids: any;
   let edit = false;
@@ -236,7 +236,10 @@
             <TableBodyCell
               ><img
                 width="50"
-                src={endpoint + location.picture.substring(8) + "?w=50&h=50"}
+                src={endpoint +
+                  "thumbnail/" +
+                  location.picture.substring(8) +
+                  "?w=50&h=50"}
                 alt=""
               /></TableBodyCell
             >

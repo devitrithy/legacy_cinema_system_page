@@ -10,12 +10,12 @@
 
   export let data;
   let movie = data.data.movie[0];
-  let endpoint = "https://cinemaapi.serveo.net/thumbnail/";
+  let endpoint = "http://localhost:3000/thumbnail/";
 </script>
 
 <main class="m-5 container text-black dark:text-white mt-32 mx-auto">
   <h1 class="text-black dark:text-white text-2xl m-4">
-    {$page.url.pathname === "/movie" ? "Movie" : "Add Movie"}
+    {$page.url.pathname === "/movie" ? "Movie" : "Movie Detail"}
   </h1>
   <div class="m-4 flex justify-between items-center">
     <Breadcrumb aria-label="Default breadcrumb example">

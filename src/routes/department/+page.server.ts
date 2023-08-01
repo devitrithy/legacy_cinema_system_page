@@ -4,14 +4,12 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ url }) => {
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("https://cinemaapi.serveo.net/department");
+  const count = await axios.get("http://localhost:3000/department");
 
   if (page > count.data.count / 5 + 1) {
     throw redirect(302, "/department");
   }
-  const data = await fetch(
-    `https://cinemaapi.serveo.net/department?page=${page}`
-  );
+  const data = await fetch(`http://localhost:3000/department?page=${page}`);
   const res = data.json();
   return {
     data: res,
@@ -24,7 +22,7 @@ export const actions = {
 
     try {
       axios
-        .post("https://cinemaapi.serveo.net/department", {
+        .post("http://localhost:3000/department", {
           department_name: data.get("department_name"),
           description: data.get("description"),
         })
@@ -54,7 +52,7 @@ export const actions = {
 
     try {
       axios
-        .delete("https://cinemaapi.serveo.net/department/" + data.get("id"))
+        .delete("http://localhost:3000/department/" + data.get("id"))
         .then((response) => {
           return {
             success: true,
@@ -79,7 +77,7 @@ export const actions = {
 
     try {
       axios
-        .put(`https://cinemaapi.serveo.net/department/${data.get("id")}`, {
+        .put(`http://localhost:3000/department/${data.get("id")}`, {
           department_name: data.get("department_name"),
           description: data.get("description"),
         })
