@@ -5,15 +5,11 @@
   import { page } from "$app/stores";
   import type { Snapshot } from "@sveltejs/kit";
   import axios from "axios";
+  import { onMount } from "svelte";
   import {
     Breadcrumb,
     BreadcrumbItem,
     Button,
-    ButtonGroup,
-    Fileupload,
-    Helper,
-    Input,
-    InputAddon,
     Label,
     Modal,
     Pagination,
@@ -25,7 +21,6 @@
     TableHead,
     TableHeadCell,
     Textarea,
-    Toast,
   } from "flowbite-svelte";
   import {
     EditOutline,
@@ -41,12 +36,8 @@
   let ids: any;
   let edit = false;
 
-  let iTitle = 0;
+  let iName = 0;
   let iDescription = 0;
-  let iTrailer = 0;
-  let iTime = 0;
-  let iGenre = 0;
-  let iImportCost = 0;
   let loading = false;
 
   const deleteModal = (id: any) => {
@@ -54,33 +45,20 @@
     ids = id;
     console.log(ids);
   };
-  let files: any, fileInput: Fileupload;
+  let txtDescription = "";
   let formInput = {
-    title: "",
-    genre: "",
-    description: "",
-    trailer: "",
-    time: "",
-    import_cost: "",
+    name: "",
   };
   let resetValue = () => {
     formInput = {
-      genre: "",
-      title: "",
-      description: "",
-      trailer: "",
-      time: "",
-      import_cost: "",
+      name: "",
     };
-    iTime = 0;
-    iTitle = 0;
+    iName = 0;
     iDescription = 0;
-    iTrailer = 0;
-    iGenre = 0;
-    iImportCost = 0;
   };
 
   import type { SubmitFunction } from "./$types.js";
+  import TextField from "$lib/ui/textField.svelte";
   let formModal = false;
   export const snapshot: Snapshot = {
     capture: () => formInput,
@@ -98,7 +76,7 @@
     count -= 1;
   }
   for (let i = 1; i <= count; i++) {
-    pages.push({ name: i, href: `/movie?page=${i}` });
+    pages.push({ name: i, href: `/department?page=${i}` });
   }
 
   $: {
@@ -123,7 +101,7 @@
   let previous = () => {
     p -= 1;
     if (p >= 1) {
-      goto(`/movie?page=${p}`);
+      goto(`/department?page=${p}`);
     } else {
       p += 1;
     }
@@ -131,10 +109,10 @@
   let next = () => {
     p += 1;
     if (activeUrl === null) {
-      goto(`/movie?page=2`);
+      goto(`/department?page=2`);
     }
     if (p <= pages.length) {
-      goto(`/movie?page=${p}`);
+      goto(`/department?page=${p}`);
     } else {
       p -= 1;
     }
@@ -142,22 +120,14 @@
 
   //Edit Form
   let editForm = async (id: string) => {
-    iTime = 0;
-    iTitle = 0;
-    iDescription = 0;
-    iTrailer = 0;
-    iTime = 0;
-    iGenre = 0;
+    iName = 0;
     ids = id;
     edit = true;
-    const editData = await axios.get(endpoint + "movie/" + id);
-    let d = editData.data.movie[0];
+    const editData = await axios.get(endpoint + "department/" + id);
+    let d = editData.data.department[0];
     if (editData) {
-      formInput.title = d.title;
-      formInput.genre = d.genre;
-      formInput.description = d.description;
-      formInput.time = d.time;
-      formInput.trailer = d.trailer;
+      formInput.name = d.department_name;
+      txtDescription = d.description;
 
       formModal = true;
     }
@@ -170,15 +140,14 @@
     formModal = true;
   };
   let formSumbit: SubmitFunction = ({ form, data, action, cancel }) => {
-    const { title, description, time, trailer, genre, import_cost } =
-      Object.fromEntries(data);
+    const { department_name, description } = Object.fromEntries(data);
     loading = true;
-    if (title.length < 1) {
-      iTitle = 1;
+    if (department_name.length < 1) {
+      iName = 1;
       loading = false;
       cancel();
     } else {
-      iTitle = 2;
+      iName = 2;
     }
     if (description.length < 1) {
       iDescription = 1;
@@ -187,52 +156,24 @@
     } else {
       iDescription = 2;
     }
-    if (import_cost.length < 1) {
-      iImportCost = 1;
-      loading = false;
-      cancel();
-    } else {
-      iImportCost = 2;
-    }
-    if (time.length < 1) {
-      iTime = 1;
-      loading = false;
-      cancel();
-    } else {
-      iTime = 2;
-    }
-    if (trailer.length < 1) {
-      iTrailer = 1;
-      loading = false;
-      cancel();
-    } else {
-      iTrailer = 2;
-    }
-    if (genre.length < 1) {
-      loading = false;
-      iGenre = 1;
-      cancel();
-    } else {
-      iGenre = 2;
-    }
     return async ({ result, update }) => {
       loading = false;
       switch (result.type) {
         case "success":
           resetValue();
-          toast.success("Successfully added the movie.", {
+          toast.success("Successfully added the department.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           formModal = false;
           await update();
           break;
         case "error":
-          toast.error("Error while added the movie.", {
+          toast.error("Error while added the department.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           break;
         case "failure":
-          toast.error("Failed added the movie.", {
+          toast.error("Failed added the department.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           break;
@@ -249,7 +190,7 @@
       switch (result.type) {
         case "success":
           await update();
-          toast.success("Successfully remove the movie.", {
+          toast.success("Successfully remove the department.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           popupModal = false;
@@ -263,60 +204,42 @@
 
 <main class=" z-10 mt-32 container mx-auto">
   <h1 class="text-black dark:text-white text-2xl m-4">
-    {$page.url.pathname === "/movie" ? "Movie" : "Add Movie"}
+    {$page.url.pathname === "/department" ? "Department" : "Add Department"}
   </h1>
   <div class="m-4 flex justify-between items-center">
     <Breadcrumb aria-label="Default breadcrumb example">
       <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
-      <BreadcrumbItem href="/movie">Movie</BreadcrumbItem>
+      <BreadcrumbItem href="/department">Department</BreadcrumbItem>
     </Breadcrumb>
 
     <Button on:click={addMovie} outline pill
-      ><span class="mr-5">Add Movie</span><PlusOutline />
+      ><span class="mr-5">Add Department</span><PlusOutline />
     </Button>
   </div>
   {#if data.data.count > 0}
     <Table divClass="z-10 m-5 overflow-x-auto " hoverable={true}>
       <TableHead>
-        <TableHeadCell>Poster</TableHeadCell>
-        <TableHeadCell>Title</TableHeadCell>
-        <TableHeadCell>Description</TableHeadCell>
-        <TableHeadCell>Import Cost</TableHeadCell>
-        <TableHeadCell>Genre</TableHeadCell>
-        <TableHeadCell>Time</TableHeadCell>
-        <TableHeadCell>Trailer</TableHeadCell>
+        <TableHeadCell>Department Name</TableHeadCell>
+        <TableHeadCell>Detail</TableHeadCell>
         <TableHeadCell>Action</TableHeadCell>
       </TableHead>
       <TableBody tableBodyClass="divide-y">
-        {#each data.data.movies as movie}
+        {#each data.data.departments as department}
           <TableBodyRow>
-            <TableBodyCell
-              ><img
-                width="50"
-                src={endpoint + movie.poster}
-                alt=""
-              /></TableBodyCell
-            >
-            <TableBodyCell>{movie.title}</TableBodyCell>
-            <TableBodyCell
-              >{movie.description.length > 50
-                ? movie.description.substring(0, 50) + "..."
-                : movie.description}</TableBodyCell
-            >
-            <TableBodyCell>${movie.import_cost}</TableBodyCell>
-            <TableBodyCell>{movie.genre}</TableBodyCell>
-            <TableBodyCell>{movie.time}</TableBodyCell>
-            <TableBodyCell>{movie.trailer}</TableBodyCell>
+            <TableBodyCell>{department.department_name}</TableBodyCell>
+            <TableBodyCell>{department.description}</TableBodyCell>
             <TableBodyCell tdClass="w-40">
               <div class="flex gap-5">
-                <a href="/movie/{movie.movie_id}"><EyeOutline /></a>
-                <button on:click={() => editForm(movie.movie_id)}
+                <a href="/department/{department.department_id}"
+                  ><EyeOutline /></a
+                >
+                <button on:click={() => editForm(department.department_id)}
                   ><EditOutline /></button
                 >
                 <button
                   type="submit"
                   on:click={() => {
-                    deleteModal(movie.movie_id);
+                    deleteModal(department.department_id);
                   }}><TrashBinOutline /></button
                 >
               </div>
@@ -326,7 +249,9 @@
       </TableBody>
     </Table>
   {:else}
-    <p class="text-2xl text-black dark:text-white">No Movie's availble yet!</p>
+    <p class="text-2xl text-black dark:text-white">
+      No Department's availble yet!
+    </p>
   {/if}
   {#if data.data.count > 5}
     <div class="flex justify-center items-center mt-5">
@@ -347,142 +272,23 @@
     {/if}
 
     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-      {edit ? "Edit" : "Add"} Movie
+      {edit ? "Edit" : "Add"} Department
     </h3>
-    <div class="grid gap-6 mb-6 md:grid-cols-2">
-      <Label class="space-y-2">
-        <span>Title</span>
-        <Input
-          color={iTitle == 0 ? "base" : iTitle == 1 ? "red" : "green"}
-          type="text"
-          name="title"
-          bind:value={formInput.title}
-          placeholder="John Wick 4"
-        />
-        {#if iTitle == 1}
-          <Helper class="mt-2" color="red"
-            ><span class="font-medium">Invalid!</span> Title is required!</Helper
-          >
-        {:else if iTitle === 2}
-          <Helper class="mt-2" color="green"
-            ><span class="font-medium">Well done!</span> Title is valid.</Helper
-          >
-        {/if}
-      </Label>
-      <Label class="space-y-2">
-        <span>Genre</span>
-        <Input
-          color={iGenre == 0 ? "base" : iGenre == 1 ? "red" : "green"}
-          type="text"
-          name="genre"
-          bind:value={formInput.genre}
-          placeholder="Action"
-        />
-        {#if iGenre == 1}
-          <Helper class="mt-2" color="red"
-            ><span class="font-medium">Invalid!</span> Genre is required!</Helper
-          >
-        {:else if iGenre === 2}
-          <Helper class="mt-2" color="green"
-            ><span class="font-medium">Well done!</span> Genre is valid.</Helper
-          >
-        {/if}
-      </Label>
-    </div>
-    <Label class="space-y-2">
-      <span>Description</span>
-      <Textarea
-        type="text"
-        name="description"
-        bind:value={formInput.description}
-        placeholder="John Wick 4 is an action movie..."
-      />
-      {#if iDescription == 1}
-        <Helper class="mt-2" color="red"
-          ><span class="font-medium">Invalid!</span> Description is required!</Helper
-        >
-      {:else if iDescription === 2}
-        <Helper class="mt-2" color="green"
-          ><span class="font-medium">Well done!</span> Description is valid.</Helper
-        >
-      {/if}
-    </Label>
-    <Label class="space-y-2">
-      <span>Import Cost</span>
-      <ButtonGroup class="w-full">
-        <InputAddon>$</InputAddon>
-        <Input
-          color={iImportCost == 0 ? "base" : iImportCost == 1 ? "red" : "green"}
-          type="number"
-          name="import_cost"
-          bind:value={formInput.import_cost}
-          placeholder="100000"
-        />
-      </ButtonGroup>
-      {#if iImportCost == 1}
-        <Helper class="mt-2" color="red"
-          ><span class="font-medium">Invalid!</span> Import Cost is required!</Helper
-        >
-      {:else if iImportCost === 2}
-        <Helper class="mt-2" color="green"
-          ><span class="font-medium">Well done!</span> Import Cost is valid.</Helper
-        >
-      {/if}
-    </Label>
-    <div class="grid gap-6 mb-6 md:grid-cols-2">
-      <Label class="space-y-2">
-        <span>Time</span>
-        <Input
-          color={iTime == 0 ? "base" : iTime == 1 ? "red" : "green"}
-          type="text"
-          name="time"
-          bind:value={formInput.time}
-          placeholder="2h40min"
-        />
-        {#if iTime == 1}
-          <Helper class="mt-2" color="red"
-            ><span class="font-medium">Invalid!</span> Time is required!</Helper
-          >
-        {:else if iTime === 2}
-          <Helper class="mt-2" color="green"
-            ><span class="font-medium">Well done!</span> Time is valid.</Helper
-          >
-        {/if}
-      </Label>
-      <Label class="space-y-2">
-        <span>Trailer Link</span>
-        <Input
-          color={iTrailer == 0 ? "base" : iTrailer == 1 ? "red" : "green"}
-          type="text"
-          name="trailer"
-          bind:value={formInput.trailer}
-          placeholder="Trailer video link..."
-        />
-        {#if iTrailer == 1}
-          <Helper class="mt-2" color="red"
-            ><span class="font-medium">Invalid!</span> Trailer is required!</Helper
-          >
-        {:else if iTrailer === 2}
-          <Helper class="mt-2" color="green"
-            ><span class="font-medium">Well done!</span> Trailer is valid.</Helper
-          >
-        {/if}
-      </Label>
-    </div>
-    <Label for="with_helper" class="pb-2">Upload file</Label>
-    <Fileupload
-      bind:files
-      bind:this={fileInput}
-      id="with_helper"
-      class="mb-2"
-      name="poster"
+    <TextField
+      fieldName="Department Name"
+      value={formInput.name}
+      name="department_name"
+      iFieldName={iName}
+      holder="Department Name..."
     />
-    {#if files?.[0]}
-      <p>
-        {files[0].name}
-      </p>
-    {/if}
-    <Helper>SVG, PNG, JPG or GIF (MAX. 800x400px).</Helper>
+    <Label for="textarea-id" class="mb-2">Description</Label>
+    <Textarea
+      id="textarea-id"
+      placeholder="Description..."
+      bind:value={txtDescription}
+      rows="2"
+      name="description"
+    />
     <div class="flex gap-10">
       <Button type="button" color="red" on:click={resetValue} class="w-full"
         >Reset</Button
@@ -516,7 +322,7 @@
       >
     {/if}
     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-      Are you sure you want to delete this movie?
+      Are you sure you want to delete this department?
     </h3>
     <form action="?/delete" method="post" use:enhance={deleteMovie}>
       <Button type="submit" color="red" class="mr-2">Yes, I'm sure</Button>

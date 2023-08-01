@@ -4,12 +4,14 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ url }) => {
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("https://cinemaapi.serveo.net/movie");
+  const count = await axios.get("https://cinemaapi.serveo.net/department");
 
   if (page > count.data.count / 5 + 1) {
-    throw redirect(302, "/movie");
+    throw redirect(302, "/department");
   }
-  const data = await fetch(`https://cinemaapi.serveo.net/movie?page=${page}`);
+  const data = await fetch(
+    `https://cinemaapi.serveo.net/department?page=${page}`
+  );
   const res = data.json();
   return {
     data: res,
@@ -22,14 +24,17 @@ export const actions = {
 
     try {
       axios
-        .post("https://cinemaapi.serveo.net/movie", data)
+        .post("https://cinemaapi.serveo.net/department", {
+          department_name: data.get("department_name"),
+          description: data.get("description"),
+        })
         .then(function (response) {
           console.log(response);
         })
         .catch(function (error) {
           return {
             success: false,
-            message: "Fail to add movie",
+            message: "Fail to add department",
           };
         });
     } catch (error: any) {
@@ -40,7 +45,7 @@ export const actions = {
     }
     return {
       success: true,
-      message: "Added movie successfully",
+      message: "Added department successfully",
     };
   },
 
@@ -49,7 +54,7 @@ export const actions = {
 
     try {
       axios
-        .delete("https://cinemaapi.serveo.net/movie/" + data.get("id"))
+        .delete("https://cinemaapi.serveo.net/department/" + data.get("id"))
         .then((response) => {
           return {
             success: true,
@@ -59,7 +64,7 @@ export const actions = {
         .catch((err) => {
           return {
             success: false,
-            message: "Some problem occurred while deleting the movie",
+            message: "Some problem occurred while deleting the department",
           };
         });
     } catch (error: any) {
@@ -74,14 +79,17 @@ export const actions = {
 
     try {
       axios
-        .put(`https://cinemaapi.serveo.net/movie/${data.get("id")}`, data)
+        .put(`https://cinemaapi.serveo.net/department/${data.get("id")}`, {
+          department_name: data.get("department_name"),
+          description: data.get("description"),
+        })
         .then(function (response) {
           console.log(response);
         })
         .catch(function (error) {
           return {
             success: false,
-            message: "Fail to add movie",
+            message: "Fail to add department",
           };
         });
     } catch (error: any) {
@@ -92,7 +100,7 @@ export const actions = {
     }
     return {
       success: true,
-      message: "Added movie successfully",
+      message: "Added department successfully",
     };
   },
 } satisfies Actions;

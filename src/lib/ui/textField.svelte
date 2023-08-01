@@ -1,18 +1,19 @@
 <script>
   import { Label, Helper, Input } from "flowbite-svelte";
 
-  export let fieldName = "Unknown";
-  export let value = "Unknown value";
+  export let fieldName = "";
+  export let value = "";
   export let iFieldName = 0;
-  export let holder = "Unknown placeholder";
-  export let name = "Unknown";
+  export let holder = "";
+  export let name = "";
+  export let type = "text";
 </script>
 
 <Label class="space-y-2">
   <span>{fieldName}</span>
   <Input
     color={iFieldName == 0 ? "base" : iFieldName == 1 ? "red" : "green"}
-    type="text"
+    {type}
     {name}
     bind:value
     placeholder={holder}

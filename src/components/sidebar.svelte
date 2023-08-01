@@ -128,10 +128,11 @@
           </svelte:fragment>
         </SidebarItem>
         <SidebarItem
-          label="Job"
+          label="Departments"
           {spanClass}
-          href="/job"
-          active={activeUrl === "/job" || activeUrl.substring(1, 6) === "job"}
+          href="/department"
+          active={activeUrl === "/department" ||
+            activeUrl.substring(1, 6) === "department"}
         >
           <svelte:fragment slot="icon">
             <UserSettingsOutline />

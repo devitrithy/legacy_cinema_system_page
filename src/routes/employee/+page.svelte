@@ -9,14 +9,13 @@
     Breadcrumb,
     BreadcrumbItem,
     Button,
-    ButtonGroup,
     Fileupload,
     Helper,
-    Input,
-    InputAddon,
     Label,
     Modal,
     Pagination,
+    Radio,
+    Select,
     Spinner,
     Table,
     TableBody,
@@ -25,7 +24,6 @@
     TableHead,
     TableHeadCell,
     Textarea,
-    Toast,
   } from "flowbite-svelte";
   import {
     EditOutline,
@@ -40,14 +38,21 @@
   let popupModal = false;
   let ids: any;
   let edit = false;
-
-  let iTitle = 0;
-  let iDescription = 0;
-  let iTrailer = 0;
-  let iTime = 0;
-  let iGenre = 0;
-  let iImportCost = 0;
   let loading = false;
+  let iName = 0;
+  let address = "";
+  let iAge = 0;
+  let iEmail = 0;
+  let iUsername = 0;
+  let iPassword = 0;
+  let iConfirmPassword = 0;
+  let iPhoneNumber = 0;
+  let selectedGen;
+  let gender = [
+    { value: "m", name: "Male" },
+    { value: "f", name: "Female" },
+    { value: "o", name: "Other" },
+  ];
 
   const deleteModal = (id: any) => {
     popupModal = true;
@@ -56,31 +61,42 @@
   };
   let files: any, fileInput: Fileupload;
   let formInput = {
-    title: "",
-    genre: "",
-    description: "",
-    trailer: "",
-    time: "",
-    import_cost: "",
+    name: "",
+    gender: "",
+    age: "",
+    email: "",
+    username: "",
+    password: "",
+    confirm_password: "",
+    address: "",
+    role: "",
+    phone_number: "",
   };
   let resetValue = () => {
     formInput = {
-      genre: "",
-      title: "",
-      description: "",
-      trailer: "",
-      time: "",
-      import_cost: "",
+      name: "",
+      gender: "",
+      age: "",
+      email: "",
+      username: "",
+      password: "",
+      confirm_password: "",
+      address: "",
+      role: "",
+      phone_number: "",
     };
-    iTime = 0;
-    iTitle = 0;
-    iDescription = 0;
-    iTrailer = 0;
-    iGenre = 0;
-    iImportCost = 0;
+    iName = 0;
+    iAge = 0;
+    iEmail = 0;
+    iUsername = 0;
+    iPassword = 0;
+    iConfirmPassword = 0;
+    iPhoneNumber = 0;
+    address = "";
   };
 
   import type { SubmitFunction } from "./$types.js";
+  import TextField from "$lib/ui/textField.svelte";
   let formModal = false;
   export const snapshot: Snapshot = {
     capture: () => formInput,
@@ -98,7 +114,7 @@
     count -= 1;
   }
   for (let i = 1; i <= count; i++) {
-    pages.push({ name: i, href: `/movie?page=${i}` });
+    pages.push({ name: i, href: `/user?page=${i}` });
   }
 
   $: {
@@ -123,7 +139,7 @@
   let previous = () => {
     p -= 1;
     if (p >= 1) {
-      goto(`/movie?page=${p}`);
+      goto(`/user?page=${p}`);
     } else {
       p += 1;
     }
@@ -131,10 +147,10 @@
   let next = () => {
     p += 1;
     if (activeUrl === null) {
-      goto(`/movie?page=2`);
+      goto(`/user?page=2`);
     }
     if (p <= pages.length) {
-      goto(`/movie?page=${p}`);
+      goto(`/user?page=${p}`);
     } else {
       p -= 1;
     }
@@ -142,22 +158,23 @@
 
   //Edit Form
   let editForm = async (id: string) => {
-    iTime = 0;
-    iTitle = 0;
-    iDescription = 0;
-    iTrailer = 0;
-    iTime = 0;
-    iGenre = 0;
+    resetValue();
     ids = id;
     edit = true;
-    const editData = await axios.get(endpoint + "movie/" + id);
-    let d = editData.data.movie[0];
+    const editData = await axios.get(endpoint + "user/" + id);
+    let d = editData.data.user[0];
+    console.log(d);
     if (editData) {
-      formInput.title = d.title;
-      formInput.genre = d.genre;
-      formInput.description = d.description;
-      formInput.time = d.time;
-      formInput.trailer = d.trailer;
+      formInput.name = d.name;
+      formInput.gender = d.gender;
+      formInput.age = d.age;
+      formInput.email = d.email;
+      formInput.username = d.username;
+      formInput.password = d.password;
+      formInput.confirm_password = d.password;
+      address = d.address;
+      formInput.phone_number = d.phone_number;
+      selectedGen = d.gender;
 
       formModal = true;
     }
@@ -170,69 +187,96 @@
     formModal = true;
   };
   let formSumbit: SubmitFunction = ({ form, data, action, cancel }) => {
-    const { title, description, time, trailer, genre, import_cost } =
-      Object.fromEntries(data);
+    const {
+      name,
+      age,
+      email,
+      password,
+      confirm_password,
+      username,
+      phone_number,
+      address,
+    } = Object.fromEntries(data);
     loading = true;
-    if (title.length < 1) {
-      iTitle = 1;
+    console.log(name);
+    if (name.length < 5) {
+      iName = 1;
       loading = false;
       cancel();
     } else {
-      iTitle = 2;
+      iName = 2;
     }
-    if (description.length < 1) {
-      iDescription = 1;
+    if (age.length < 1) {
+      iAge = 1;
       loading = false;
       cancel();
     } else {
-      iDescription = 2;
+      iAge = 2;
     }
-    if (import_cost.length < 1) {
-      iImportCost = 1;
+    if (email.length < 5) {
+      iEmail = 1;
       loading = false;
       cancel();
     } else {
-      iImportCost = 2;
+      iEmail = 2;
     }
-    if (time.length < 1) {
-      iTime = 1;
+    if (phone_number.length < 9) {
+      iPhoneNumber = 1;
       loading = false;
       cancel();
     } else {
-      iTime = 2;
+      iPhoneNumber = 2;
     }
-    if (trailer.length < 1) {
-      iTrailer = 1;
+    if (username.length < 1) {
+      iUsername = 1;
       loading = false;
       cancel();
     } else {
-      iTrailer = 2;
+      iUsername = 2;
     }
-    if (genre.length < 1) {
+    if (password.length < 5) {
+      iPassword = 1;
       loading = false;
-      iGenre = 1;
       cancel();
     } else {
-      iGenre = 2;
+      iPassword = 2;
+    }
+    if (confirm_password.length < 5) {
+      iConfirmPassword = 1;
+      loading = false;
+      cancel();
+    } else {
+      iConfirmPassword = 2;
+    }
+    if (confirm_password !== password) {
+      iConfirmPassword = 1;
+      loading = false;
+      cancel();
+    } else {
+      if (confirm_password.length > 1) {
+        iConfirmPassword = 2;
+      } else {
+        cancel();
+      }
     }
     return async ({ result, update }) => {
       loading = false;
       switch (result.type) {
         case "success":
           resetValue();
-          toast.success("Successfully added the movie.", {
+          toast.success("Successfully added the user.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           formModal = false;
           await update();
           break;
         case "error":
-          toast.error("Error while added the movie.", {
+          toast.error("Error while added the user.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           break;
         case "failure":
-          toast.error("Failed added the movie.", {
+          toast.error("Failed added the user.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           break;
@@ -249,7 +293,7 @@
       switch (result.type) {
         case "success":
           await update();
-          toast.success("Successfully remove the movie.", {
+          toast.success("Successfully remove the user.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           popupModal = false;
@@ -263,60 +307,76 @@
 
 <main class=" z-10 mt-32 container mx-auto">
   <h1 class="text-black dark:text-white text-2xl m-4">
-    {$page.url.pathname === "/movie" ? "Movie" : "Add Movie"}
+    {$page.url.pathname === "/user" ? "User" : "Add User"}
   </h1>
   <div class="m-4 flex justify-between items-center">
     <Breadcrumb aria-label="Default breadcrumb example">
       <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
-      <BreadcrumbItem href="/movie">Movie</BreadcrumbItem>
+      <BreadcrumbItem href="/user">Users</BreadcrumbItem>
     </Breadcrumb>
 
     <Button on:click={addMovie} outline pill
-      ><span class="mr-5">Add Movie</span><PlusOutline />
+      ><span class="mr-5">Add User</span><PlusOutline />
     </Button>
   </div>
   {#if data.data.count > 0}
     <Table divClass="z-10 m-5 overflow-x-auto " hoverable={true}>
       <TableHead>
-        <TableHeadCell>Poster</TableHeadCell>
-        <TableHeadCell>Title</TableHeadCell>
-        <TableHeadCell>Description</TableHeadCell>
-        <TableHeadCell>Import Cost</TableHeadCell>
-        <TableHeadCell>Genre</TableHeadCell>
-        <TableHeadCell>Time</TableHeadCell>
-        <TableHeadCell>Trailer</TableHeadCell>
+        <TableHeadCell>Profile</TableHeadCell>
+        <TableHeadCell>Name</TableHeadCell>
+        <TableHeadCell>Age</TableHeadCell>
+        <TableHeadCell>Email</TableHeadCell>
+        <TableHeadCell>Gender</TableHeadCell>
+        <TableHeadCell>Username</TableHeadCell>
+        <TableHeadCell>Phone Number</TableHeadCell>
+        <TableHeadCell>Address</TableHeadCell>
+        <TableHeadCell>Role</TableHeadCell>
         <TableHeadCell>Action</TableHeadCell>
       </TableHead>
       <TableBody tableBodyClass="divide-y">
-        {#each data.data.movies as movie}
+        {#each data.data.users as user}
           <TableBodyRow>
             <TableBodyCell
               ><img
+                class="rounded-full"
                 width="50"
-                src={endpoint + movie.poster}
+                src={endpoint +
+                  "thumbnail/" +
+                  user.profile_picture.substring(8) +
+                  "?w=50&h=50"}
                 alt=""
               /></TableBodyCell
             >
-            <TableBodyCell>{movie.title}</TableBodyCell>
+            <TableBodyCell>{user.name}</TableBodyCell>
+            <TableBodyCell>${user.age}</TableBodyCell>
             <TableBodyCell
-              >{movie.description.length > 50
-                ? movie.description.substring(0, 50) + "..."
-                : movie.description}</TableBodyCell
+              >{user.email.length > 50
+                ? user.email.substring(0, 50) + "..."
+                : user.email}</TableBodyCell
             >
-            <TableBodyCell>${movie.import_cost}</TableBodyCell>
-            <TableBodyCell>{movie.genre}</TableBodyCell>
-            <TableBodyCell>{movie.time}</TableBodyCell>
-            <TableBodyCell>{movie.trailer}</TableBodyCell>
+            <TableBodyCell
+              >{user.gender === "o"
+                ? "Other"
+                : user.gender === "m"
+                ? "Male"
+                : "Female"}</TableBodyCell
+            >
+            <TableBodyCell>{user.username}</TableBodyCell>
+            <TableBodyCell>{user.phone_number}</TableBodyCell>
+            <TableBodyCell>{user.address}</TableBodyCell>
+            <TableBodyCell
+              >{user.role === 0 ? "Customer" : "Employee"}</TableBodyCell
+            >
             <TableBodyCell tdClass="w-40">
               <div class="flex gap-5">
-                <a href="/movie/{movie.movie_id}"><EyeOutline /></a>
-                <button on:click={() => editForm(movie.movie_id)}
+                <a href="/user/{user.user_id}"><EyeOutline /></a>
+                <button on:click={() => editForm(user.user_id)}
                   ><EditOutline /></button
                 >
                 <button
                   type="submit"
                   on:click={() => {
-                    deleteModal(movie.movie_id);
+                    deleteModal(user.user_id);
                   }}><TrashBinOutline /></button
                 >
               </div>
@@ -326,7 +386,7 @@
       </TableBody>
     </Table>
   {:else}
-    <p class="text-2xl text-black dark:text-white">No Movie's availble yet!</p>
+    <p class="text-2xl text-black dark:text-white">No User's availble yet!</p>
   {/if}
   {#if data.data.count > 5}
     <div class="flex justify-center items-center mt-5">
@@ -347,135 +407,90 @@
     {/if}
 
     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-      {edit ? "Edit" : "Add"} Movie
+      {edit ? "Edit" : "Add"} User
     </h3>
     <div class="grid gap-6 mb-6 md:grid-cols-2">
-      <Label class="space-y-2">
-        <span>Title</span>
-        <Input
-          color={iTitle == 0 ? "base" : iTitle == 1 ? "red" : "green"}
-          type="text"
-          name="title"
-          bind:value={formInput.title}
-          placeholder="John Wick 4"
-        />
-        {#if iTitle == 1}
-          <Helper class="mt-2" color="red"
-            ><span class="font-medium">Invalid!</span> Title is required!</Helper
-          >
-        {:else if iTitle === 2}
-          <Helper class="mt-2" color="green"
-            ><span class="font-medium">Well done!</span> Title is valid.</Helper
-          >
-        {/if}
-      </Label>
-      <Label class="space-y-2">
-        <span>Genre</span>
-        <Input
-          color={iGenre == 0 ? "base" : iGenre == 1 ? "red" : "green"}
-          type="text"
-          name="genre"
-          bind:value={formInput.genre}
-          placeholder="Action"
-        />
-        {#if iGenre == 1}
-          <Helper class="mt-2" color="red"
-            ><span class="font-medium">Invalid!</span> Genre is required!</Helper
-          >
-        {:else if iGenre === 2}
-          <Helper class="mt-2" color="green"
-            ><span class="font-medium">Well done!</span> Genre is valid.</Helper
-          >
-        {/if}
-      </Label>
-    </div>
-    <Label class="space-y-2">
-      <span>Description</span>
-      <Textarea
-        type="text"
-        name="description"
-        bind:value={formInput.description}
-        placeholder="John Wick 4 is an action movie..."
+      <TextField
+        fieldName="Name"
+        value={formInput.name}
+        name="name"
+        iFieldName={iName}
+        holder="Fullname..."
       />
-      {#if iDescription == 1}
-        <Helper class="mt-2" color="red"
-          ><span class="font-medium">Invalid!</span> Description is required!</Helper
-        >
-      {:else if iDescription === 2}
-        <Helper class="mt-2" color="green"
-          ><span class="font-medium">Well done!</span> Description is valid.</Helper
-        >
-      {/if}
-    </Label>
-    <Label class="space-y-2">
-      <span>Import Cost</span>
-      <ButtonGroup class="w-full">
-        <InputAddon>$</InputAddon>
-        <Input
-          color={iImportCost == 0 ? "base" : iImportCost == 1 ? "red" : "green"}
-          type="number"
-          name="import_cost"
-          bind:value={formInput.import_cost}
-          placeholder="100000"
-        />
-      </ButtonGroup>
-      {#if iImportCost == 1}
-        <Helper class="mt-2" color="red"
-          ><span class="font-medium">Invalid!</span> Import Cost is required!</Helper
-        >
-      {:else if iImportCost === 2}
-        <Helper class="mt-2" color="green"
-          ><span class="font-medium">Well done!</span> Import Cost is valid.</Helper
-        >
-      {/if}
-    </Label>
-    <div class="grid gap-6 mb-6 md:grid-cols-2">
-      <Label class="space-y-2">
-        <span>Time</span>
-        <Input
-          color={iTime == 0 ? "base" : iTime == 1 ? "red" : "green"}
-          type="text"
-          name="time"
-          bind:value={formInput.time}
-          placeholder="2h40min"
-        />
-        {#if iTime == 1}
-          <Helper class="mt-2" color="red"
-            ><span class="font-medium">Invalid!</span> Time is required!</Helper
-          >
-        {:else if iTime === 2}
-          <Helper class="mt-2" color="green"
-            ><span class="font-medium">Well done!</span> Time is valid.</Helper
-          >
-        {/if}
-      </Label>
-      <Label class="space-y-2">
-        <span>Trailer Link</span>
-        <Input
-          color={iTrailer == 0 ? "base" : iTrailer == 1 ? "red" : "green"}
-          type="text"
-          name="trailer"
-          bind:value={formInput.trailer}
-          placeholder="Trailer video link..."
-        />
-        {#if iTrailer == 1}
-          <Helper class="mt-2" color="red"
-            ><span class="font-medium">Invalid!</span> Trailer is required!</Helper
-          >
-        {:else if iTrailer === 2}
-          <Helper class="mt-2" color="green"
-            ><span class="font-medium">Well done!</span> Trailer is valid.</Helper
-          >
-        {/if}
-      </Label>
+      <TextField
+        fieldName="Age"
+        name="age"
+        value={formInput.age}
+        iFieldName={iAge}
+        holder="Age..."
+      />
     </div>
-    <Label for="with_helper" class="pb-2">Upload file</Label>
+    <Label
+      >Gender
+      <Select class="mt-2" items={gender} bind:value={selectedGen} />
+    </Label>
+    <input type="hidden" name="gender" bind:value={selectedGen} />
+    <Label for="textarea-id" class="mb-2">Your message</Label>
+    <Textarea
+      id="textarea-id"
+      placeholder="Address..."
+      bind:value={address}
+      rows="2"
+      name="address"
+    />
+    <div class="grid gap-6 mb-6 md:grid-cols-2">
+      <TextField
+        fieldName="Email"
+        name="email"
+        value={formInput.email}
+        type="email"
+        iFieldName={iEmail}
+        holder="Email..."
+      />
+      <TextField
+        fieldName="Phone Number"
+        name="phone_number"
+        type="tel"
+        value={formInput.phone_number}
+        iFieldName={iPhoneNumber}
+        holder="Phone Number..."
+      />
+    </div>
+    <TextField
+      fieldName="Username"
+      name="username"
+      type="text"
+      value={formInput.username}
+      iFieldName={iUsername}
+      holder="Username..."
+    />
+    <div class="grid gap-6 mb-6 md:grid-cols-2">
+      <TextField
+        fieldName="Password"
+        name="password"
+        value={formInput.password}
+        type="password"
+        iFieldName={iPassword}
+        holder="Password..."
+      />
+      <TextField
+        fieldName="Confirm Password"
+        name="confirm_password"
+        type="password"
+        value={formInput.confirm_password}
+        iFieldName={iConfirmPassword}
+        holder="Confirm Password..."
+      />
+    </div>
+    <input type="hidden" name="role" value="1" />
+
+    <Label for="with_helper" class="pb-2">Profile Picture</Label>
     <Fileupload
       bind:files
       bind:this={fileInput}
       id="with_helper"
       class="mb-2"
-      name="poster"
+      name="profile"
     />
     {#if files?.[0]}
       <p>
@@ -516,7 +531,7 @@
       >
     {/if}
     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-      Are you sure you want to delete this movie?
+      Are you sure you want to delete this user?
     </h3>
     <form action="?/delete" method="post" use:enhance={deleteMovie}>
       <Button type="submit" color="red" class="mr-2">Yes, I'm sure</Button>
