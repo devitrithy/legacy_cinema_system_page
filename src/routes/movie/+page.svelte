@@ -256,6 +256,11 @@
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           break;
+
+        case "failure":
+          toast.success("Successfully remove.", {
+            style: "border-radius: 200px; background: #333; color: #fff;",
+          });
         default:
           break;
       }
@@ -521,7 +526,8 @@
       >
     {/if}
     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-      Are you sure you want to delete this movie?
+      If you delete this movie, The related data will also delete too. Are you
+      sure you want to delete?
     </h3>
     <form action="?/delete" method="post" use:enhance={deleteMovie}>
       <Button type="submit" color="red" class="mr-2">Yes, I'm sure</Button>

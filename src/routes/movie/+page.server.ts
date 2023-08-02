@@ -51,16 +51,18 @@ export const actions = {
       axios
         .delete("https://cinemaapi.serveo.net/movie/" + data.get("id"))
         .then((response) => {
+          console.log(response.status);
+          if (response.status === 400) {
+            return fail(400, { message: response.data.message });
+          }
           return {
             success: true,
             message: "Deleted successfully",
           };
         })
         .catch((err) => {
-          return {
-            success: false,
-            message: "Some problem occurred while deleting the movie",
-          };
+          console.log(err);
+          return fail(400, { message: "Failed to delete movie." });
         });
     } catch (error: any) {
       return fail(422, {
