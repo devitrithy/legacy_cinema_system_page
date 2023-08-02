@@ -5,6 +5,7 @@
   import { page } from "$app/stores";
   import type { Snapshot, SubmitFunction } from "@sveltejs/kit";
   import axios from "axios";
+  import moment from "moment-timezone";
   import {
     Breadcrumb,
     BreadcrumbItem,
@@ -30,29 +31,41 @@
     TrashBinOutline,
   } from "flowbite-svelte-icons";
   import { onMount } from "svelte";
+  import TextField from "$lib/ui/textField.svelte";
 
   export let data;
-  export let form;
+  console.log(data.data);
   let endpoint = "https://cinemaapi.serveo.net/";
   let popupModal = false;
   let ids: any;
   let edit = false;
   let loading = false;
-  let select;
-  let locationItems = [];
-  let l;
+  let selectHall;
+  let selectMovie;
+  let hallItems = [];
+  let movieItems = [];
+  let h;
+  let m;
   onMount(async () => {
-    l = await axios.get(endpoint + "location");
-    l.data.locations.forEach((lo) => {
-      locationItems.push({
-        value: lo.location_id,
-        name: lo.location_name,
+    h = await axios.get(endpoint + "hall");
+    m = await axios.get(endpoint + "movie");
+    h.data.halls.forEach((lo) => {
+      hallItems.push({
+        value: lo.hall_id,
+        name: lo.hall_name,
+      });
+    });
+    m.data.movies.forEach((lo) => {
+      movieItems.push({
+        value: lo.movie_id,
+        name: lo.title,
       });
     });
   });
 
-  let iHallName = 0;
   let iSelect = 0;
+  let iDate = 0;
+  let iPrice = 0;
 
   const deleteModal = (id: any) => {
     popupModal = true;
@@ -60,16 +73,17 @@
     console.log(ids);
   };
   let formInput = {
-    hall_name: "",
-    location: select,
+    date: new Date(),
+    price: 0,
   };
   let resetValue = () => {
     formInput = {
-      hall_name: "",
-      location: undefined,
+      date: new Date(),
+      price: 0,
     };
 
-    iHallName = 0;
+    iDate = 0;
+    iPrice = 0;
   };
 
   let formModal = false;
@@ -89,7 +103,7 @@
     count -= 1;
   }
   for (let i = 1; i <= count; i++) {
-    pages.push({ name: i, href: `/hall?page=${i}` });
+    pages.push({ name: i, href: `/showingtime?page=${i}` });
   }
 
   $: {
@@ -114,7 +128,7 @@
   let previous = () => {
     p -= 1;
     if (p >= 1) {
-      goto(`/hall?page=${p}`);
+      goto(`/showingtime?page=${p}`);
     } else {
       p += 1;
     }
@@ -122,10 +136,10 @@
   let next = () => {
     p += 1;
     if (activeUrl === null) {
-      goto(`/hall?page=2`);
+      goto(`/showingtime?page=2`);
     }
     if (p <= pages.length) {
-      goto(`/hall?page=${p}`);
+      goto(`/showingtime?page=${p}`);
     } else {
       p -= 1;
     }
@@ -133,15 +147,16 @@
 
   //Edit Form
   let editForm = async (id: string) => {
-    iHallName = 0;
     ids = id;
     edit = true;
     formModal = true;
-    const editData = await axios.get(endpoint + "hall/" + id);
-    let d = editData.data.movie[0];
+    const editData = await axios.get(endpoint + "showing/" + id);
+    let d = editData.data.showingtime[0];
     console.log(d);
-    formInput.hall_name = d.hall_name;
-    select = d.location_id;
+    formInput.date = new Date(d.showing_date);
+    formInput.price = d.price;
+    selectHall = d.hall_id;
+    selectMovie = d.movie_id;
   };
   let addHall = async () => {
     if (edit) {
@@ -154,21 +169,6 @@
   let formSumbit: SubmitFunction = ({ form, data, action, cancel }) => {
     const { hall_name, id } = Object.fromEntries(data);
     loading = true;
-    console.log(hall_name.length);
-    if (hall_name.length < 1) {
-      iHallName = 1;
-      loading = false;
-      cancel();
-    } else {
-      iHallName = 2;
-    }
-    if (!id) {
-      iSelect = 1;
-      loading = false;
-      cancel();
-    } else {
-      iSelect = 2;
-    }
 
     return async ({ result, update }) => {
       switch (result.type) {
@@ -217,38 +217,53 @@
 </script>
 
 <main class=" z-10 mt-32 container mx-auto">
-  <h1 class="text-black dark:text-white text-2xl m-4">Hall</h1>
+  <h1 class="text-black dark:text-white text-2xl m-4">Showing Time</h1>
   <div class="m-4 flex justify-between items-center">
     <Breadcrumb aria-label="Default breadcrumb example">
       <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
-      <BreadcrumbItem href="/hall">Hall</BreadcrumbItem>
+      <BreadcrumbItem href="/showingtime">Showing Time</BreadcrumbItem>
     </Breadcrumb>
 
     <Button on:click={addHall} outline pill
-      ><span class="mr-5">Add Hall</span><PlusOutline />
+      ><span class="mr-5">Add Showing Time</span><PlusOutline />
     </Button>
   </div>
   <Table divClass="z-10 m-5 overflow-x-auto " hoverable={true}>
     <TableHead>
+      <TableHeadCell>Movie Name</TableHeadCell>
       <TableHeadCell>Hall Name</TableHeadCell>
-      <TableHeadCell>Location Name</TableHeadCell>
+      <TableHeadCell>Date</TableHeadCell>
+      <TableHeadCell>Time</TableHeadCell>
+      <TableHeadCell>Ticket Price</TableHeadCell>
       <TableHeadCell>Action</TableHeadCell>
     </TableHead>
     <TableBody tableBodyClass="divide-y">
-      {#each data.data.halls as hall}
+      {#each data.data.showingTime as showingtime}
         <TableBodyRow>
-          <TableBodyCell>{hall.hall_name}</TableBodyCell>
-          <TableBodyCell>{hall.location.location_name}</TableBodyCell>
+          <TableBodyCell>{showingtime.movie.title}</TableBodyCell>
+          <TableBodyCell>{showingtime.hall.hall_name}</TableBodyCell>
+          <TableBodyCell>
+            {moment(showingtime.showing_date, [
+              "YYYY-MM-DD",
+              "DD-MM-YYYY",
+            ]).format("DD MMMM YYYY")}
+          </TableBodyCell>
+          <TableBodyCell
+            >{moment(showingtime.showing_date)
+              .tz("Atlantic/Azores")
+              .format("hh:mm A")}</TableBodyCell
+          >
+          <TableBodyCell>${showingtime.price}</TableBodyCell>
           <TableBodyCell tdClass="w-40">
             <div class="flex gap-5">
-              <a href="/hall/{hall.movie_id}"><EyeOutline /></a>
-              <button on:click={() => editForm(hall.hall_id)}
+              <a href="/showingtime/{showingtime.showing_id}"><EyeOutline /></a>
+              <button on:click={() => editForm(showingtime.showing_id)}
                 ><EditOutline /></button
               >
               <button
                 type="submit"
                 on:click={() => {
-                  deleteModal(hall.hall_id);
+                  deleteModal(showingtime.showing_id);
                 }}><TrashBinOutline /></button
               >
             </div>
@@ -279,29 +294,24 @@
     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
       {edit ? "Edit" : "Add"} Hall
     </h3>
-    <Label class="space-y-2">
-      <span>Hall Name</span>
-      <Input
-        color={iHallName == 0 ? "base" : iHallName == 1 ? "red" : "green"}
-        type="text"
-        name="hall_name"
-        bind:value={formInput.hall_name}
-        placeholder="Hall Name"
-      />
-      {#if iHallName == 1}
-        <Helper class="mt-2" color="red"
-          ><span class="font-medium">Invalid!</span> Hall Name is required!</Helper
-        >
-      {:else if iHallName === 2}
-        <Helper class="mt-2" color="green"
-          ><span class="font-medium">Well done!</span> Hall Name is valid.</Helper
-        >
-      {/if}
-    </Label>
+    <TextField
+      fieldName="Date Time"
+      iFieldName={iDate}
+      name="date"
+      value={formInput.date}
+      type="datetime-local"
+    />
+    <TextField
+      fieldName="Ticket Price"
+      iFieldName={iPrice}
+      name="price"
+      value={formInput.price}
+      type="number"
+    />
     <Label class="space-y-2">
       <!-- // -->
-      Select An Option
-      <Select class="mt-2" items={locationItems} bind:value={select} />
+      Select Hall
+      <Select class="mt-2" items={hallItems} bind:value={selectHall} />
       {#if iSelect == 1}
         <Helper class="mt-2" color="red"
           ><span class="font-medium">Invalid!</span> Please select the location</Helper
@@ -312,7 +322,22 @@
         >
       {/if}
     </Label>
-    <input type="hidden" name="id" bind:value={select} />
+    <Label class="space-y-2">
+      <!-- // -->
+      Select Movie
+      <Select class="mt-2" items={movieItems} bind:value={selectMovie} />
+      {#if iSelect == 1}
+        <Helper class="mt-2" color="red"
+          ><span class="font-medium">Invalid!</span> Please select the location</Helper
+        >
+      {:else if iSelect === 2}
+        <Helper class="mt-2" color="green"
+          ><span class="font-medium">Well done!</span> Hall Name is valid.</Helper
+        >
+      {/if}
+    </Label>
+    <input type="hidden" name="movie_id" bind:value={selectMovie} />
+    <input type="hidden" name="hall_id" bind:value={selectHall} />
     <div class="flex gap-10">
       <Button type="button" color="red" on:click={resetValue} class="w-full"
         >Reset</Button

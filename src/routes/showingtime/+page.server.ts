@@ -4,13 +4,13 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ url }) => {
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("https://cinemaapi.serveo.net/hall");
+  const count = await axios.get("https://cinemaapi.serveo.net/showing");
 
   if (page > count.data.count / 5 + 1) {
-    throw redirect(302, "/hall");
+    throw redirect(302, "/showing");
   }
-  const hall = await fetch(`https://cinemaapi.serveo.net/hall`);
-  let halls = hall.json();
+  const showing = await fetch(`https://cinemaapi.serveo.net/showing`);
+  let halls = showing.json();
   return {
     data: halls,
   };
@@ -22,9 +22,11 @@ export const actions = {
 
     try {
       axios
-        .post("https://cinemaapi.serveo.net/hall", {
-          hall_name: data.get("hall_name"),
-          id: data.get("id"),
+        .post("https://cinemaapi.serveo.net/showing", {
+          showing_date: data.get("date"),
+          movie_id: data.get("movie_id"),
+          hall_id: data.get("hall_id"),
+          price: data.get("price"),
         })
         .then(function (response) {
           console.log(response);
@@ -32,7 +34,7 @@ export const actions = {
         .catch(function (error) {
           return {
             success: false,
-            message: "Fail to add hall",
+            message: "Fail to add showing",
           };
         });
     } catch (error: any) {
@@ -43,7 +45,7 @@ export const actions = {
     }
     return {
       success: true,
-      message: "Added hall successfully",
+      message: "Added showing successfully",
     };
   },
 
@@ -52,7 +54,7 @@ export const actions = {
 
     try {
       axios
-        .delete("https://cinemaapi.serveo.net/hall/" + data.get("id"))
+        .delete("https://cinemaapi.serveo.net/showing/" + data.get("id"))
         .then((response) => {
           return {
             success: true,
@@ -62,7 +64,7 @@ export const actions = {
         .catch((err) => {
           return {
             success: false,
-            message: "Some problem occurred while deleting the hall",
+            message: "Some problem occurred while deleting the showing",
           };
         });
     } catch (error: any) {
@@ -77,7 +79,7 @@ export const actions = {
 
     try {
       axios
-        .put(`https://cinemaapi.serveo.net/hall/${data.get("h_id")}`, {
+        .put(`https://cinemaapi.serveo.net/showing/${data.get("h_id")}`, {
           hall_name: data.get("hall_name"),
           id: data.get("id"),
         })
@@ -87,7 +89,7 @@ export const actions = {
         .catch(function (error) {
           return {
             success: false,
-            message: "Fail to add hall",
+            message: "Fail to add showing",
           };
         });
     } catch (error: any) {
@@ -98,7 +100,7 @@ export const actions = {
     }
     return {
       success: true,
-      message: "Added hall successfully",
+      message: "Added showing successfully",
     };
   },
 } satisfies Actions;
