@@ -95,16 +95,6 @@
       </SidebarGroup>
       <SidebarGroup border>
         <SidebarItem
-          label="Hall"
-          {spanClass}
-          href="/hall"
-          active={activeUrl === "/hall" || activeUrl.substring(1, 5) === "hall"}
-        >
-          <svelte:fragment slot="icon">
-            <WindowOutline />
-          </svelte:fragment>
-        </SidebarItem>
-        <SidebarItem
           label="Location"
           {spanClass}
           href="/location"
@@ -113,6 +103,16 @@
         >
           <svelte:fragment slot="icon">
             <MapLocationOutline />
+          </svelte:fragment>
+        </SidebarItem>
+        <SidebarItem
+          label="Hall"
+          {spanClass}
+          href="/hall"
+          active={activeUrl === "/hall" || activeUrl.substring(1, 5) === "hall"}
+        >
+          <svelte:fragment slot="icon">
+            <WindowOutline />
           </svelte:fragment>
         </SidebarItem>
       </SidebarGroup>
