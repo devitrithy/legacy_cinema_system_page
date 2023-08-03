@@ -8,14 +8,14 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
     Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
   };
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("https://cinemaapi.serveo.net/hall", {
+  const count = await axios.get("http://localhost:3000/hall", {
     headers: customHeaders,
   });
 
   if (page > count.data.count / 5 + 1) {
     throw redirect(302, "/hall");
   }
-  const hall = await fetch(`https://cinemaapi.serveo.net/hall`, {
+  const hall = await fetch(`http://localhost:3000/hall`, {
     headers: customHeaders,
   });
   let halls = hall.json();
@@ -25,15 +25,23 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
 };
 
 export const actions = {
-  create: async ({ request }) => {
+  create: async ({ request, cookies }) => {
     const data = await request.formData();
+    const token = cookies.get("token");
+    const customHeaders = {
+      Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    };
 
     try {
       axios
-        .post("https://cinemaapi.serveo.net/hall", {
-          hall_name: data.get("hall_name"),
-          id: data.get("id"),
-        })
+        .post(
+          "http://localhost:3000/hall",
+          {
+            hall_name: data.get("hall_name"),
+            id: data.get("id"),
+          },
+          { headers: customHeaders }
+        )
         .then(function (response) {
           console.log(response);
         })
@@ -55,12 +63,18 @@ export const actions = {
     };
   },
 
-  delete: async ({ request }) => {
+  delete: async ({ request, cookies }) => {
     const data = await request.formData();
+    const token = cookies.get("token");
+    const customHeaders = {
+      Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    };
 
     try {
       axios
-        .delete("https://cinemaapi.serveo.net/hall/" + data.get("id"))
+        .delete("http://localhost:3000/hall/" + data.get("id"), {
+          headers: customHeaders,
+        })
         .then((response) => {
           return {
             success: true,
@@ -80,15 +94,23 @@ export const actions = {
       });
     }
   },
-  edit: async ({ request }) => {
+  edit: async ({ request, cookies }) => {
     const data = await request.formData();
+    const token = cookies.get("token");
+    const customHeaders = {
+      Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    };
 
     try {
       axios
-        .put(`https://cinemaapi.serveo.net/hall/${data.get("h_id")}`, {
-          hall_name: data.get("hall_name"),
-          id: data.get("id"),
-        })
+        .put(
+          `http://localhost:3000/hall/${data.get("h_id")}`,
+          {
+            hall_name: data.get("hall_name"),
+            id: data.get("id"),
+          },
+          { headers: customHeaders }
+        )
         .then(function (response) {
           console.log(response);
         })

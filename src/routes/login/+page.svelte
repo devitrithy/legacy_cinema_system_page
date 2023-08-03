@@ -94,7 +94,7 @@
         {:else}
           <Button>
             <Spinner class="mr-3" size="4" color="white" />
-            Loading ...
+            Logging in ...
           </Button>
         {/if}
       </form>

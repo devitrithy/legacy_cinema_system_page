@@ -8,17 +8,16 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
     Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
   };
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("https://cinemaapi.serveo.net/employee", {
+  const count = await axios.get("http://localhost:3000/employee", {
     headers: customHeaders,
   });
 
   if (page > count.data.count / 5 + 1) {
     throw redirect(302, "/employee");
   }
-  const data = await fetch(
-    `https://cinemaapi.serveo.net/employee?page=${page}`,
-    { headers: customHeaders }
-  );
+  const data = await fetch(`http://localhost:3000/employee?page=${page}`, {
+    headers: customHeaders,
+  });
   const res = data.json();
   return {
     data: res,
@@ -35,7 +34,7 @@ export const actions = {
 
     try {
       axios
-        .post("https://cinemaapi.serveo.net/employee", data, {
+        .post("http://localhost:3000/employee", data, {
           headers: customHeaders,
         })
         .then(function (response) {
@@ -68,7 +67,7 @@ export const actions = {
 
     try {
       axios
-        .delete("https://cinemaapi.serveo.net/employee/" + data.get("id"), {
+        .delete("http://localhost:3000/employee/" + data.get("id"), {
           headers: customHeaders,
         })
         .then((response) => {
@@ -99,7 +98,7 @@ export const actions = {
 
     try {
       axios
-        .put(`https://cinemaapi.serveo.net/employee/${data.get("id")}`, data, {
+        .put(`http://localhost:3000/employee/${data.get("id")}`, data, {
           headers: customHeaders,
         })
         .then(function (response) {
