@@ -187,7 +187,7 @@
         </SidebarItem>
       </SidebarGroup>
       <SidebarGroup border>
-        <SidebarItem label="Sign Out" {spanClass}>
+        <SidebarItem label="Sign Out" href="/logout" {spanClass}>
           <svelte:fragment slot="icon">
             <ArrowRightToBracketOutline />
           </svelte:fragment>

@@ -5,9 +5,12 @@
   import Navbar from "../components/navbar.svelte";
   import Sidebar from "../components/sidebar.svelte";
   import { VideoCameraOutline } from "flowbite-svelte-icons";
-  export let data;
-  console.log(data);
-  console.log($page.url.pathname);
+  // export let data;
+  // let user = data.user;
+
+  // let pf = user.profile.substring(8) || "1691002845965.webp";
+  //FIX: Please fix this becsae it's bug the whole proccess
+  // let profile = `http://localhost:3000/thumbnail/${pf})}?w=25&h=25`;
 </script>
 
 <title>Legacy Cinema | Admin Page</title>

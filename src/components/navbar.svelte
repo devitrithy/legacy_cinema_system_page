@@ -143,7 +143,7 @@
     <DropdownItem>Settings</DropdownItem>
     <DropdownItem>Earnings</DropdownItem>
     <DropdownDivider />
-    <DropdownItem on:click={logout}>Sign Out</DropdownItem>
+    <DropdownItem href="/logout">Sign Out</DropdownItem>
   </Dropdown>
   <div class="hidden relative md:block">
     <form class="flex gap-2 w-full lg:w-[300px]">
