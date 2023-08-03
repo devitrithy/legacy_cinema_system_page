@@ -66,7 +66,8 @@
   let ids: any;
   let edit = false;
   let loading = false;
-  let iName = 0;
+  let iFirstname = 0;
+  let iLastname = 0;
   let address = "";
   let iAge = 0;
   let iDepartment = 0;
@@ -91,7 +92,8 @@
   };
   let files: any, fileInput: Fileupload;
   let formInput = {
-    name: "",
+    firstname: "",
+    lastname: "",
     age: "",
     email: "",
     username: "",
@@ -105,7 +107,8 @@
   let date = new Date().toISOString().slice(0, 10);
   let resetValue = () => {
     formInput = {
-      name: "",
+      firstname: "",
+      lastname: "",
       age: "",
       email: "",
       username: "",
@@ -116,7 +119,8 @@
       phone_number: "",
       salary: 0,
     };
-    iName = 0;
+    iFirstname = 0;
+    iLastname = 0;
     iAge = 0;
     iEmail = 0;
     iSalary = 0;
@@ -204,7 +208,8 @@
 
     if (editData) {
       console.log(d);
-      formInput.name = d.users.name;
+      formInput.firstname = d.users.firstname;
+      formInput.lastname = d.users.lastname;
       selectedGen = d.users.gender;
       formInput.salary = d.salary;
       formInput.age = d.users.age;
@@ -230,7 +235,8 @@
   };
   let formSumbit: SubmitFunction = ({ form, data, action, cancel }) => {
     const {
-      name,
+      firstname,
+      lastname,
       age,
       email,
       password,
@@ -244,12 +250,19 @@
     } = Object.fromEntries(data);
     loading = true;
     console.log(name);
-    if (name.length < 5) {
-      iName = 1;
+    if (firstname.length < 1) {
+      iFirstname = 1;
       loading = false;
       cancel();
     } else {
-      iName = 2;
+      iFirstname = 2;
+    }
+    if (lastname.length < 1) {
+      iLastname = 1;
+      loading = false;
+      cancel();
+    } else {
+      iLastname = 2;
     }
     if (age.length < 1) {
       iAge = 1;
@@ -382,7 +395,7 @@
     <Table divClass="z-10 m-5 overflow-x-auto " hoverable={true}>
       <TableHead>
         <TableHeadCell>Profile</TableHeadCell>
-        <TableHeadCell>Name</TableHeadCell>
+        <TableHeadCell>Fullname</TableHeadCell>
         <TableHeadCell>Gender</TableHeadCell>
         <TableHeadCell>Phone Number</TableHeadCell>
         <TableHeadCell>Salary</TableHeadCell>
@@ -405,7 +418,9 @@
                 alt=""
               /></TableBodyCell
             >
-            <TableBodyCell>{user.users.name}</TableBodyCell>
+            <TableBodyCell
+              >{user.users.lastname + " " + user.users.firstname}</TableBodyCell
+            >
             <TableBodyCell
               >{user.users.gender === "o"
                 ? "Other"
@@ -468,12 +483,25 @@
     </h3>
     <div class="grid gap-6 mb-6 md:grid-cols-2">
       <TextField
-        fieldName="Name"
-        value={formInput.name}
-        name="name"
-        iFieldName={iName}
-        holder="Fullname..."
+        fieldName="Firstname"
+        value={formInput.firstname}
+        name="firstname"
+        iFieldName={iFirstname}
+        holder="Firstname..."
       />
+      <TextField
+        fieldName="Lastname"
+        value={formInput.lastname}
+        name="lastname"
+        iFieldName={iLastname}
+        holder="Lastname..."
+      />
+    </div>
+    <div class="grid gap-6 mb-6 md:grid-cols-2">
+      <Label
+        >Gender
+        <Select class="mt-2" items={gender} bind:value={selectedGen} />
+      </Label>
       <TextField
         fieldName="Age"
         name="age"
@@ -481,12 +509,8 @@
         iFieldName={iAge}
         holder="Age..."
       />
+      <input type="hidden" name="gender" bind:value={selectedGen} />
     </div>
-    <Label
-      >Gender
-      <Select class="mt-2" items={gender} bind:value={selectedGen} />
-    </Label>
-    <input type="hidden" name="gender" bind:value={selectedGen} />
     <Label for="textarea-id" class="mb-2">Address</Label>
     <Textarea
       id="textarea-id"

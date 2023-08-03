@@ -35,6 +35,7 @@
 
   export let data;
   console.log(data.data);
+
   let endpoint = "https://cinemaapi.serveo.net/";
   let popupModal = false;
   let ids: any;
@@ -52,7 +53,7 @@
     h.data.halls.forEach((lo) => {
       hallItems.push({
         value: lo.hall_id,
-        name: lo.hall_name,
+        name: `Location: ${lo.location.location_name} => ${lo.hall_name}`,
       });
     });
     m.data.movies.forEach((lo) => {
@@ -230,7 +231,9 @@
   </div>
   <Table divClass="z-10 m-5 overflow-x-auto " hoverable={true}>
     <TableHead>
+      <TableHeadCell>Poster</TableHeadCell>
       <TableHeadCell>Movie Name</TableHeadCell>
+      <TableHeadCell>Location Name</TableHeadCell>
       <TableHeadCell>Hall Name</TableHeadCell>
       <TableHeadCell>Date</TableHeadCell>
       <TableHeadCell>Time</TableHeadCell>
@@ -240,7 +243,20 @@
     <TableBody tableBodyClass="divide-y">
       {#each data.data.showingTime as showingtime}
         <TableBodyRow>
+          <TableBodyCell
+            ><img
+              width="50"
+              src={endpoint +
+                "thumbnail/" +
+                showingtime.movie.poster.substring(8) +
+                "?h=96&w=54"}
+              alt=""
+            /></TableBodyCell
+          >
           <TableBodyCell>{showingtime.movie.title}</TableBodyCell>
+          <TableBodyCell
+            >{showingtime.hall.location.location_name}</TableBodyCell
+          >
           <TableBodyCell>{showingtime.hall.hall_name}</TableBodyCell>
           <TableBodyCell>
             {moment(showingtime.showing_date, [

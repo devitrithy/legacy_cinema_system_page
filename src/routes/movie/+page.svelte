@@ -1,4 +1,5 @@
 <script lang="ts">
+  export const load = true;
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import toast, { Toaster } from "svelte-french-toast";

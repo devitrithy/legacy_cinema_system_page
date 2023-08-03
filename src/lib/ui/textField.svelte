@@ -7,6 +7,7 @@
   export let holder = "";
   export let name = "";
   export let type = "text";
+  export let message = "";
 </script>
 
 <Label class="space-y-2">
@@ -20,12 +21,11 @@
   />
   {#if iFieldName == 1}
     <Helper class="mt-2" color="red"
-      ><span class="font-medium">Invalid!</span>
-      {fieldName} is required!</Helper
+      ><span class="font-medium">{message}</span></Helper
     >
   {:else if iFieldName === 2}
     <Helper class="mt-2" color="green"
-      ><span class="font-medium">Well done!</span> {fieldName} is valid.</Helper
+      ><span class="font-medium">{message}</span></Helper
     >
   {/if}
 </Label>
