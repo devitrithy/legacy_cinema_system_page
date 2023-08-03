@@ -12,6 +12,9 @@
   export let profile = "";
   export let user = "Rithy Devit";
   export let email = "devit@gmail.com";
+  const logout = () => {
+    console.log("logout");
+  };
 </script>
 
 <div
@@ -140,7 +143,7 @@
     <DropdownItem>Settings</DropdownItem>
     <DropdownItem>Earnings</DropdownItem>
     <DropdownDivider />
-    <DropdownItem>Sign out</DropdownItem>
+    <DropdownItem on:click={logout}>Sign Out</DropdownItem>
   </Dropdown>
   <div class="hidden relative md:block">
     <form class="flex gap-2 w-full lg:w-[300px]">
