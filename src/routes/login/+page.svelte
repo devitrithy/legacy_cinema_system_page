@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, Card } from "flowbite-svelte";
+  import { Button, Card, Spinner } from "flowbite-svelte";
   import src from "../../public/Logo.png";
   import { enhance } from "$app/forms";
   import type { SubmitFunction } from "@sveltejs/kit";
@@ -11,9 +11,13 @@
   let iUsernameMessage = "";
   let iPassword = 0;
   let iPasswordMessage = "";
+  let loading = false;
+  let iFail = 0;
+  let iFailMessage = "";
 
   let login: SubmitFunction = ({ form, data, action, cancel }) => {
     const { username, password } = Object.fromEntries(data);
+    loading = true;
     if (username.length < 1) {
       iUsername = 1;
       iUsernameMessage = "Please enter a username";
@@ -35,6 +39,13 @@
           goto("/");
           break;
         default:
+          iUsername = 1;
+          iPassword = 1;
+          iPasswordMessage = null;
+          iUsernameMessage = null;
+          iFail = 1;
+          iFailMessage = "Please check your username and password.";
+          loading = false;
           break;
       }
     };
@@ -75,7 +86,17 @@
           message={iPasswordMessage}
           holder="•••••"
         />
-        <Button type="submit" class="w-full">Login to your account</Button>
+        {#if iFail === 1}
+          <small class="text-red-700">{iFailMessage}</small>
+        {/if}
+        {#if !loading}
+          <Button type="submit" class="w-full">Login to your account</Button>
+        {:else}
+          <Button>
+            <Spinner class="mr-3" size="4" color="white" />
+            Loading ...
+          </Button>
+        {/if}
       </form>
     </Card>
   </div>

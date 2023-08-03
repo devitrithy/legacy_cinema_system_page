@@ -19,7 +19,7 @@
     bind:value
     placeholder={holder}
   />
-  {#if iFieldName == 1}
+  {#if iFieldName == 1 && message !== null}
     <Helper class="mt-2" color="red"
       ><span class="font-medium">{message}</span></Helper
     >

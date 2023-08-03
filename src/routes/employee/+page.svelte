@@ -10,6 +10,7 @@
     Breadcrumb,
     BreadcrumbItem,
     Button,
+    Checkbox,
     Fileupload,
     Helper,
     Input,
@@ -30,6 +31,7 @@
   import {
     EditOutline,
     EyeOutline,
+    LockOpenSolid,
     PlusOutline,
     TrashBinOutline,
   } from "flowbite-svelte-icons";
@@ -381,6 +383,10 @@
       }
     };
   };
+  let modalPermission = false;
+  const permission = (id) => {
+    modalPermission = true;
+  };
 </script>
 
 <main class=" z-10 mt-20 container mx-auto">
@@ -445,7 +451,9 @@
             <TableBodyCell>{user.locations.location_name}</TableBodyCell>
             <TableBodyCell tdClass="w-40">
               <div class="flex gap-5">
-                <a href="/employee/{user.users.user_id}"><EyeOutline /></a>
+                <button on:click={() => permission(user.users.user_id)}
+                  ><LockOpenSolid /></button
+                >
                 <button on:click={() => editForm(user.employee_id)}
                   ><EditOutline /></button
                 >
@@ -671,3 +679,28 @@
   </div>
 </Modal>
 <Toaster />
+
+<Modal bind:open={modalPermission} size="xs" autoclose={false} class="w-full">
+  <form class="flex flex-col space-y-6" action="#">
+    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
+      Permission
+    </h3>
+    <Label class="space-y-2">
+      <span>Email</span>
+      <Input
+        type="email"
+        name="email"
+        placeholder="name@company.com"
+        required
+      />
+    </Label>
+    <Label class="space-y-2">
+      <span>Your password</span>
+      <Input type="password" name="password" placeholder="•••••" required />
+    </Label>
+    <div class="flex items-start">
+      <Checkbox>Remember me</Checkbox>
+    </div>
+    <Button type="submit" class="w-full1">Login to your account</Button>
+  </form>
+</Modal>
