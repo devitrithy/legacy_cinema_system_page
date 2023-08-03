@@ -115,8 +115,6 @@
             <WindowOutline />
           </svelte:fragment>
         </SidebarItem>
-      </SidebarGroup>
-      <SidebarGroup border>
         <SidebarItem
           label="Departments"
           {spanClass}
@@ -126,17 +124,6 @@
         >
           <svelte:fragment slot="icon">
             <UserSettingsOutline />
-          </svelte:fragment>
-        </SidebarItem>
-        <SidebarItem
-          label="Permission"
-          {spanClass}
-          href="/permission"
-          active={activeUrl === "/permission" ||
-            activeUrl.substring(1, 6) === "permission"}
-        >
-          <svelte:fragment slot="icon">
-            <LockOpenOutline />
           </svelte:fragment>
         </SidebarItem>
         <SidebarItem

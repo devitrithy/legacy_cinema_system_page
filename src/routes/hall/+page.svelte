@@ -220,7 +220,7 @@
   };
 </script>
 
-<main class=" z-10 mt-32 container mx-auto">
+<main class=" z-10 mt-20 container mx-auto">
   <h1 class="text-black dark:text-white text-2xl m-4">Hall</h1>
   <div class="m-4 flex justify-between items-center">
     <Breadcrumb aria-label="Default breadcrumb example">

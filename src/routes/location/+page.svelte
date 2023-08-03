@@ -210,7 +210,7 @@
   };
 </script>
 
-<main class=" z-10 mt-32 container mx-auto">
+<main class=" z-10 mt-20 container mx-auto">
   <h1 class="text-black dark:text-white text-2xl m-4">
     {$page.url.pathname === "/location" ? "Location" : "Add Location"}
   </h1>
@@ -338,6 +338,7 @@
     </Label>
     <Label for="with_helper" class="pb-2">Upload file</Label>
     <Fileupload
+      accept="Image/jpeg"
       bind:files
       bind:this={fileInput}
       id="with_helper"

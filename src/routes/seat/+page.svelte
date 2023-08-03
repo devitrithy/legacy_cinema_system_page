@@ -37,7 +37,7 @@
 </script>
 
 <!-- Render the seats -->
-<div class="mx-auto mt-32 ml-5">
+<div class="mx-auto mt-20 ml-5">
   {#each availableSeats as seat}
     <div
       class="seat"
