@@ -42,7 +42,9 @@
   let locationItems = [];
   let l;
   onMount(async () => {
-    l = await axios.get(endpoint + "location");
+    l = await axios.get(endpoint + "location", {
+      headers: { Authorization: "Bearer guest" },
+    });
     l.data.locations.forEach((lo) => {
       locationItems.push({
         value: lo.location_id,

@@ -41,8 +41,12 @@
   let selectLoc: any[];
   let selectDep: any[];
   onMount(async () => {
-    const loc = await fetch(`${endpoint}location`);
-    const dep = await fetch(`${endpoint}department`);
+    const loc = await fetch(`${endpoint}location`, {
+      headers: { Authorization: "Bearer guest" },
+    });
+    const dep = await fetch(`${endpoint}department`, {
+      headers: { Authorization: "Bearer guest" },
+    });
     locations = await loc.json();
     departments = await dep.json();
 

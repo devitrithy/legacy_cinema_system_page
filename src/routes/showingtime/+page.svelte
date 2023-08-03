@@ -48,8 +48,12 @@
   let h;
   let m;
   onMount(async () => {
-    h = await axios.get(endpoint + "hall");
-    m = await axios.get(endpoint + "movie");
+    h = await axios.get(endpoint + "hall", {
+      headers: { Authorization: "Bearer guest" },
+    });
+    m = await axios.get(endpoint + "movie", {
+      headers: { Authorization: "Bearer guest" },
+    });
     h.data.halls.forEach((lo) => {
       hallItems.push({
         value: lo.hall_id,

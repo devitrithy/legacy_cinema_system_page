@@ -2,14 +2,22 @@ import { fail, type Actions, redirect } from "@sveltejs/kit";
 import axios from "axios";
 import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ url }) => {
+export const load: PageServerLoad = async ({ cookies, url }) => {
+  const token = cookies.get("token");
+  const customHeaders = {
+    Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+  };
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("https://cinemaapi.serveo.net/hall");
+  const count = await axios.get("https://cinemaapi.serveo.net/hall", {
+    headers: customHeaders,
+  });
 
   if (page > count.data.count / 5 + 1) {
     throw redirect(302, "/hall");
   }
-  const hall = await fetch(`https://cinemaapi.serveo.net/hall`);
+  const hall = await fetch(`https://cinemaapi.serveo.net/hall`, {
+    headers: customHeaders,
+  });
   let halls = hall.json();
   return {
     data: halls,
