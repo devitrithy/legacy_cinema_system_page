@@ -151,7 +151,9 @@
     ids = id;
     edit = true;
     formModal = true;
-    const editData = await axios.get(endpoint + "showing/" + id);
+    const editData = await axios.get(endpoint + "showing/" + id, {
+      headers: { Authorization: "Bearer guest" },
+    });
     let d = editData.data.showingtime[0];
     console.log(d);
     formInput.date = new Date(d.showing_date);

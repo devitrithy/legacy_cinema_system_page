@@ -1,9 +1,15 @@
 import type { PageServerLoad } from "./$types";
 import { error } from "@sveltejs/kit";
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, cookies }) => {
+  const token = cookies.get("token");
+  const customHeaders = {
+    Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+  };
   let id = params.id;
-  const data = await fetch("https://cinemaapi.serveo.net/movie/" + id);
+  const data = await fetch("https://cinemaapi.serveo.net/movie/" + id, {
+    headers: customHeaders,
+  });
   console.log(data.status);
   if (data.status === 404) {
     console.log("error loading");

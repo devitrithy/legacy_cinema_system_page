@@ -4,8 +4,8 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ url, cookies }) => {
   try {
-    const token = cookies.get("token");
     let page = Number(url.searchParams.get("page")) || 1;
+    const token = cookies.get("token");
     const customHeaders = {
       Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
     };
@@ -27,17 +27,24 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
       data: data.json(),
     };
   } catch (error) {
-    throw redirect(303, "/login");
+    console.log(error);
+    throw fail(400, { message: "Permission denied" });
   }
 };
 
 export const actions = {
-  create: async ({ request }) => {
+  create: async ({ request, cookies }) => {
     const data = await request.formData();
 
     try {
+      const token = cookies.get("token");
+      const customHeaders = {
+        Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+      };
       axios
-        .post("https://cinemaapi.serveo.net/movie", data)
+        .post("https://cinemaapi.serveo.net/movie", data, {
+          headers: customHeaders,
+        })
         .then(function (response) {
           console.log(response);
         })
@@ -59,12 +66,18 @@ export const actions = {
     };
   },
 
-  delete: async ({ request }) => {
+  delete: async ({ request, cookies }) => {
     const data = await request.formData();
+    const token = cookies.get("token");
+    const customHeaders = {
+      Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    };
 
     try {
       axios
-        .delete("https://cinemaapi.serveo.net/movie/" + data.get("id"))
+        .delete("https://cinemaapi.serveo.net/movie/" + data.get("id"), {
+          headers: customHeaders,
+        })
         .then((response) => {
           console.log(response.status);
           if (response.status === 400) {
@@ -86,12 +99,18 @@ export const actions = {
       });
     }
   },
-  edit: async ({ request }) => {
+  edit: async ({ cookies, request }) => {
     const data = await request.formData();
+    const token = cookies.get("token");
+    const customHeaders = {
+      Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    };
 
     try {
       axios
-        .put(`https://cinemaapi.serveo.net/movie/${data.get("id")}`, data)
+        .put(`https://cinemaapi.serveo.net/movie/${data.get("id")}`, data, {
+          headers: customHeaders,
+        })
         .then(function (response) {
           console.log(response);
         })

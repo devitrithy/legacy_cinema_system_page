@@ -19,12 +19,18 @@ export const load: PageServerLoad = async ({ url }) => {
 };
 
 export const actions = {
-  create: async ({ request }) => {
+  create: async ({ cookies, request }) => {
     const data = await request.formData();
+    const token = cookies.get("token");
+    const customHeaders = {
+      Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    };
 
     try {
       axios
-        .post("https://cinemaapi.serveo.net/location", data)
+        .post("https://cinemaapi.serveo.net/location", data, {
+          headers: customHeaders,
+        })
         .then(function (response) {
           console.log(response);
         })
@@ -46,12 +52,18 @@ export const actions = {
     };
   },
 
-  delete: async ({ request }) => {
+  delete: async ({ cookies, request }) => {
     const data = await request.formData();
+    const token = cookies.get("token");
+    const customHeaders = {
+      Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    };
 
     try {
       axios
-        .delete("https://cinemaapi.serveo.net/location/" + data.get("id"))
+        .delete("https://cinemaapi.serveo.net/location/" + data.get("id"), {
+          headers: customHeaders,
+        })
         .then((response) => {
           return {
             success: true,
@@ -71,12 +83,18 @@ export const actions = {
       });
     }
   },
-  edit: async ({ request }) => {
+  edit: async ({ request, cookies }) => {
     const data = await request.formData();
+    const token = cookies.get("token");
+    const customHeaders = {
+      Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    };
 
     try {
       axios
-        .put(`https://cinemaapi.serveo.net/location/${data.get("id")}`, data)
+        .put(`https://cinemaapi.serveo.net/location/${data.get("id")}`, data, {
+          headers: customHeaders,
+        })
         .then(function (response) {
           console.log(response);
         })

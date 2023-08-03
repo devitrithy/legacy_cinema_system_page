@@ -5,26 +5,15 @@
 <div
   class="flex flex-col gap-4 items-center justify-center text-black dark:text-white"
 >
-  {#if $page.status === 404}
-    <div id="main">
-      <div class="fof">
-        <h1 class="mb-5">Error 404</h1>
-        <p class="mb-5">
-          You’re either misspelling the URL or requesting a page that's no
-          longer here.
-        </p>
-        <a href="/" class="underline">Click here to go to home page</a>
-      </div>
+  <div id="main">
+    <div class="fof">
+      <h1 class="mb-5">Error {$page.status}</h1>
+      <p class="mb-5">
+        {$page.error?.message}
+      </p>
+      <a href="/" class="underline">Click here to go to home page</a>
     </div>
-  {:else}
-    <div id="main">
-      <div class="fof">
-        <h1 class="mb-5">Error 500</h1>
-        <p class="mb-5">Something went wrong!</p>
-        <a href="/" class="underline">Click here to go to home page</a>
-      </div>
-    </div>
-  {/if}
+  </div>
 </div>
 
 <style>

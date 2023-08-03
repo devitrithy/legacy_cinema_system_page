@@ -201,7 +201,9 @@
   let editForm = async (id: string) => {
     resetValue();
     edit = true;
-    const editData = await axios.get(endpoint + "employee/" + id);
+    const editData = await axios.get(endpoint + "employee/" + id, {
+      headers: { Authorization: "Bearer guest" },
+    });
     let d = editData.data.movie[0];
     ids = d.users.user_id;
     emp_id = d.employee_id;

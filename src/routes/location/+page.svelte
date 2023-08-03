@@ -130,7 +130,9 @@
     ids = id;
     edit = true;
     formModal = true;
-    const editData = await axios.get(endpoint + "location/" + id);
+    const editData = await axios.get(endpoint + "location/" + id, {
+      headers: { Authorization: "Bearer guest" },
+    });
     let d = editData.data.location[0];
     console.log(editData.data);
     if (editData) {

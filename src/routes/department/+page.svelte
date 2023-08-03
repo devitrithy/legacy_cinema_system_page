@@ -124,7 +124,9 @@
     iName = 0;
     ids = id;
     edit = true;
-    const editData = await axios.get(endpoint + "department/" + id);
+    const editData = await axios.get(endpoint + "department/" + id, {
+      headers: { Authorization: "Bearer guest" },
+    });
     let d = editData.data.department[0];
     if (editData) {
       formInput.name = d.department_name;

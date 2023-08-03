@@ -137,7 +137,9 @@
     ids = id;
     edit = true;
     formModal = true;
-    const editData = await axios.get(endpoint + "hall/" + id);
+    const editData = await axios.get(endpoint + "hall/" + id, {
+      headers: { Authorization: "Bearer guest" },
+    });
     let d = editData.data.movie[0];
     console.log(d);
     formInput.hall_name = d.hall_name;

@@ -151,7 +151,11 @@
     iGenre = 0;
     ids = id;
     edit = true;
-    const editData = await axios.get(endpoint + "movie/" + id);
+    const editData = await axios.get(endpoint + "movie/" + id, {
+      headers: {
+        Authorization: "Bearer guest",
+      },
+    });
     let d = editData.data.movie[0];
     console.log(editData);
     if (editData) {
