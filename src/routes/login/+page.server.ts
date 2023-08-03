@@ -4,7 +4,6 @@ import axios from "axios";
 
 export const load: PageServerLoad = async ({ cookies }) => {
   const token = cookies.get("token");
-  console.log(token);
   if (token) {
     throw redirect(303, "/");
   }
@@ -20,14 +19,21 @@ export const actions: Actions = {
           password: data.get("password"),
         })
         .then((response) => {
-          cookies.set("token", response.data.token);
+          cookies.set("token", response.data.token, {
+            path: "/",
+            httpOnly: true,
+            sameSite: "strict",
+            maxAge: 60 * 60 * 8,
+          });
           return redirect(303, "/");
         })
         .catch((err) => {
           console.log(err);
+          throw redirect(303, "/login");
         });
     } catch (error) {
       console.log(error);
+      throw redirect(303, "/login");
     }
   },
 };
