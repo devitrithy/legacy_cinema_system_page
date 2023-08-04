@@ -1,6 +1,6 @@
 import type { PageServerLoad } from "./$types";
 
-export const load = (async ({ cookies, url }) => {
+export const load: PageServerLoad = async ({ cookies, url }) => {
   let date = url.searchParams.get("day") || new Date().getDay() - 1;
   const token = cookies.get("token");
   const customHeaders = {
@@ -10,7 +10,8 @@ export const load = (async ({ cookies, url }) => {
     `https://cinemaapi.serveo.net/showing/now?day=${date}`,
     {
       headers: customHeaders,
+      credentials: "include",
     }
   );
   return { data: data.json() };
-}) satisfies PageServerLoad;
+};

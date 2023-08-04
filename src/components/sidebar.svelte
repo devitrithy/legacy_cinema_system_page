@@ -3,18 +3,15 @@
   import { page } from "$app/stores";
   import {
     AddressCardSolid,
-    ArrowRightArrowLeftOutline,
     ArrowRightToBracketOutline,
     BookOpenOutline,
     ClockOutline,
     FileCsvSolid,
     FilePdfOutline,
     FolderDuplicateOutline,
-    LockOpenOutline,
     MapLocationOutline,
     TicketOutline,
     UserGroupSolid,
-    UserOutline,
     UserSettingsOutline,
     VideoCameraOutline,
     WindowOutline,
@@ -28,7 +25,6 @@
   } from "flowbite-svelte";
   let spanClass = "flex-1 ml-3 whitespace-nowrap";
   $: activeUrl = $page.url.pathname;
-  $: console.log(activeUrl.substring(1, 6));
 </script>
 
 <div class="bg-white dark:bg-gray-900 p-8">
@@ -75,7 +71,7 @@
           {spanClass}
           href="/ticket"
           active={activeUrl === "/ticket" ||
-            activeUrl.substring(1, 6) === "ticket"}
+            activeUrl.substring(0, 7) === "/ticket"}
         >
           <svelte:fragment slot="icon">
             <TicketOutline />

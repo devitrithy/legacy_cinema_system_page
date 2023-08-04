@@ -1,13 +1,20 @@
-<script>
+<script lang="ts">
+  import type { Snapshot } from "@sveltejs/kit";
   import { Label, Helper, Input } from "flowbite-svelte";
+  import type { InputType } from "flowbite-svelte/dist/types";
 
   export let fieldName = "";
   export let value = "";
   export let iFieldName = 0;
   export let holder = "";
   export let name = "";
-  export let type = "text";
+  export let type: InputType = "text";
   export let message = "";
+
+  export const snapshot: Snapshot = {
+    capture: () => value,
+    restore: (v) => (value = v),
+  };
 </script>
 
 <Label class="space-y-2">

@@ -513,7 +513,7 @@
   <div class="text-center">
     {#if loading}
       <div class="my-5">
-        <Spinner color="gray" size={8} />
+        <Spinner color="gray" size="8" />
       </div>
     {:else}
       <svg

@@ -4,15 +4,24 @@
     BreadcrumbItem,
     Button,
     Card,
+    Chevron,
+    Dropdown,
+    DropdownItem,
     Input,
   } from "flowbite-svelte";
-  import { Ca } from "$lib";
   import type { PageData } from "./$types";
   import moment from "moment";
   import { ClockOutline, TicketOutline } from "flowbite-svelte-icons";
+  import { goto } from "$app/navigation";
   let endpoint = "https://cinemaapi.serveo.net/thumbnail/";
-  let day = new Date().toISOString().slice(0, 10);
+  let nextDay = (day: Number) => {
+    return new Date(Date.now() + 3600 * 1000 * 24 * day);
+  };
+  let gotoDay = (day: String) => {
+    goto(`/ticket?day=${day}`);
+  };
 
+  let dropdownOpen = false;
   export let data: PageData;
   let showings = data.data;
 </script>
@@ -28,11 +37,41 @@
         </Breadcrumb>
       </div>
     </div>
-    <form method="get" class="flex gap-5">
-      <!-- // -->
-      <Input type="date" bind:value={day} name="day" />
-      <Button type="submit">Confirm</Button>
-    </form>
+    <div class="flex items-center gap-5">
+      <Button><Chevron>Select Date</Chevron></Button>
+      <Dropdown bind:open={dropdownOpen}>
+        <DropdownItem
+          on:click={() =>
+            gotoDay(
+              new Date(nextDay(0))
+                .toDateString()
+                .substring(0, 15)
+                .substring(8, 10)
+            )}
+          >{new Date(nextDay(0)).toDateString().substring(0, 15)}</DropdownItem
+        >
+        <DropdownItem
+          on:click={() =>
+            gotoDay(
+              new Date(nextDay(1))
+                .toDateString()
+                .substring(0, 15)
+                .substring(8, 10)
+            )}
+          >{new Date(nextDay(1)).toDateString().substring(0, 15)}</DropdownItem
+        >
+        <DropdownItem
+          on:click={() =>
+            gotoDay(
+              new Date(nextDay(2))
+                .toDateString()
+                .substring(0, 15)
+                .substring(8, 10)
+            )}
+          >{new Date(nextDay(2)).toDateString().substring(0, 15)}</DropdownItem
+        >
+      </Dropdown>
+    </div>
   </div>
   <div class="flex gap-10 w-full overflow-x-scroll">
     {#each showings as movie}
@@ -71,9 +110,9 @@
             <div class="flex flex-wrap gap-5">
               {#each movie.ShowingTime as s}
                 <Button>
-                  {moment(s.showing_date)
-                    .tz("Atlantic/Azores")
-                    .format("hh:mm A")}
+                  <a href={`/ticket/${s.showing_id}`}>
+                    {s.showing_date.substring(11, 16)}
+                  </a>
                 </Button>
               {/each}
             </div>
