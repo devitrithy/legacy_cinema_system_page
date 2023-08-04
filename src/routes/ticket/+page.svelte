@@ -1,13 +1,9 @@
 <script lang="ts">
-  import {
-    Breadcrumb,
-    BreadcrumbItem,
-    Button,
-    Card,
-    Toggle,
-  } from "flowbite-svelte";
+  import { Breadcrumb, BreadcrumbItem, Button, Card } from "flowbite-svelte";
+  import { Ca } from "$lib";
   import type { PageData } from "./$types";
   import moment from "moment";
+  import { ClockOutline, TicketOutline } from "flowbite-svelte-icons";
   let endpoint = "https://cinemaapi.serveo.net/thumbnail/";
 
   export let data: PageData;
@@ -23,35 +19,55 @@
       <BreadcrumbItem href="/showingtime">Tickets</BreadcrumbItem>
     </Breadcrumb>
   </div>
-  {#each showings as showing}
-    <p class="text-black dark:text-white text-2xl font-light">
-      {moment(showing.showing_date, ["YYYY-MM-DD", "DD-MM-YYYY"]).format(
-        "DD MMMM YYYY"
-      )}
-    </p>
-    <Card padding="none">
-      <a href="/">
-        <img
-          class="p-8 rounded-t-lg"
-          src={endpoint + showing.movie.poster.substring(8) + "?w=200&h=300"}
-          alt="product 1"
-        />
-      </a>
-      <div class="px-5 pb-5">
-        <a href="/">
-          <h5
-            class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white"
-          >
-            Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport
-          </h5>
-        </a>
-        <div class="flex justify-between items-center">
-          <span class="text-3xl font-bold text-gray-900 dark:text-white"
-            >$543</span
-          >
-          <Button href="/">Buy now</Button>
+  <p class="text-black dark:text-white text-2xl font-light mb-10">
+    {moment(new Date(), ["YYYY-MM-DD", "DD-MM-YYYY"]).format("DD MMMM YYYY")}
+  </p>
+  <div class="flex gap-10 w-full overflow-x-scroll">
+    {#each showings as movie}
+      {#if movie.ShowingTime.length > 0}
+        <div>
+          <Card class="w-[384px]">
+            <img
+              src={endpoint + movie.poster.substring(8) + "?h=384&w=216"}
+              height="384"
+              width="216"
+              alt=""
+              srcset=""
+            />
+            <h5
+              class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+            >
+              {movie.title}
+            </h5>
+            <p
+              class="mb-3 font-normal text-gray-700 dark:text-white text-2xl leading-tight flex items-center gap-3"
+            >
+              <TicketOutline /> ${movie.ShowingTime[0].price}
+            </p>
+            <p
+              class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight flex items-center gap-3"
+            >
+              <ClockOutline />
+              {movie.time} Minutes
+            </p>
+            <p
+              class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight flex items-center gap-3"
+            >
+              {movie.genre}
+            </p>
+
+            <div class="flex flex-wrap gap-5">
+              {#each movie.ShowingTime as s}
+                <Button>
+                  {moment(s.showing_date)
+                    .tz("Atlantic/Azores")
+                    .format("hh:mm A")}
+                </Button>
+              {/each}
+            </div>
+          </Card>
         </div>
-      </div>
-    </Card>
-  {/each}
+      {/if}
+    {/each}
+  </div>
 </main>
