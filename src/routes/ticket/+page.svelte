@@ -1,27 +1,39 @@
 <script lang="ts">
-  import { Breadcrumb, BreadcrumbItem, Button, Card } from "flowbite-svelte";
+  import {
+    Breadcrumb,
+    BreadcrumbItem,
+    Button,
+    Card,
+    Input,
+  } from "flowbite-svelte";
   import { Ca } from "$lib";
   import type { PageData } from "./$types";
   import moment from "moment";
   import { ClockOutline, TicketOutline } from "flowbite-svelte-icons";
   let endpoint = "https://cinemaapi.serveo.net/thumbnail/";
+  let day = new Date().toISOString().slice(0, 10);
 
   export let data: PageData;
   let showings = data.data;
-  console.log(data.data);
 </script>
 
 <main class=" z-10 mt-20 container mx-auto">
-  <h1 class="text-black dark:text-white text-2xl m-4">Tickets</h1>
-  <div class="m-4 flex justify-between items-center">
-    <Breadcrumb aria-label="Default breadcrumb example">
-      <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
-      <BreadcrumbItem href="/showingtime">Tickets</BreadcrumbItem>
-    </Breadcrumb>
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-black dark:text-white text-2xl m-4">Tickets</h1>
+      <div class="m-4 flex justify-between items-center">
+        <Breadcrumb aria-label="Default breadcrumb example">
+          <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
+          <BreadcrumbItem href="/showingtime">Tickets</BreadcrumbItem>
+        </Breadcrumb>
+      </div>
+    </div>
+    <form method="get" class="flex gap-5">
+      <!-- // -->
+      <Input type="date" bind:value={day} name="day" />
+      <Button type="submit">Confirm</Button>
+    </form>
   </div>
-  <p class="text-black dark:text-white text-2xl font-light mb-10">
-    {moment(new Date(), ["YYYY-MM-DD", "DD-MM-YYYY"]).format("DD MMMM YYYY")}
-  </p>
   <div class="flex gap-10 w-full overflow-x-scroll">
     {#each showings as movie}
       {#if movie.ShowingTime.length > 0}

@@ -2,14 +2,22 @@ import { fail, type Actions, redirect } from "@sveltejs/kit";
 import axios from "axios";
 import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ url }) => {
+export const load: PageServerLoad = async ({ url, cookies }) => {
+  const token = cookies.get("token");
+  const customHeaders = {
+    Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+  };
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("https://cinemaapi.serveo.net/showing");
+  const count = await axios.get("https://cinemaapi.serveo.net/showing", {
+    headers: customHeaders,
+  });
 
   if (page > count.data.count / 5 + 1) {
     throw redirect(302, "/showing");
   }
-  const showing = await fetch(`https://cinemaapi.serveo.net/showing`);
+  const showing = await fetch(`https://cinemaapi.serveo.net/showing`, {
+    headers: customHeaders,
+  });
   let halls = showing.json();
   return {
     data: halls,
@@ -17,17 +25,25 @@ export const load: PageServerLoad = async ({ url }) => {
 };
 
 export const actions = {
-  create: async ({ request }) => {
+  create: async ({ request, cookies }) => {
     const data = await request.formData();
+    const token = cookies.get("token");
+    const customHeaders = {
+      Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    };
 
     try {
       axios
-        .post("https://cinemaapi.serveo.net/showing", {
-          showing_date: data.get("date"),
-          movie_id: data.get("movie_id"),
-          hall_id: data.get("hall_id"),
-          price: data.get("price"),
-        })
+        .post(
+          "https://cinemaapi.serveo.net/showing",
+          {
+            showing_date: data.get("date"),
+            movie_id: data.get("movie_id"),
+            hall_id: data.get("hall_id"),
+            price: data.get("price"),
+          },
+          { headers: customHeaders }
+        )
         .then(function (response) {
           console.log(response);
         })
@@ -49,12 +65,18 @@ export const actions = {
     };
   },
 
-  delete: async ({ request }) => {
+  delete: async ({ request, cookies }) => {
     const data = await request.formData();
+    const token = cookies.get("token");
+    const customHeaders = {
+      Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    };
 
     try {
       axios
-        .delete("https://cinemaapi.serveo.net/showing/" + data.get("id"))
+        .delete("https://cinemaapi.serveo.net/showing/" + data.get("id"), {
+          headers: customHeaders,
+        })
         .then((response) => {
           return {
             success: true,
@@ -74,15 +96,23 @@ export const actions = {
       });
     }
   },
-  edit: async ({ request }) => {
+  edit: async ({ request, cookies }) => {
     const data = await request.formData();
+    const token = cookies.get("token");
+    const customHeaders = {
+      Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    };
 
     try {
       axios
-        .put(`https://cinemaapi.serveo.net/showing/${data.get("h_id")}`, {
-          hall_name: data.get("hall_name"),
-          id: data.get("id"),
-        })
+        .put(
+          `https://cinemaapi.serveo.net/showing/${data.get("h_id")}`,
+          {
+            hall_name: data.get("hall_name"),
+            id: data.get("id"),
+          },
+          { headers: customHeaders }
+        )
         .then(function (response) {
           console.log(response);
         })
