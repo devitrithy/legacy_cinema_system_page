@@ -10,7 +10,7 @@
 
   // let pf = user.profile.substring(8) | "1691002845965.webp";
   // FIX: Please fix this becsae it's bug the whole proccess
-  // let profile = `http://localhost:3000/thumbnail/${pf})}?w=25&h=25`;
+  // let profile = `https://cinemaapi.serveo.net/thumbnail/${pf})}?w=25&h=25`;
 </script>
 
 <title>Legacy Cinema | Admin Page</title>

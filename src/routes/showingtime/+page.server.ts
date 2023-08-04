@@ -4,12 +4,12 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ url }) => {
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("http://localhost:3000/showing");
+  const count = await axios.get("https://cinemaapi.serveo.net/showing");
 
   if (page > count.data.count / 5 + 1) {
     throw redirect(302, "/showing");
   }
-  const showing = await fetch(`http://localhost:3000/showing`);
+  const showing = await fetch(`https://cinemaapi.serveo.net/showing`);
   let halls = showing.json();
   return {
     data: halls,
@@ -22,7 +22,7 @@ export const actions = {
 
     try {
       axios
-        .post("http://localhost:3000/showing", {
+        .post("https://cinemaapi.serveo.net/showing", {
           showing_date: data.get("date"),
           movie_id: data.get("movie_id"),
           hall_id: data.get("hall_id"),
@@ -54,7 +54,7 @@ export const actions = {
 
     try {
       axios
-        .delete("http://localhost:3000/showing/" + data.get("id"))
+        .delete("https://cinemaapi.serveo.net/showing/" + data.get("id"))
         .then((response) => {
           return {
             success: true,
@@ -79,7 +79,7 @@ export const actions = {
 
     try {
       axios
-        .put(`http://localhost:3000/showing/${data.get("h_id")}`, {
+        .put(`https://cinemaapi.serveo.net/showing/${data.get("h_id")}`, {
           hall_name: data.get("hall_name"),
           id: data.get("id"),
         })

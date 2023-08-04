@@ -36,7 +36,7 @@
   export let data;
   console.log(data.data);
 
-  let endpoint = "http://localhost:3000/";
+  let endpoint = "https://cinemaapi.serveo.net/";
   let popupModal = false;
   let ids: any;
   let edit = false;

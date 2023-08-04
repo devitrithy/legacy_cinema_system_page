@@ -7,7 +7,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
   };
   let id = params.id;
-  const data = await fetch("http://localhost:3000/movie/" + id, {
+  const data = await fetch("https://cinemaapi.serveo.net/movie/" + id, {
     headers: customHeaders,
   });
   console.log(data.status);

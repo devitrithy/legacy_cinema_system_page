@@ -5,7 +5,7 @@ export const load = (async ({ cookies }) => {
   const customHeaders = {
     Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
   };
-  const data = await fetch(`http://localhost:3000/showing/now`, {
+  const data = await fetch(`https://cinemaapi.serveo.net/showing/now`, {
     headers: customHeaders,
   });
   return { data: data.json() };

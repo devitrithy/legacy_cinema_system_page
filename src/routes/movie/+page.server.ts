@@ -9,17 +9,20 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
     const customHeaders = {
       Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
     };
-    const count = await axios.get("http://localhost:3000/movie", {
+    const count = await axios.get("https://cinemaapi.serveo.net/movie", {
       headers: customHeaders,
     });
 
     if (page > count.data.count / 5 + 1) {
       throw redirect(302, "/movie");
     }
-    const data = await fetch(`http://localhost:3000/movie?page=${page}`, {
-      headers: customHeaders,
-      credentials: "include",
-    });
+    const data = await fetch(
+      `https://cinemaapi.serveo.net/movie?page=${page}`,
+      {
+        headers: customHeaders,
+        credentials: "include",
+      }
+    );
     return {
       data: data.json(),
     };
@@ -39,7 +42,7 @@ export const actions = {
         Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
       };
       axios
-        .post("http://localhost:3000/movie", data, {
+        .post("https://cinemaapi.serveo.net/movie", data, {
           headers: customHeaders,
         })
         .then(function (response) {
@@ -72,7 +75,7 @@ export const actions = {
 
     try {
       axios
-        .delete("http://localhost:3000/movie/" + data.get("id"), {
+        .delete("https://cinemaapi.serveo.net/movie/" + data.get("id"), {
           headers: customHeaders,
         })
         .then((response) => {
@@ -105,7 +108,7 @@ export const actions = {
 
     try {
       axios
-        .put(`http://localhost:3000/movie/${data.get("id")}`, data, {
+        .put(`https://cinemaapi.serveo.net/movie/${data.get("id")}`, data, {
           headers: customHeaders,
         })
         .then(function (response) {

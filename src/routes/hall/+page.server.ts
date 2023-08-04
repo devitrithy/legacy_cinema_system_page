@@ -8,14 +8,14 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
     Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
   };
   let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get("http://localhost:3000/hall", {
+  const count = await axios.get("https://cinemaapi.serveo.net/hall", {
     headers: customHeaders,
   });
 
   if (page > count.data.count / 5 + 1) {
     throw redirect(302, "/hall");
   }
-  const hall = await fetch(`http://localhost:3000/hall`, {
+  const hall = await fetch(`https://cinemaapi.serveo.net/hall`, {
     headers: customHeaders,
   });
   let halls = hall.json();
@@ -35,7 +35,7 @@ export const actions = {
     try {
       axios
         .post(
-          "http://localhost:3000/hall",
+          "https://cinemaapi.serveo.net/hall",
           {
             hall_name: data.get("hall_name"),
             id: data.get("id"),
@@ -72,7 +72,7 @@ export const actions = {
 
     try {
       axios
-        .delete("http://localhost:3000/hall/" + data.get("id"), {
+        .delete("https://cinemaapi.serveo.net/hall/" + data.get("id"), {
           headers: customHeaders,
         })
         .then((response) => {
@@ -104,7 +104,7 @@ export const actions = {
     try {
       axios
         .put(
-          `http://localhost:3000/hall/${data.get("h_id")}`,
+          `https://cinemaapi.serveo.net/hall/${data.get("h_id")}`,
           {
             hall_name: data.get("hall_name"),
             id: data.get("id"),
