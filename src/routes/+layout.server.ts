@@ -1,5 +1,8 @@
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals }) => {
-  return { user: locals.user };
+  if (locals.user) {
+    return { user: locals.user };
+  }
+  return { user: null };
 };

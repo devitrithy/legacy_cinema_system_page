@@ -9,12 +9,9 @@
     Button,
     Search,
   } from "flowbite-svelte";
-  export let profile = "";
-  export let user = "Rithy Devit";
-  export let email = "devit@gmail.com";
-  const logout = () => {
-    console.log("logout");
-  };
+  export let profile: String = "";
+  export let user: String = "Rithy Devit";
+  export let email: String = "devit@gmail.com";
 </script>
 
 <div

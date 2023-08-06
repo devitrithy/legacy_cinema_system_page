@@ -1,16 +1,19 @@
 <script>
   import { page } from "$app/stores";
-  import { SpeedDial, SpeedDialButton } from "flowbite-svelte";
   import "../app.postcss";
   import Navbar from "../components/navbar.svelte";
   import Sidebar from "../components/sidebar.svelte";
-  import { VideoCameraOutline } from "flowbite-svelte-icons";
   // export let data;
-  // let user = data.user;
+  // let user = data.user || null;
+  // let pf;
+  // if (!user.profile) {
+  //   pf = "1691002845965.webp";
+  // } else {
+  //   pf = user.profile.substring(8);
+  // }
 
-  // let pf = user.profile.substring(8) | "1691002845965.webp";
   // FIX: Please fix this becsae it's bug the whole proccess
-  // let profile = `https://cinemaapi.serveo.net/thumbnail/${pf})}?w=25&h=25`;
+  // let profile = `https://cinemaapi.serveo.net/thumbnail/${pf}?w=25&h=25`;
 </script>
 
 <title>Legacy Cinema | Admin Page</title>
@@ -24,6 +27,7 @@
     </div>
     <div class="self-top w-full">
       <div>
+        <!-- <Navbar email={user.email || ""} {profile} user={user.username || ""} /> -->
         <Navbar />
       </div>
       <slot />
