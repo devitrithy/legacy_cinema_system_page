@@ -2,7 +2,7 @@ import { fail, type Actions, redirect } from "@sveltejs/kit";
 import axios from "axios";
 import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ url, cookies }) => {
+export const load: PageServerLoad = async ({ url, cookies, setHeaders }) => {
   const token = cookies.get("token");
   const customHeaders = {
     Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
@@ -18,6 +18,13 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
   const showing = await fetch(`https://cinemaapi.serveo.net/showing`, {
     headers: customHeaders,
   });
+
+  const countCache = count.headers.get("cache-control");
+  const showingCache = count.headers.get("cache-control");
+
+  if (countCache) setHeaders({ "cache-control": countCache });
+  if (showingCache) setHeaders({ "cache-control": showingCache });
+
   let halls = showing.json();
   return {
     data: halls,

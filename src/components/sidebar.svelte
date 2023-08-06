@@ -44,6 +44,7 @@
           </svelte:fragment>
         </SidebarItem>
         <SidebarItem
+          data-sveltekit-prefetch
           label="Movie"
           {spanClass}
           href="/movie"
@@ -58,6 +59,7 @@
         <SidebarItem
           label="Showing Time"
           {spanClass}
+          data-sveltekit-prefetch
           href="/showingtime"
           active={activeUrl === "/showingtime" ||
             activeUrl.substring(1, 12) === "showingtime"}
@@ -67,6 +69,7 @@
           </svelte:fragment>
         </SidebarItem>
         <SidebarItem
+          data-sveltekit-prefetch
           label="Tickets"
           {spanClass}
           href="/ticket"
@@ -78,6 +81,7 @@
           </svelte:fragment>
         </SidebarItem>
         <SidebarItem
+          data-sveltekit-prefetch
           label="Booking"
           {spanClass}
           href="/booking"
@@ -91,6 +95,7 @@
       </SidebarGroup>
       <SidebarGroup border>
         <SidebarItem
+          data-sveltekit-prefetch
           label="Location"
           {spanClass}
           href="/location"
@@ -102,6 +107,7 @@
           </svelte:fragment>
         </SidebarItem>
         <SidebarItem
+          data-sveltekit-prefetch
           label="Hall"
           {spanClass}
           href="/hall"
@@ -112,6 +118,7 @@
           </svelte:fragment>
         </SidebarItem>
         <SidebarItem
+          data-sveltekit-prefetch
           label="Departments"
           {spanClass}
           href="/department"
@@ -123,6 +130,7 @@
           </svelte:fragment>
         </SidebarItem>
         <SidebarItem
+          data-sveltekit-prefetch
           label="Employee"
           {spanClass}
           href="/employee"
@@ -136,6 +144,7 @@
       </SidebarGroup>
       <SidebarGroup border>
         <SidebarItem
+          data-sveltekit-prefetch
           label="Report"
           {spanClass}
           href="/report"
@@ -147,6 +156,7 @@
           </svelte:fragment>
         </SidebarItem>
         <SidebarItem
+          data-sveltekit-prefetch
           label="Reports"
           {spanClass}
           href="/reports"
@@ -158,6 +168,7 @@
           </svelte:fragment>
         </SidebarItem>
         <SidebarItem
+          data-sveltekit-prefetch
           label="Reportss"
           {spanClass}
           href="/reportss"

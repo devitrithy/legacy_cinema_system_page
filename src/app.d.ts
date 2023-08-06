@@ -8,6 +8,7 @@ type User = {
   lastname: string;
   username: string;
 };
+
 declare global {
   namespace App {
     // interface Error {}
