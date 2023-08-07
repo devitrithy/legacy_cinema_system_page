@@ -1,7 +1,7 @@
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ cookies, url }) => {
-  let date = url.searchParams.get("day") || new Date().getDay() - 1;
+  let date = url.searchParams.get("day") || new Date().getDate();
   const token = cookies.get("token");
   const customHeaders = {
     Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
