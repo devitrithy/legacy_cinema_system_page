@@ -1,4 +1,4 @@
-import { fail, type Actions, redirect } from "@sveltejs/kit";
+import { error, fail, type Actions, redirect } from "@sveltejs/kit";
 import axios from "axios";
 import type { PageServerLoad } from "./$types";
 
@@ -26,9 +26,15 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
     return {
       data: data.json(),
     };
-  } catch (error) {
-    console.log(error);
-    throw fail(400, { message: "Permission denied" });
+  } catch (err) {
+    console.log(err.response.data.message);
+    if (err.response.status === 401) {
+      cookies.delete("token");
+      throw redirect(303, "/login");
+    }
+    throw error(400, {
+      message: "Permission Denied",
+    });
   }
 };
 

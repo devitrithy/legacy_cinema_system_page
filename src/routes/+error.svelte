@@ -1,5 +1,7 @@
 <script>
   import { page } from "$app/stores";
+  import internal from "./website-maintenance.gif";
+  import e from "./security-research.gif";
 </script>
 
 <div
@@ -7,9 +9,16 @@
 >
   <div id="main">
     <div class="fof">
-      <h1 class="mb-5">Error {$page.status}</h1>
-      <p class="mb-5">
-        {$page.error?.message}
+      <p class="mb-5 flex flex-col justify-center items-center">
+        {#if $page.status === 500}
+          <img src={internal} alt="this slowpoke moves" width="550" />
+        {:else}
+          <img src={e} alt="this slowpoke moves" width="550" />
+        {/if}
+        <span class="text-3xl">
+          {$page.status}
+          {$page.error?.message}
+        </span>
       </p>
       <a href="/" class="underline">Click here to go to home page</a>
     </div>

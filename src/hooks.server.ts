@@ -6,10 +6,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   event.locals.user = auth(event);
   const response = await resolve(event); //2
   //3
-  if (
-    event.url.pathname.startsWith("/") &&
-    !event.url.pathname.startsWith("/login")
-  ) {
+  if (!event.url.pathname.startsWith("/login")) {
     if (!event.locals.user) {
       throw redirect(303, "/login");
     }
