@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, Card, Spinner } from "flowbite-svelte";
+  import { Button, Card, DarkMode, Spinner } from "flowbite-svelte";
   import src from "../../public/Logo.png";
   import { enhance } from "$app/forms";
   import type { SubmitFunction } from "@sveltejs/kit";
@@ -51,6 +51,10 @@
     };
   };
 </script>
+
+<div style="display: none;">
+  <DarkMode />
+</div>
 
 <main
   class="w-screen h-screen text-white bg-slate-950 flex items-center justify-center"

@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { Actions, PageServerLoad } from "../$types";
+import { error, redirect } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
   const token = cookies.get("token");

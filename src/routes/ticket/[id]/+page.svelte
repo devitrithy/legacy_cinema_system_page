@@ -7,26 +7,28 @@
     Indicator,
     Tooltip,
   } from "flowbite-svelte";
+  import moment from "moment-timezone";
   export let data;
   const endpoint = "https://cinemaapi.serveo.net/thumbnail/";
   let disabled = true;
   const { tickets, showings } = data;
   let showing = showings.showingtime[0];
+  let total: number = 0;
 
   let selected: String[] = [];
   const select = (seatNumber: String) => {
+    disabled = false;
     for (let index = 0; index < selected.length; index++) {
       if (seatNumber === selected[index]) {
         selected.splice(index, 1);
         selected = selected;
+        if (selected.length < 1) disabled = true;
         return;
       }
     }
     selected.push(seatNumber);
     selected = selected;
   };
-  $: console.log(selected);
-  let total;
   $: total = showing.price * selected.length;
 </script>
 
@@ -37,6 +39,9 @@
       <Breadcrumb aria-label="Default breadcrumb example">
         <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
         <BreadcrumbItem href="/ticket">Ticket</BreadcrumbItem>
+        <BreadcrumbItem href="/ticket/{showing.showing_id}"
+          >{showing.movie.title}</BreadcrumbItem
+        >
       </Breadcrumb>
     </div>
   </h1>
@@ -59,7 +64,7 @@
           <p>H</p>
           <p>I</p>
         </div>
-        <div class="grid grid-cols-20 m-5">
+        <div class="grid grid-cols-20 m-5 gap-1">
           {#each tickets as seat}
             <div id={`hover${seat.id}`}>
               <Tooltip
@@ -102,28 +107,37 @@
         />
         <div class="flex flex-col gap-5">
           <h1>
-            Title: <span class=" font-bold">{showing.movie.title}</span>
+            <span class=" font-bold">{showing.movie.title}</span>
           </h1>
           <h1>
-            Location: <span class="font-bold"
-              >{showing.hall.location.location_name}</span
+            <span class=""
+              >Legacy Cinema {showing.hall.location.location_name}</span
             >
           </h1>
-          <h1>Hall: <span class="font-bold">{showing.hall.hall_name}</span></h1>
+          <h1><span class="">{showing.hall.hall_name}</span></h1>
+          <h1>
+            <span class=""
+              >{moment(showing.showing_date)
+                .tz("Atlantic/Reykjavik")
+                .format("LLL")}</span
+            >
+          </h1>
+          <h1>
+            Seat:
+            {#each selected as select}
+              <span class="mx-1">
+                {select}
+              </span>
+            {/each}
+          </h1>
+          <h1>Total: <span class="">${total}</span></h1>
         </div>
       </div>
-      <h1>Total: <span class="font-bold">${total}</span></h1>
-      <h1>
-        Seat:
-        {#each selected as select}
-          <span class="mx-1">
-            {select}
-          </span>
-        {/each}
-      </h1>
-      <form action="?/pay" method="post" class="w-[100%]">
+      <form action="?/pay" method="post">
         <input type="hidden" name="pay" bind:value={selected} />
-        <Button type="submit" {disabled}>Pay</Button>
+        <div class="w-full grid">
+          <Button type="submit" {disabled} pill>Pay</Button>
+        </div>
       </form>
     </aside>
   </div>
