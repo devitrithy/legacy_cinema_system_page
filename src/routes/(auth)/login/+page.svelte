@@ -35,6 +35,7 @@
       iPasswordMessage = "Password validated.";
     }
     return async ({ result, update }) => {
+      console.log(result.type);
       switch (result.type) {
         case "success":
           if ($page.url.searchParams.get("r")) {
@@ -45,6 +46,16 @@
             goto("/");
           }
           break;
+        case "redirect":
+          iUsername = 0;
+          iPassword = 0;
+          iPasswordMessage = "";
+          iUsernameMessage = "";
+          iFail = 1;
+          iFailMessage = "Server is under maintenance please wait ⚠️";
+          loading = false;
+          break;
+
         default:
           iUsername = 1;
           iPassword = 1;

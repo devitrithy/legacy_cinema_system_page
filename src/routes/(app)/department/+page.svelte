@@ -28,9 +28,10 @@
     PlusOutline,
     TrashBinOutline,
   } from "flowbite-svelte-icons";
+  import { PUBLIC_API_ENDPOINT } from "$env/static/public";
 
   export let data;
-  let endpoint = PUBLIC_API_ENDPOINT;
+  let endpoint = `${PUBLIC_API_ENDPOINT}/`;
   let popupModal = false;
   let ids: any;
   let edit = false;
@@ -59,7 +60,6 @@
 
   import type { SubmitFunction } from "./$types.js";
   import TextField from "$lib/ui/textField.svelte";
-  import { PUBLIC_API_ENDPOINT } from "$env/static/public";
   let formModal = false;
   export const snapshot: Snapshot = {
     capture: () => formInput,
