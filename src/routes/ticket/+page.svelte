@@ -10,15 +10,11 @@
     Input,
   } from "flowbite-svelte";
   import type { PageData } from "./$types";
-  import moment from "moment";
+  import moment from "moment-timezone";
   import { ClockOutline, TicketOutline } from "flowbite-svelte-icons";
-  import { goto } from "$app/navigation";
   let endpoint = "https://cinemaapi.serveo.net/thumbnail/";
   let nextDay = (day: Number) => {
     return new Date(Date.now() + 3600 * 1000 * 24 * day);
-  };
-  let gotoDay = (day: String) => {
-    goto(`/ticket?day=${day}`);
   };
 
   let dropdownOpen = false;
@@ -42,53 +38,48 @@
       <Button><Chevron>Select Date</Chevron></Button>
       <Dropdown bind:open={dropdownOpen}>
         <DropdownItem
-          on:click={() =>
-            gotoDay(
-              new Date(nextDay(0))
-                .toDateString()
-                .substring(0, 15)
-                .substring(8, 10)
-            )}
+          data-sveltekit-prefetch
+          href={"/ticket?day=" +
+            new Date(nextDay(0))
+              .toDateString()
+              .substring(0, 15)
+              .substring(8, 10)}
           >{new Date(nextDay(0)).toDateString().substring(0, 15)}</DropdownItem
         >
         <DropdownItem
-          on:click={() =>
-            gotoDay(
-              new Date(nextDay(1))
-                .toDateString()
-                .substring(0, 15)
-                .substring(8, 10)
-            )}
+          data-sveltekit-prefetch
+          href={"/ticket?day=" +
+            new Date(nextDay(1))
+              .toDateString()
+              .substring(0, 15)
+              .substring(8, 10)}
           >{new Date(nextDay(1)).toDateString().substring(0, 15)}</DropdownItem
         >
         <DropdownItem
-          on:click={() =>
-            gotoDay(
-              new Date(nextDay(2))
-                .toDateString()
-                .substring(0, 15)
-                .substring(8, 10)
-            )}
+          data-sveltekit-prefetch
+          href={"/ticket?day=" +
+            new Date(nextDay(2))
+              .toDateString()
+              .substring(0, 15)
+              .substring(8, 10)}
           >{new Date(nextDay(2)).toDateString().substring(0, 15)}</DropdownItem
         >
         <DropdownItem
-          on:click={() =>
-            gotoDay(
-              new Date(nextDay(3))
-                .toDateString()
-                .substring(0, 15)
-                .substring(8, 10)
-            )}
+          data-sveltekit-prefetch
+          href={"/ticket?day=" +
+            new Date(nextDay(3))
+              .toDateString()
+              .substring(0, 15)
+              .substring(8, 10)}
           >{new Date(nextDay(3)).toDateString().substring(0, 15)}</DropdownItem
         >
         <DropdownItem
-          on:click={() =>
-            gotoDay(
-              new Date(nextDay(4))
-                .toDateString()
-                .substring(0, 15)
-                .substring(8, 10)
-            )}
+          data-sveltekit-prefetch
+          href={"/ticket?day=" +
+            new Date(nextDay(4))
+              .toDateString()
+              .substring(0, 15)
+              .substring(8, 10)}
           >{new Date(nextDay(4)).toDateString().substring(0, 15)}</DropdownItem
         >
       </Dropdown>
@@ -128,7 +119,7 @@
             {#each movie.ShowingTime as s}
               <Button>
                 <a href={`/ticket/${s.showing_id}`} class="text-xl">
-                  {s.showing_date.substring(11, 16)}
+                  {moment(s.showing_date).tz("Atlantic/Reykjavik").format("LT")}
                 </a>
               </Button>
             {/each}

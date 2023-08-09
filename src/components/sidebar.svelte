@@ -7,8 +7,10 @@
     BookOpenOutline,
     ClockOutline,
     FileCsvSolid,
+    FileImageOutline,
     FilePdfOutline,
     FolderDuplicateOutline,
+    ImageOutline,
     MapLocationOutline,
     TicketOutline,
     UserGroupSolid,
@@ -47,12 +49,24 @@
           data-sveltekit-prefetch
           label="Movie"
           {spanClass}
+          href="/slideshow"
+          active={activeUrl === "/slideshow" ||
+            activeUrl.substring(1, 6) === "slideshow"}
+        >
+          <svelte:fragment slot="icon">
+            <VideoCameraOutline />
+          </svelte:fragment>
+        </SidebarItem>
+        <SidebarItem
+          data-sveltekit-prefetch
+          label="Slideshow"
+          {spanClass}
           href="/movie"
           active={activeUrl === "/movie" ||
             activeUrl.substring(1, 6) === "movie"}
         >
           <svelte:fragment slot="icon">
-            <VideoCameraOutline />
+            <ImageOutline />
           </svelte:fragment>
         </SidebarItem>
 
@@ -68,6 +82,8 @@
             <ClockOutline />
           </svelte:fragment>
         </SidebarItem>
+      </SidebarGroup>
+      <SidebarGroup border>
         <SidebarItem
           data-sveltekit-prefetch
           label="Tickets"
