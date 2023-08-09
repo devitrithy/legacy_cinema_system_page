@@ -8,7 +8,8 @@ export const handle: Handle = async ({ event, resolve }) => {
   //3
   if (!event.url.pathname.startsWith("/login")) {
     if (!event.locals.user) {
-      throw redirect(303, "/login");
+      const fromUrl = event.url.pathname + event.url.search;
+      throw redirect(303, `/login?r=${fromUrl}`);
     }
   }
 

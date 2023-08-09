@@ -4,7 +4,7 @@
   import type { InputType } from "flowbite-svelte/dist/types";
 
   export let fieldName = "";
-  export let value = "";
+  export let value: String = "";
   export let iFieldName = 0;
   export let holder = "";
   export let name = "";

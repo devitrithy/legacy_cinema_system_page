@@ -2,8 +2,12 @@
   import { page } from "$app/stores";
   import internal from "./website-maintenance.gif";
   import e from "./security-research.gif";
+  import { DarkMode } from "flowbite-svelte";
 </script>
 
+<div style="display: none;">
+  <DarkMode />
+</div>
 <div
   class="flex flex-col gap-4 items-center justify-center text-black dark:text-white"
 >
