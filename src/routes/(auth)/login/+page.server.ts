@@ -1,4 +1,4 @@
-import { redirect, type Actions } from "@sveltejs/kit";
+import { error, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { PUBLIC_API_ENDPOINT } from "$env/static/public";
 import axios from "axios";
@@ -15,7 +15,7 @@ export const actions: Actions = {
     try {
       const data = await request.formData();
       await axios
-        .post(`${PUBLIC_API_ENDPOINT}/user/login`, {
+        .post(`${PUBLIC_API_ENDPOINT}/user/admin/login`, {
           username: data.get("username"),
           password: data.get("password"),
         })
@@ -30,11 +30,11 @@ export const actions: Actions = {
         })
         .catch((err) => {
           console.log(err);
-          throw redirect(303, "/login");
+          throw error(400, { message: "Fail to login." });
         });
-    } catch (error) {
+    } catch (err) {
       console.log(error);
-      throw redirect(303, "/login");
+      throw error(400, { message: "Fail to login." });
     }
   },
 };

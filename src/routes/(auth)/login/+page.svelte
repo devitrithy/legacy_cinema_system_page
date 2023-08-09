@@ -49,7 +49,7 @@
             goto("/");
           }
           break;
-        case "redirect":
+        case "error":
           iUsername = 0;
           iPassword = 0;
           iPasswordMessage = "";

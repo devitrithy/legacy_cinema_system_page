@@ -28,8 +28,11 @@
     Textarea,
     Toast,
     Toggle,
+    Tooltip,
   } from "flowbite-svelte";
   import {
+    ArrowDownOutline,
+    ArrowUpOutline,
     EditOutline,
     EyeOutline,
     PlusOutline,
@@ -229,16 +232,16 @@
 
 <main class=" z-10 mt-20 container mx-auto">
   <h1 class="text-black dark:text-white text-2xl m-4">
-    {$page.url.pathname === "/slideshow" ? "Movie" : "Add Movie"}
+    {$page.url.pathname === "/slideshow" ? "Slideshow" : "Add Slideshow"}
   </h1>
   <div class="m-4 flex justify-between items-center">
     <Breadcrumb aria-label="Default breadcrumb example">
       <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
-      <BreadcrumbItem href="/slideshow">Movie</BreadcrumbItem>
+      <BreadcrumbItem href="/slideshow">Slideshow</BreadcrumbItem>
     </Breadcrumb>
 
     <Button on:click={addMovie} outline pill
-      ><span class="mr-5">Add Movie</span><PlusOutline />
+      ><span class="mr-5">Add Slideshow</span><PlusOutline />
     </Button>
   </div>
   {#if data.data.count > 0}
@@ -252,13 +255,12 @@
       <TableBody tableBodyClass="divide-y">
         {#each data.data.slideshows as slideshow}
           <TableBodyRow>
-            <TableBodyCell
+            <TableBodyCell tdClass="w-[210px] h-[70px]"
               ><img
-                width="50"
                 src={endpoint +
                   "thumbnail/" +
                   slideshow.poster.substring(8) +
-                  "?h=96&w=54"}
+                  "?h=50&w=180"}
                 alt=""
               /></TableBodyCell
             >
@@ -270,15 +272,44 @@
             >
             <TableBodyCell tdClass="w-40">
               <div class="flex gap-5">
-                <a href="/slideshow/{slideshow.id}"><EyeOutline /></a>
-                <button on:click={() => editForm(slideshow.id)}
-                  ><EditOutline /></button
+                <form action="?/active" method="post">
+                  <button id={`activeHover${slideshow.id}`}
+                    ><EyeOutline /></button
+                  >
+                  <Tooltip triggeredBy={`#activeHover${slideshow.id}`}
+                    >Active</Tooltip
+                  >
+                </form>
+                <form action="?/up" method="post">
+                  <button id={`upHover${slideshow.id}`}
+                    ><ArrowUpOutline /></button
+                  >
+                  <Tooltip triggeredBy={`#upHover${slideshow.id}`}
+                    >Move Up</Tooltip
+                  >
+                </form>
+                <form action="?down" method="post">
+                  <button id={`downHover${slideshow.id}`}
+                    ><ArrowDownOutline /></button
+                  >
+                  <Tooltip triggeredBy={`#downHover${slideshow.id}`}
+                    >Move Down</Tooltip
+                  >
+                </form>
+                <button
+                  on:click={() => editForm(slideshow.id)}
+                  id={`editHover${slideshow.id}`}><EditOutline /></button
+                >
+                <Tooltip triggeredBy={`#editHover${slideshow.id}`}>Edit</Tooltip
                 >
                 <button
+                  id={`rmHover${slideshow.id}`}
                   type="submit"
                   on:click={() => {
                     deleteModal(slideshow.id);
                   }}><TrashBinOutline /></button
+                >
+                <Tooltip triggeredBy={`#rmHover${slideshow.id}`}>Remove</Tooltip
                 >
               </div>
             </TableBodyCell>
@@ -287,7 +318,9 @@
       </TableBody>
     </Table>
   {:else}
-    <p class="text-2xl text-black dark:text-white">No Movie's availble yet!</p>
+    <p class="text-2xl text-black dark:text-white">
+      No Slideshow's availble yet!
+    </p>
   {/if}
   {#if data.data.count > 5}
     <div class="flex justify-center items-center mt-5">
@@ -308,7 +341,7 @@
     {/if}
 
     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-      {edit ? "Edit" : "Add"} Movie
+      {edit ? "Edit" : "Add"} Slideshow
     </h3>
     <Label class="space-y-2">
       <span>Title</span>
