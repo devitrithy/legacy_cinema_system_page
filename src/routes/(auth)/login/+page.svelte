@@ -22,6 +22,7 @@
     if (username.length < 1) {
       iUsername = 1;
       iUsernameMessage = "Please enter a username";
+      loading = false;
       cancel();
     } else {
       iUsername = 2;
@@ -30,6 +31,8 @@
     if (password.length < 1) {
       iPassword = 1;
       iPasswordMessage = "Please enter a Password";
+      loading = false;
+      cancel();
     } else {
       iPassword = 2;
       iPasswordMessage = "Password validated.";

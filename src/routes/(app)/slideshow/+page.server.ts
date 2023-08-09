@@ -10,14 +10,14 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
     const customHeaders = {
       Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
     };
-    const count = await axios.get(`${PUBLIC_API_ENDPOINT}/movie`, {
+    const count = await axios.get(`${PUBLIC_API_ENDPOINT}/slideshow`, {
       headers: customHeaders,
     });
 
     if (page > count.data.count / 5 + 1) {
-      throw redirect(302, "/movie");
+      throw redirect(302, "/slideshow");
     }
-    const data = await fetch(`${PUBLIC_API_ENDPOINT}/movie?page=${page}`, {
+    const data = await fetch(`${PUBLIC_API_ENDPOINT}/slideshow?page=${page}`, {
       headers: customHeaders,
       credentials: "include",
     });
@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
       data: data.json(),
     };
   } catch (err) {
-    console.log(err.response.data.message);
+    console.log(err);
     if (err.response.status === 401) {
       cookies.delete("token");
       throw redirect(303, "/login");
@@ -46,7 +46,7 @@ export const actions = {
         Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
       };
       axios
-        .post(`${PUBLIC_API_ENDPOINT}/movie`, data, {
+        .post(`${PUBLIC_API_ENDPOINT}/slideshow`, data, {
           headers: customHeaders,
         })
         .then(function (response) {
@@ -55,7 +55,7 @@ export const actions = {
         .catch(function (error) {
           return {
             success: false,
-            message: "Fail to add movie",
+            message: "Fail to add slideshow",
           };
         });
     } catch (error: any) {
@@ -66,7 +66,7 @@ export const actions = {
     }
     return {
       success: true,
-      message: "Added movie successfully",
+      message: "Added slideshow successfully",
     };
   },
 
@@ -79,7 +79,7 @@ export const actions = {
 
     try {
       axios
-        .delete(`${PUBLIC_API_ENDPOINT}/movie/` + data.get("id"), {
+        .delete(`${PUBLIC_API_ENDPOINT}/slideshow/` + data.get("id"), {
           headers: customHeaders,
         })
         .then((response) => {
@@ -94,7 +94,7 @@ export const actions = {
         })
         .catch((err) => {
           console.log(err);
-          return fail(400, { message: "Failed to delete movie." });
+          return fail(400, { message: "Failed to delete slideshow." });
         });
     } catch (error: any) {
       return fail(422, {
@@ -112,7 +112,7 @@ export const actions = {
 
     try {
       axios
-        .put(`${PUBLIC_API_ENDPOINT}/movie/${data.get("id")}`, data, {
+        .put(`${PUBLIC_API_ENDPOINT}/slideshow/${data.get("id")}`, data, {
           headers: customHeaders,
         })
         .then(function (response) {
@@ -121,7 +121,7 @@ export const actions = {
         .catch(function (error) {
           return {
             success: false,
-            message: "Fail to add movie",
+            message: "Fail to add slideshow",
           };
         });
     } catch (error: any) {
@@ -132,7 +132,7 @@ export const actions = {
     }
     return {
       success: true,
-      message: "Added movie successfully",
+      message: "Added slideshow successfully",
     };
   },
 } satisfies Actions;

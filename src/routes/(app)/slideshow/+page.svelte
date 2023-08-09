@@ -27,6 +27,7 @@
     TableHeadCell,
     Textarea,
     Toast,
+    Toggle,
   } from "flowbite-svelte";
   import {
     EditOutline,
@@ -36,7 +37,6 @@
   } from "flowbite-svelte-icons";
 
   export let data;
-  export let form;
   let endpoint = `${PUBLIC_API_ENDPOINT}/`;
   let popupModal = false;
   let ids: any;
@@ -44,6 +44,7 @@
 
   let iTitle = 0;
   let iDescription = 0;
+  let active = true;
 
   let loading = false;
 
@@ -144,6 +145,7 @@
     if (editData) {
       formInput.title = d.title;
       formInput.description = d.description;
+      active = d.active;
       formModal = true;
     }
   };
@@ -245,14 +247,10 @@
         <TableHeadCell>Poster</TableHeadCell>
         <TableHeadCell>Title</TableHeadCell>
         <TableHeadCell>Description</TableHeadCell>
-        <TableHeadCell>Import Cost</TableHeadCell>
-        <TableHeadCell>Genre</TableHeadCell>
-        <TableHeadCell>Time</TableHeadCell>
-        <TableHeadCell>Trailer</TableHeadCell>
         <TableHeadCell>Action</TableHeadCell>
       </TableHead>
       <TableBody tableBodyClass="divide-y">
-        {#each data.data.movies as slideshow}
+        {#each data.data.slideshows as slideshow}
           <TableBodyRow>
             <TableBodyCell
               ><img
@@ -270,20 +268,16 @@
                 ? slideshow.description.substring(0, 50) + "..."
                 : slideshow.description}</TableBodyCell
             >
-            <TableBodyCell>${slideshow.import_cost}</TableBodyCell>
-            <TableBodyCell>{slideshow.genre}</TableBodyCell>
-            <TableBodyCell>{slideshow.time}</TableBodyCell>
-            <TableBodyCell>{slideshow.trailer}</TableBodyCell>
             <TableBodyCell tdClass="w-40">
               <div class="flex gap-5">
-                <a href="/slideshow/{slideshow.movie_id}"><EyeOutline /></a>
-                <button on:click={() => editForm(slideshow.movie_id)}
+                <a href="/slideshow/{slideshow.id}"><EyeOutline /></a>
+                <button on:click={() => editForm(slideshow.id)}
                   ><EditOutline /></button
                 >
                 <button
                   type="submit"
                   on:click={() => {
-                    deleteModal(slideshow.movie_id);
+                    deleteModal(slideshow.id);
                   }}><TrashBinOutline /></button
                 >
               </div>
@@ -353,6 +347,8 @@
         >
       {/if}
     </Label>
+    <Toggle checked={active}>Enable Slideshow</Toggle>
+    <input type="hidden" name="active" bind:value={active} />
 
     <Label for="with_helper" class="pb-2">Upload file</Label>
     <Fileupload
@@ -368,6 +364,7 @@
         {files[0].name}
       </p>
     {/if}
+
     <Helper>SVG, PNG, JPG or GIF (MAX. 800x400px).</Helper>
     <div class="flex gap-10">
       <Button type="button" color="red" on:click={resetValue} class="w-full"
