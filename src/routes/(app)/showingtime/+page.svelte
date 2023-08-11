@@ -30,12 +30,11 @@
     PlusOutline,
     TrashBinOutline,
   } from "flowbite-svelte-icons";
-  import { onMount } from "svelte";
   import TextField from "$lib/ui/textField.svelte";
   import { PUBLIC_API_ENDPOINT } from "$env/static/public";
+  import { onMount } from "svelte";
 
   export let data;
-  console.log(data.data);
 
   let hour = [];
   let endpoint = `${PUBLIC_API_ENDPOINT}/`;
@@ -47,26 +46,19 @@
   let selectMovie;
   let hallItems = [];
   let movieItems = [];
-  let h;
-  let m;
-  onMount(async () => {
-    h = await axios.get(endpoint + "hall", {
-      headers: { Authorization: "Bearer guest" },
+  let { showing, hall, movie } = data;
+  $: showing = data.showing;
+
+  hall.halls.forEach((lo) => {
+    hallItems.push({
+      value: lo.hall_id,
+      name: `Location: ${lo.location.location_name} => ${lo.hall_name}`,
     });
-    m = await axios.get(endpoint + "movie", {
-      headers: { Authorization: "Bearer guest" },
-    });
-    h.data.halls.forEach((lo) => {
-      hallItems.push({
-        value: lo.hall_id,
-        name: `Location: ${lo.location.location_name} => ${lo.hall_name}`,
-      });
-    });
-    m.data.movies.forEach((lo) => {
-      movieItems.push({
-        value: lo.movie_id,
-        name: lo.title,
-      });
+  });
+  movie.movies.forEach((lo) => {
+    movieItems.push({
+      value: lo.movie_id,
+      name: lo.title,
     });
   });
 
@@ -94,7 +86,6 @@
     iDate = 0;
     iPrice = 0;
   };
-  console.log(formInput.date.toISOString().substring(0, 10));
 
   let formModal = false;
   export const snapshot: Snapshot = {
@@ -108,8 +99,8 @@
   // Pagination
   $: activeUrl = $page.url.searchParams.get("page");
   let pages: any[] = [];
-  let count = data.data.count / 5 + 1;
-  if (data.data.count % 5 == 0) {
+  let count = showing.count / 5 + 1;
+  if (showing.count % 5 == 0) {
     count -= 1;
   }
   for (let i = 1; i <= count; i++) {
@@ -253,7 +244,7 @@
       <TableHeadCell>Action</TableHeadCell>
     </TableHead>
     <TableBody tableBodyClass="divide-y">
-      {#each data.data.showingTimes as showingtime}
+      {#each showing.showingTimes as showingtime}
         <TableBodyRow>
           <TableBodyCell
             ><img
@@ -301,7 +292,7 @@
     </TableBody>
   </Table>
 
-  {#if data.data.count > 5}
+  {#if showing.count > 5}
     <div class="flex justify-center items-center mt-5">
       <Pagination {pages} on:previous={previous} on:next={next} large />
     </div>
@@ -324,7 +315,7 @@
     <div class="flex justify-between items-end gap-5">
       <div class="grow">
         <TextField
-          fieldName="Date Time"
+          fieldName="Time"
           iFieldName={iDate}
           name="none"
           bind:value={formInput.time}
@@ -336,7 +327,7 @@
         on:click={() => {
           times.push(formInput.time);
           times = times;
-        }}><PlusOutline /></Button
+        }}>Add Time</Button
       >
     </div>
     <div class="flex flex-wrap gap-3 dark:text-white">
@@ -360,7 +351,7 @@
       {/each}
     </div>
     <TextField
-      fieldName="Date Time"
+      fieldName="Date"
       iFieldName={iDate}
       name="date"
       value={formInput.date.toISOString().substring(0, 10)}
@@ -374,7 +365,6 @@
       type="number"
     />
     <Label class="space-y-2">
-      <!-- // -->
       Select Hall
       <Select class="mt-2" items={hallItems} bind:value={selectHall} />
       {#if iSelect == 1}
@@ -388,7 +378,6 @@
       {/if}
     </Label>
     <Label class="space-y-2">
-      <!-- // -->
       Select Movie
       <Select class="mt-2" items={movieItems} bind:value={selectMovie} />
       {#if iSelect == 1}

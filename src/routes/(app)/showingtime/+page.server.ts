@@ -10,19 +10,42 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
     const customHeaders = {
       Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
     };
-    const count = await axios.get(`${PUBLIC_API_ENDPOINT}/showing`, {
-      headers: customHeaders,
+    const count = async () => {
+      const data = await fetch(`${PUBLIC_API_ENDPOINT}/showing`, {
+        headers: customHeaders,
+      });
+      return data.json();
+    };
+    count().then((res) => {
+      if (page > res.showingTime.count / 5 + 1) {
+        throw redirect(302, "/showingtime");
+      }
     });
-
-    if (page > count.data.count / 5 + 1) {
-      throw redirect(302, "/showingtime");
-    }
-    const data = await fetch(`${PUBLIC_API_ENDPOINT}/showing?page=${page}`, {
-      headers: customHeaders,
-      credentials: "include",
-    });
+    const data = async () => {
+      const data = await fetch(`${PUBLIC_API_ENDPOINT}/showing?page=${page}`, {
+        headers: customHeaders,
+        credentials: "include",
+      });
+      return data.json();
+    };
+    const movie = async () => {
+      const data = await fetch(`${PUBLIC_API_ENDPOINT}/movie`, {
+        headers: customHeaders,
+        credentials: "include",
+      });
+      return data.json();
+    };
+    const hall = async () => {
+      const data = await fetch(`${PUBLIC_API_ENDPOINT}/hall`, {
+        headers: customHeaders,
+        credentials: "include",
+      });
+      return data.json();
+    };
     return {
-      data: data.json(),
+      showing: data(),
+      movie: movie(),
+      hall: hall(),
     };
   } catch (err) {
     console.log(err.response.data.message);
