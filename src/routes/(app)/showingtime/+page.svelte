@@ -11,7 +11,6 @@
     BreadcrumbItem,
     Button,
     Helper,
-    Input,
     Label,
     Modal,
     Pagination,
@@ -32,36 +31,39 @@
   } from "flowbite-svelte-icons";
   import TextField from "$lib/ui/textField.svelte";
   import { PUBLIC_API_ENDPOINT } from "$env/static/public";
-  import { onMount } from "svelte";
 
   export let data;
 
-  let hour = [];
   let endpoint = `${PUBLIC_API_ENDPOINT}/`;
   let popupModal = false;
   let ids: any;
   let edit = false;
   let loading = false;
-  let selectHall;
-  let selectMovie;
-  let hallItems = [];
-  let movieItems = [];
+  let selectHall: any;
+  let selectMovie: any;
+  let hallItems: { value: any; name: string }[] = [];
+  let movieItems: { value: any; name: any }[] = [];
   let { showing, hall, movie } = data;
   $: showing = data.showing;
 
-  hall.halls.forEach((lo) => {
-    hallItems.push({
-      value: lo.hall_id,
-      name: `Location: ${lo.location.location_name} => ${lo.hall_name}`,
-    });
-  });
-  movie.movies.forEach((lo) => {
+  hall.halls.forEach(
+    (lo: {
+      hall_id: any;
+      location: { location_name: any };
+      hall_name: any;
+    }) => {
+      hallItems.push({
+        value: lo.hall_id,
+        name: `Location: ${lo.location.location_name} => ${lo.hall_name}`,
+      });
+    }
+  );
+  movie.movies.forEach((lo: { movie_id: any; title: any }) => {
     movieItems.push({
       value: lo.movie_id,
       name: lo.title,
     });
   });
-
   let iSelect = 0;
   let iDate = 0;
   let iPrice = 0;
@@ -107,7 +109,7 @@
     pages.push({ name: i, href: `/showingtime?page=${i}` });
   }
 
-  let times = [];
+  let times: any[] = [];
   $: {
     pages.forEach((page) => {
       let splitUrl = page.href.split("?");
@@ -361,7 +363,7 @@
       fieldName="Ticket Price"
       iFieldName={iPrice}
       name="price"
-      value={formInput.price}
+      bind:value={formInput.price}
       type="number"
     />
     <Label class="space-y-2">

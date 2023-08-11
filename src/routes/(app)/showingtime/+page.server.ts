@@ -1,4 +1,4 @@
-import { fail, type Actions, redirect } from "@sveltejs/kit";
+import { fail, type Actions, redirect, error } from "@sveltejs/kit";
 import axios from "axios";
 import type { PageServerLoad } from "./$types";
 import { PUBLIC_API_ENDPOINT } from "$env/static/public";
