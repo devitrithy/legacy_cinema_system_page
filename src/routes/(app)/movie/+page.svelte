@@ -37,7 +37,7 @@
   } from "flowbite-svelte-icons";
 
   export let data;
-  export let form;
+  console.log(data.data);
   let endpoint = `${PUBLIC_API_ENDPOINT}/`;
   let popupModal = false;
   let ids: any;

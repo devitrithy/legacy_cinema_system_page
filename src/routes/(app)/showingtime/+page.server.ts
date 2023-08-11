@@ -3,33 +3,37 @@ import axios from "axios";
 import type { PageServerLoad } from "./$types";
 import { PUBLIC_API_ENDPOINT } from "$env/static/public";
 
-export const load: PageServerLoad = async ({ url, cookies, setHeaders }) => {
-  const token = cookies.get("token");
-  const customHeaders = {
-    Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
-  };
-  let page = Number(url.searchParams.get("page")) || 1;
-  const count = await axios.get(`${PUBLIC_API_ENDPOINT}/showing`, {
-    headers: customHeaders,
-  });
+export const load: PageServerLoad = async ({ url, cookies }) => {
+  try {
+    let page = Number(url.searchParams.get("page")) || 1;
+    const token = cookies.get("token");
+    const customHeaders = {
+      Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
+    };
+    const count = await axios.get(`${PUBLIC_API_ENDPOINT}/showing`, {
+      headers: customHeaders,
+    });
 
-  if (page > count.data.count / 5 + 1) {
-    throw redirect(302, "/showing");
+    if (page > count.data.count / 5 + 1) {
+      throw redirect(302, "/showingtime");
+    }
+    const data = await fetch(`${PUBLIC_API_ENDPOINT}/showing?page=${page}`, {
+      headers: customHeaders,
+      credentials: "include",
+    });
+    return {
+      data: data.json(),
+    };
+  } catch (err) {
+    console.log(err.response.data.message);
+    if (err.response.status === 401) {
+      cookies.delete("token");
+      throw redirect(303, "/login");
+    }
+    throw error(400, {
+      message: "Permission Denied",
+    });
   }
-  const showing = await fetch(`${PUBLIC_API_ENDPOINT}/showing`, {
-    headers: customHeaders,
-  });
-
-  const countCache = count.headers.get("cache-control");
-  const showingCache = count.headers.get("cache-control");
-
-  if (countCache) setHeaders({ "cache-control": countCache });
-  if (showingCache) setHeaders({ "cache-control": showingCache });
-
-  let halls = showing.json();
-  return {
-    data: halls,
-  };
 };
 
 export const actions = {
@@ -39,18 +43,27 @@ export const actions = {
     const customHeaders = {
       Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
     };
+    let times = data.get("time")?.toString().split(",");
+    let arrayTimes = [];
+    times?.forEach((time) => {
+      arrayTimes.push({
+        showing_date: new Date(
+          `${data.get("date")}T${time}:00.000Z`
+        ).toISOString(),
+        price: data.get("price"),
+        movie_id: data.get("movie_id"),
+        hall_id: data.get("hall_id"),
+      });
+    });
 
     try {
       axios
         .post(
           `${PUBLIC_API_ENDPOINT}/showing`,
+          { arrayTimes },
           {
-            showing_date: data.get("date"),
-            movie_id: data.get("movie_id"),
-            hall_id: data.get("hall_id"),
-            price: data.get("price"),
-          },
-          { headers: customHeaders }
+            headers: customHeaders,
+          }
         )
         .then(function (response) {
           console.log(response);

@@ -37,6 +37,7 @@
   export let data;
   console.log(data.data);
 
+  let hour = [];
   let endpoint = `${PUBLIC_API_ENDPOINT}/`;
   let popupModal = false;
   let ids: any;
@@ -80,17 +81,20 @@
   };
   let formInput = {
     date: new Date(),
+    time: new Date().toISOString().substring(11, 16),
     price: 0,
   };
   let resetValue = () => {
     formInput = {
       date: new Date(),
+      time: new Date().toISOString().substring(11, 16),
       price: 0,
     };
 
     iDate = 0;
     iPrice = 0;
   };
+  console.log(formInput.date.toISOString().substring(0, 10));
 
   let formModal = false;
   export const snapshot: Snapshot = {
@@ -112,6 +116,7 @@
     pages.push({ name: i, href: `/showingtime?page=${i}` });
   }
 
+  let times = [];
   $: {
     pages.forEach((page) => {
       let splitUrl = page.href.split("?");
@@ -248,7 +253,7 @@
       <TableHeadCell>Action</TableHeadCell>
     </TableHead>
     <TableBody tableBodyClass="divide-y">
-      {#each data.data.showingTime as showingtime}
+      {#each data.data.showingTimes as showingtime}
         <TableBodyRow>
           <TableBodyCell
             ><img
@@ -307,7 +312,6 @@
     class="flex flex-col space-y-6"
     action="?/{edit ? 'edit' : 'create'}"
     method="POST"
-    enctype="multipart/form-data"
     use:enhance={formSumbit}
   >
     {#if edit}
@@ -317,12 +321,50 @@
     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
       {edit ? "Edit" : "Add"} Hall
     </h3>
+    <div class="flex justify-between items-end gap-5">
+      <div class="grow">
+        <TextField
+          fieldName="Date Time"
+          iFieldName={iDate}
+          name="none"
+          bind:value={formInput.time}
+          type="time"
+        />
+      </div>
+      <input type="hidden" name="time" bind:value={times} />
+      <Button
+        on:click={() => {
+          times.push(formInput.time);
+          times = times;
+        }}><PlusOutline /></Button
+      >
+    </div>
+    <div class="flex flex-wrap gap-3 dark:text-white">
+      {#if times.length > 0}
+        |
+      {/if}
+      {#each times as time}
+        <p>{time}</p>
+        <button
+          type="button"
+          on:click={() => {
+            for (let i = 0; i < times.length; i++) {
+              if (times[i] === time) {
+                times.splice(i, 1);
+                times = times;
+                return;
+              }
+            }
+          }}>x</button
+        > |
+      {/each}
+    </div>
     <TextField
       fieldName="Date Time"
       iFieldName={iDate}
       name="date"
-      value={formInput.date}
-      type="datetime-local"
+      value={formInput.date.toISOString().substring(0, 10)}
+      type="date"
     />
     <TextField
       fieldName="Ticket Price"
