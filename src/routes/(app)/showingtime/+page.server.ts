@@ -48,7 +48,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
       hall: hall(),
     };
   } catch (err) {
-    console.log(err.response.data.message);
+    console.log(err);
     if (err.response.status === 401) {
       cookies.delete("token");
       throw redirect(303, "/login");

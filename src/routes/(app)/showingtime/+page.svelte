@@ -76,13 +76,13 @@
     console.log(ids);
   };
   let formInput = {
-    date: new Date(),
+    date: new Date().toISOString().substring(0, 10),
     time: new Date().toISOString().substring(11, 16),
     price: 0,
   };
   let resetValue = () => {
     formInput = {
-      date: new Date(),
+      date: new Date().toISOString().substring(0, 10),
       time: new Date().toISOString().substring(11, 16),
       price: 0,
     };
@@ -361,7 +361,7 @@
       fieldName="Date"
       iFieldName={iDate}
       name="date"
-      value={formInput.date.toISOString().substring(0, 10)}
+      bind:value={formInput.date}
       type="date"
     />
     <TextField
