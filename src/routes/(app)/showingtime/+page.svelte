@@ -22,12 +22,14 @@
     TableBodyRow,
     TableHead,
     TableHeadCell,
+    Tooltip,
   } from "flowbite-svelte";
   import {
     EditOutline,
     EyeOutline,
     PlusOutline,
     TrashBinOutline,
+    XCircleOutline,
   } from "flowbite-svelte-icons";
   import TextField from "$lib/ui/textField.svelte";
   import { PUBLIC_API_ENDPOINT } from "$env/static/public";
@@ -332,24 +334,27 @@
         }}>Add Time</Button
       >
     </div>
-    <div class="flex flex-wrap gap-3 dark:text-white">
-      {#if times.length > 0}
-        |
-      {/if}
+    <div class="flex gap-5 flex-wrap">
       {#each times as time}
-        <p>{time}</p>
-        <button
-          type="button"
-          on:click={() => {
-            for (let i = 0; i < times.length; i++) {
-              if (times[i] === time) {
-                times.splice(i, 1);
-                times = times;
-                return;
+        <div
+          class="flex gap-3 dark:text-white bg-primary-600 px-5 py-2 rounded-lg justify-center items-center"
+        >
+          <p>{time}</p>
+          <button
+            id="hover"
+            type="button"
+            on:click={() => {
+              for (let i = 0; i < times.length; i++) {
+                if (times[i] === time) {
+                  times.splice(i, 1);
+                  times = times;
+                  return;
+                }
               }
-            }
-          }}>x</button
-        > |
+            }}><XCircleOutline /></button
+          >
+          <Tooltip triggeredBy="#hover">Remove</Tooltip>
+        </div>
       {/each}
     </div>
     <TextField
