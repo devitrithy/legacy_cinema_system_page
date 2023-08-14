@@ -1,5 +1,8 @@
 <script lang="ts">
-  import { PUBLIC_API_ENDPOINT } from "$env/static/public";
+  import {
+    PUBLIC_API_ENDPOINT,
+    PUBLIC_SECRET_GUEST_KEY,
+  } from "$env/static/public";
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import toast, { Toaster } from "svelte-french-toast";
@@ -43,12 +46,13 @@
   let de: any[] = [];
   let selectLoc: any[];
   let selectDep: any[];
+
   onMount(async () => {
     const loc = await fetch(`${endpoint}location`, {
-      headers: { Authorization: "Bearer guest" },
+      headers: { Authorization: `Bearer ${PUBLIC_SECRET_GUEST_KEY}` },
     });
     const dep = await fetch(`${endpoint}department`, {
-      headers: { Authorization: "Bearer guest" },
+      headers: { Authorization: `Bearer ${PUBLIC_SECRET_GUEST_KEY}` },
     });
     locations = await loc.json();
     departments = await dep.json();
@@ -209,7 +213,7 @@
     resetValue();
     edit = true;
     const editData = await axios.get(endpoint + "employee/" + id, {
-      headers: { Authorization: "Bearer guest" },
+      headers: { Authorization: `Bearer ${PUBLIC_SECRET_GUEST_KEY}` },
     });
     let d = editData.data.movie[0];
     ids = d.users.user_id;

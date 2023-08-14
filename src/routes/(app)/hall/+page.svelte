@@ -31,6 +31,7 @@
   } from "flowbite-svelte-icons";
   import { onMount } from "svelte";
   import { PUBLIC_API_ENDPOINT } from "$env/static/public";
+  import { PUBLIC_SECRET_GUEST_KEY } from "$env/static/public";
 
   export let data;
   export let form;
@@ -44,7 +45,7 @@
   let l;
   onMount(async () => {
     l = await axios.get(endpoint + "location", {
-      headers: { Authorization: "Bearer guest" },
+      headers: { Authorization: `Bearer ${PUBLIC_SECRET_GUEST_KEY}` },
     });
     l.data.locations.forEach((lo) => {
       locationItems.push({
@@ -141,7 +142,7 @@
     edit = true;
     formModal = true;
     const editData = await axios.get(endpoint + "hall/" + id, {
-      headers: { Authorization: "Bearer guest" },
+      headers: { Authorization: `Bearer ${PUBLIC_SECRET_GUEST_KEY}` },
     });
     let d = editData.data.movie[0];
     console.log(d);

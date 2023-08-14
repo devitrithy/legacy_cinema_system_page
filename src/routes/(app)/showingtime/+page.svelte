@@ -33,6 +33,7 @@
   } from "flowbite-svelte-icons";
   import TextField from "$lib/ui/textField.svelte";
   import { PUBLIC_API_ENDPOINT } from "$env/static/public";
+  import { PUBLIC_SECRET_GUEST_KEY } from "$env/static/public";
 
   export let data;
 
@@ -157,7 +158,7 @@
     edit = true;
     formModal = true;
     const editData = await axios.get(endpoint + "showing/" + id, {
-      headers: { Authorization: "Bearer guest" },
+      headers: { Authorization: `Bearer ${PUBLIC_SECRET_GUEST_KEY}` },
     });
     let d = editData.data.showingtime[0];
     console.log(d);

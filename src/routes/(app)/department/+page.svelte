@@ -5,7 +5,6 @@
   import { page } from "$app/stores";
   import type { Snapshot } from "@sveltejs/kit";
   import axios from "axios";
-  import { onMount } from "svelte";
   import {
     Breadcrumb,
     BreadcrumbItem,
@@ -60,6 +59,7 @@
 
   import type { SubmitFunction } from "./$types.js";
   import TextField from "$lib/ui/textField.svelte";
+  import { PUBLIC_SECRET_GUEST_KEY } from "$env/static/public";
   let formModal = false;
   export const snapshot: Snapshot = {
     capture: () => formInput,
@@ -125,7 +125,7 @@
     ids = id;
     edit = true;
     const editData = await axios.get(endpoint + "department/" + id, {
-      headers: { Authorization: "Bearer guest" },
+      headers: { Authorization: `Bearer ${PUBLIC_SECRET_GUEST_KEY}` },
     });
     let d = editData.data.department[0];
     if (editData) {

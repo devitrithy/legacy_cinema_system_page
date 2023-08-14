@@ -34,6 +34,7 @@
     TrashBinOutline,
   } from "flowbite-svelte-icons";
   import { PUBLIC_API_ENDPOINT } from "$env/static/public";
+  import { PUBLIC_SECRET_GUEST_KEY } from "$env/static/public";
 
   export let data;
   let endpoint = `${PUBLIC_API_ENDPOINT}/`;
@@ -131,7 +132,7 @@
     edit = true;
     formModal = true;
     const editData = await axios.get(endpoint + "location/" + id, {
-      headers: { Authorization: "Bearer guest" },
+      headers: { Authorization: `Bearer ${PUBLIC_SECRET_GUEST_KEY}` },
     });
     let d = editData.data.location[0];
     console.log(editData.data);

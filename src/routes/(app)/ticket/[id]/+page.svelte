@@ -20,6 +20,7 @@
   let disabled = true;
   let { tickets, showings } = data;
   let showing = showings.showingtime[0];
+
   let total: number = 0;
 
   let selected: String[] = [];
