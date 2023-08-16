@@ -9,13 +9,13 @@
 
 {#if isAvailable}
   {#if isSelected}
-    <div on:click={() => (isSelected = !isSelected)}>
+    <button on:click={() => (isSelected = !isSelected)}>
       <Img src={selected} imgClass="w-10" />
-    </div>
+    </button>
   {:else}
-    <div on:click={() => (isSelected = !isSelected)}>
+    <button on:click={() => (isSelected = !isSelected)}>
       <Img src={notSelect} imgClass="w-10" />
-    </div>
+    </button>
   {/if}
 {:else}
   <Img src={notAvailable} imgClass="w-10" />

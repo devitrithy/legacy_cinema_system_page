@@ -113,9 +113,9 @@
               {#if seat.selected}
                 <Seat isAvailable={false} />
               {:else}
-                <div on:click={() => select(seat.seatNumber)}>
+                <button on:click={() => select(seat.seatNumber)}>
                   <Seat />
-                </div>
+                </button>
               {/if}
             </div>
           {/each}
