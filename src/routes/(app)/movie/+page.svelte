@@ -1,4 +1,5 @@
 <script lang="ts">
+  import moment from "moment-timezone";
   import { PUBLIC_API_ENDPOINT } from "$env/static/public";
   export const load = true;
   import { enhance } from "$app/forms";
@@ -12,6 +13,7 @@
     BreadcrumbItem,
     Button,
     ButtonGroup,
+    Datepicker,
     Fileupload,
     Helper,
     Input,
@@ -37,6 +39,7 @@
   } from "flowbite-svelte-icons";
 
   export let data;
+  let releaseDate;
   console.log(data.data);
   let endpoint = `${PUBLIC_API_ENDPOINT}/`;
   let popupModal = false;
@@ -50,11 +53,12 @@
   let iGenre = 0;
   let iImportCost = 0;
   let loading = false;
+  let m;
+  $: m = data.data;
 
   const deleteModal = (id: any) => {
     popupModal = true;
     ids = id;
-    console.log(ids);
   };
   let files: any, fileInput: Fileupload;
   let formInput = {
@@ -250,6 +254,7 @@
       }
     };
   };
+
   let deleteMovie: SubmitFunction = ({ form, data, action, cancel }) => {
     loading = true;
     return async ({ result, update }) => {
@@ -294,6 +299,7 @@
         <TableHeadCell>Poster</TableHeadCell>
         <TableHeadCell>Title</TableHeadCell>
         <TableHeadCell>Description</TableHeadCell>
+        <TableHeadCell>Release Date</TableHeadCell>
         <TableHeadCell>Import Cost</TableHeadCell>
         <TableHeadCell>Genre</TableHeadCell>
         <TableHeadCell>Time</TableHeadCell>
@@ -301,7 +307,7 @@
         <TableHeadCell>Action</TableHeadCell>
       </TableHead>
       <TableBody tableBodyClass="divide-y">
-        {#each data.data.movies as movie}
+        {#each m.movies as movie}
           <TableBodyRow>
             <TableBodyCell
               ><img
@@ -318,6 +324,11 @@
               >{movie.description.length > 50
                 ? movie.description.substring(0, 50) + "..."
                 : movie.description}</TableBodyCell
+            >
+            <TableBodyCell
+              >{moment(movie.releaseDate)
+                .tz("Atlantic/Reykjavik")
+                .format("LL")}</TableBodyCell
             >
             <TableBodyCell>${movie.import_cost}</TableBodyCell>
             <TableBodyCell>{movie.genre}</TableBodyCell>
@@ -485,7 +496,15 @@
         {/if}
       </Label>
     </div>
-    <Label for="with_helper" class="pb-2">Upload file</Label>
+    <Label for="release">Release Date</Label>
+    <Input
+      type="date"
+      name="releaseDate"
+      id="release"
+      required
+      bind:value={releaseDate}
+    />
+    <Label for="with_helper">Upload file</Label>
     <Fileupload
       accept="Image/jpeg"
       bind:files

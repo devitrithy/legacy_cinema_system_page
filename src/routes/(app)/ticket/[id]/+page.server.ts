@@ -32,12 +32,12 @@ export const actions: Actions = {
     console.log(arrayData);
     arrayData?.forEach((element) => {
       arrayDatas.push({
-        showing_id: params.id,
         seat: element,
       });
     });
     try {
       const pay = await axios.post(`${PUBLIC_API_ENDPOINT}/ticket`, {
+        sid: params.id,
         arrayDatas,
       });
       console.log(pay);

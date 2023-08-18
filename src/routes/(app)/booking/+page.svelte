@@ -18,9 +18,10 @@
   import { EyeOutline } from "flowbite-svelte-icons";
   import { enhance } from "$app/forms";
   import type { SubmitFunction } from "@sveltejs/kit";
-  import toast from "svelte-french-toast";
+  import toast, { Toaster } from "svelte-french-toast";
   export let data: PageData;
-  let booking = data.booking;
+  let booking;
+  $: booking = data.booking;
   let loading = false;
 
   const recived: SubmitFunction = () => {
@@ -31,17 +32,17 @@
         case "success":
           await update();
           loading = false;
-          toast.success("Successfully added the movie.", {
+          toast.success("Customer successfully recived the ticket.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           break;
         case "error":
-          toast.error("Error while added the movie.", {
+          toast.error("Error while change status.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           break;
         case "failure":
-          toast.error("Failed added the movie.", {
+          toast.error("Failed change status.", {
             style: "border-radius: 200px; background: #333; color: #fff;",
           });
           break;
@@ -51,8 +52,9 @@
       }
     };
   };
-  console.log(booking);
 </script>
+
+<Toaster />
 
 <main class=" z-0 mt-20 container mx-auto">
   <h1 class="text-black dark:text-white text-2xl m-4">Booking Tickets</h1>
@@ -88,17 +90,13 @@
           <TableHeadCell>{booked.users.username}</TableHeadCell>
           <TableHeadCell>
             {#if booked.isRecived}
-              <button><Badge large color="green">Recived</Badge></button>
+              <button disabled
+                ><Badge large color="green">Recived</Badge></button
+              >
             {:else}
               <form method="post" use:enhance={recived}>
                 <button>
-                  <Badge large color="yellow">
-                    {#if loading}
-                      <Spinner size="4" /> Not Recived
-                    {:else}
-                      Not Recived
-                    {/if}
-                  </Badge></button
+                  <Badge large color="yellow">Not Recived</Badge></button
                 >
                 <input type="hidden" name="tid" bind:value={booked.ticket_id} />
               </form>
