@@ -10,17 +10,17 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
     const customHeaders = {
       Authorization: "Bearer " + token, // Replace 'YOUR_ACCESS_TOKEN' with your actual access token
     };
-    const count = async () => {
-      const data = await fetch(`${PUBLIC_API_ENDPOINT}/showing`, {
-        headers: customHeaders,
-      });
-      return data.json();
-    };
-    count().then((res) => {
-      if (page > res.showingTime.count / 5 + 1) {
-        throw redirect(302, "/showingtime");
-      }
-    });
+    // const count = async () => {
+    //   const data = await fetch(`${PUBLIC_API_ENDPOINT}/showing`, {
+    //     headers: customHeaders,
+    //   });
+    //   return data.json();
+    // };
+    // count().then((res) => {
+    //   if (page > res.showingTime.count / 5 + 1) {
+    //     throw redirect(302, "/showingtime");
+    //   }
+    // });
     const data = async () => {
       const data = await fetch(`${PUBLIC_API_ENDPOINT}/showing?page=${page}`, {
         headers: customHeaders,
