@@ -104,7 +104,8 @@
           {spanClass}
           href="/booking"
           active={activeUrl === "/booking" ||
-            activeUrl.substring(1, 8) === "booking"}
+            (activeUrl.substring(1, 8) === "booking" &&
+              activeUrl !== "/booking-hour")}
         >
           <svelte:fragment slot="icon">
             <BookOpenOutline />
@@ -165,10 +166,22 @@
           <svelte:fragment slot="icon">
             <FilePdfOutline />
           </svelte:fragment>
-          <SidebarDropdownItem href="/revenue" label="Revenue" />
-          <SidebarDropdownItem href="/booking-hour" label="Booking Hour" />
           <SidebarDropdownItem
-            href="/most-watched-movie"
+            active={activeUrl === "/revenue" ||
+              activeUrl.substring(1, 6) === "revenue"}
+            href="/revenue"
+            label="Revenue"
+          />
+          <SidebarDropdownItem
+            active={activeUrl === "/booking-hour" ||
+              activeUrl.substring(1, 6) === "booking-hour"}
+            href="/booking-hour"
+            label="Booking Hour"
+          />
+          <SidebarDropdownItem
+            active={activeUrl === "/most-watched-movie" ||
+              activeUrl.substring(1, 6) === "most-watched-movie"}
+            ef="/most-watched-movie"
             label="Most Watched Movie"
           />
           <SidebarDropdownItem

@@ -79,13 +79,13 @@
   let formInput = {
     date: new Date().toISOString().substring(0, 10),
     time: new Date().toISOString().substring(11, 16),
-    price: 0,
+    price: 5,
   };
   let resetValue = () => {
     formInput = {
       date: new Date().toISOString().substring(0, 10),
       time: new Date().toISOString().substring(11, 16),
-      price: 0,
+      price: 5,
     };
 
     iDate = 0;
@@ -102,10 +102,11 @@
     formModal = true;
   }
   // Pagination
+  console.log(showing.count);
   $: activeUrl = $page.url.searchParams.get("page");
   let pages: any[] = [];
   let count = showing.count / 5 + 1;
-  if (showing.count % 5 == 0) {
+  if (showing.showingTimes.length % 5 == 0) {
     count -= 1;
   }
   for (let i = 1; i <= count; i++) {

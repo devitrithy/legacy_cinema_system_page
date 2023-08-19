@@ -479,11 +479,6 @@
       No Employee's availble yet!
     </p>
   {/if}
-  {#if data.data.count > 5}
-    <div class="flex justify-center items-center mt-5">
-      <Pagination {pages} on:previous={previous} on:next={next} large />
-    </div>
-  {/if}
 </main>
 <Modal bind:open={formModal} autoclose={false} class="w-full">
   <form

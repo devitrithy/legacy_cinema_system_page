@@ -55,6 +55,21 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
     );
     return res.json();
   };
+  const genre = async () => {
+    const res = await fetch(
+      `${PUBLIC_API_ENDPOINT}/report/most-watched-genre`,
+      {
+        headers: customHeaders,
+      }
+    );
+    return res.json();
+  };
+  const users = async () => {
+    const res = await fetch(`${PUBLIC_API_ENDPOINT}/report/active-users`, {
+      headers: customHeaders,
+    });
+    return res.json();
+  };
   return {
     today: today(),
     month: month(),
@@ -63,5 +78,7 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
     peakHours: peakHours(),
     mostWatched: mostWatched(),
     cinemasMostWatched: cinemasMostWatched(),
+    mostWatchGenre: genre(),
+    users: users(),
   };
 };
