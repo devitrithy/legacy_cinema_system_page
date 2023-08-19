@@ -23,13 +23,13 @@
 >
 
 <div class="flex">
-  <div class="w-72 container hidden 2xl:block z-50">
+  <div class="w-72 container hidden 2xl:block z-50 print">
     <div class="fixed">
       <Sidebar />
     </div>
   </div>
   <div class="self-top w-full">
-    <div>
+    <div class="print">
       <Navbar
         email={user.email || ""}
         {profile}

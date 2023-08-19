@@ -15,7 +15,7 @@
 </script>
 
 <div
-  class="flex p-3 fixed bg-white dark:bg-gray-900 w-full 2xl:w-[88%] px-20 justify-between"
+  class="flex p-3 fixed bg-white dark:bg-gray-900 w-full 2xl:w-[88%] px-20 justify-between z-50"
 >
   <div class="flex items-center md:order-2 gap-5">
     <div

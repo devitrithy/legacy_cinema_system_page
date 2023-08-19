@@ -3,8 +3,6 @@
     Badge,
     Breadcrumb,
     BreadcrumbItem,
-    Button,
-    Spinner,
     Table,
     TableBody,
     TableBodyCell,
@@ -19,6 +17,7 @@
   import { enhance } from "$app/forms";
   import type { SubmitFunction } from "@sveltejs/kit";
   import toast, { Toaster } from "svelte-french-toast";
+  import { page } from "$app/stores";
   export let data: PageData;
   let booking;
   $: booking = data.booking;
@@ -112,7 +111,7 @@
   <Tooltip
     trigger="click"
     triggeredBy={`#click_${booked.ticket_id}`}
-    class="w-60 overflow-auto"
+    class="max-w-60 w-60 overflow-auto"
     placement="bottom"
   >
     <div class="flex gap-1 flex-wrap">

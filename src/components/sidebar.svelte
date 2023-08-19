@@ -24,6 +24,8 @@
     SidebarGroup,
     SidebarItem,
     NavBrand,
+    SidebarDropdownItem,
+    SidebarDropdownWrapper,
   } from "flowbite-svelte";
   let spanClass = "flex-1 ml-3 whitespace-nowrap";
   $: activeUrl = $page.url.pathname;
@@ -159,42 +161,25 @@
         </SidebarItem>
       </SidebarGroup>
       <SidebarGroup border>
-        <SidebarItem
-          data-sveltekit-prefetch
-          label="Report"
-          {spanClass}
-          href="/report"
-          active={activeUrl === "/report" ||
-            activeUrl.substring(1, 6) === "report"}
-        >
-          <svelte:fragment slot="icon">
-            <FolderDuplicateOutline />
-          </svelte:fragment>
-        </SidebarItem>
-        <SidebarItem
-          data-sveltekit-prefetch
-          label="Reports"
-          {spanClass}
-          href="/reports"
-          active={activeUrl === "/reports" ||
-            activeUrl.substring(1, 6) === "reports"}
-        >
-          <svelte:fragment slot="icon">
-            <FileCsvSolid />
-          </svelte:fragment>
-        </SidebarItem>
-        <SidebarItem
-          data-sveltekit-prefetch
-          label="Reportss"
-          {spanClass}
-          href="/reportss"
-          active={activeUrl === "/reportss" ||
-            activeUrl.substring(1, 6) === "reportss"}
-        >
+        <SidebarDropdownWrapper label="Reports">
           <svelte:fragment slot="icon">
             <FilePdfOutline />
           </svelte:fragment>
-        </SidebarItem>
+          <SidebarDropdownItem href="/revenue" label="Revenue" />
+          <SidebarDropdownItem href="/booking-hour" label="Booking Hour" />
+          <SidebarDropdownItem
+            href="/most-watched-movie"
+            label="Most Watched Movie"
+          />
+          <SidebarDropdownItem
+            href="/most-booked-cinema"
+            label="Most Booked Cinema"
+          />
+          <SidebarDropdownItem
+            href="/most-watched-movie"
+            label="Most Watched Movie"
+          />
+        </SidebarDropdownWrapper>
       </SidebarGroup>
       <SidebarGroup border>
         <SidebarItem label="Sign Out" href="/logout" {spanClass}>

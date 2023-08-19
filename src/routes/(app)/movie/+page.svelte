@@ -39,8 +39,7 @@
   } from "flowbite-svelte-icons";
 
   export let data;
-  let releaseDate;
-  console.log(data.data);
+  let releaseDate = new Date().toISOString().substring(0, 10);
   let endpoint = `${PUBLIC_API_ENDPOINT}/`;
   let popupModal = false;
   let ids: any;
@@ -62,6 +61,7 @@
   };
   let files: any, fileInput: Fileupload;
   let formInput = {
+    price_id: "",
     title: "",
     genre: "",
     description: "",
@@ -71,6 +71,7 @@
   };
   let resetValue = () => {
     formInput = {
+      price_id: "",
       genre: "",
       title: "",
       description: "",
@@ -165,6 +166,8 @@
     console.log(editData);
     if (editData) {
       formInput.title = d.title;
+      releaseDate = d.releaseDate.substring(0, 10);
+      formInput.price_id = d.price_id;
       formInput.genre = d.genre;
       formInput.description = d.description;
       formInput.time = d.time;
@@ -496,14 +499,26 @@
         {/if}
       </Label>
     </div>
-    <Label for="release">Release Date</Label>
-    <Input
-      type="date"
-      name="releaseDate"
-      id="release"
-      required
-      bind:value={releaseDate}
-    />
+    <Label for="release"
+      >Release Date
+      <Input
+        type="date"
+        name="releaseDate"
+        id="release"
+        required
+        bind:value={releaseDate}
+      /></Label
+    >
+    <Label for="release"
+      >Price ID
+      <Input
+        type="text"
+        placeholder="Example: price_1NeUShLmuduO7w8mjnb65Xlh"
+        name="price_id"
+        required
+        bind:value={formInput.price_id}
+      /></Label
+    >
     <Label for="with_helper">Upload file</Label>
     <Fileupload
       accept="Image/jpeg"
