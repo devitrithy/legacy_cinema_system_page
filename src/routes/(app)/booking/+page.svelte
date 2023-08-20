@@ -3,6 +3,8 @@
     Badge,
     Breadcrumb,
     BreadcrumbItem,
+    Button,
+    Search,
     Table,
     TableBody,
     TableBodyCell,
@@ -13,11 +15,12 @@
   } from "flowbite-svelte";
   import type { PageData } from "./$types";
   import moment from "moment-timezone";
-  import { EyeOutline } from "flowbite-svelte-icons";
+  import { EyeOutline, SearchOutline } from "flowbite-svelte-icons";
   import { enhance } from "$app/forms";
   import type { SubmitFunction } from "@sveltejs/kit";
   import toast, { Toaster } from "svelte-french-toast";
-  import { page } from "$app/stores";
+  import { createSearchStore, searchHandler } from "$lib/stores/search";
+  import { onDestroy } from "svelte";
   export let data: PageData;
   let booking;
   $: booking = data.booking;
@@ -51,17 +54,41 @@
       }
     };
   };
+  let search;
+
+  let searchBooking = data.booking.booked.map((c: any) => ({
+    ...c,
+    searchTerms: `${c.Showingtime.movie.title} ${c.users.username} ${c.users.firstname} ${c.users.lastname} ${c.ticket_id} ${c.users.user_id}`,
+  }));
+
+  const searchStore = createSearchStore(searchBooking);
+
+  const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
+
+  onDestroy(() => {
+    unsubscribe();
+  });
 </script>
 
 <Toaster />
 
 <main class=" z-0 mt-20 container mx-auto">
-  <h1 class="text-black dark:text-white text-2xl m-4">Booking Tickets</h1>
-  <div class="m-4 flex justify-between items-center">
-    <Breadcrumb aria-label="Default breadcrumb example">
-      <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
-      <BreadcrumbItem href="/booking">Booking</BreadcrumbItem>
-    </Breadcrumb>
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-black dark:text-white text-2xl m-4">Booking Tickets</h1>
+      <div class="m-4 flex justify-between items-center">
+        <Breadcrumb aria-label="Default breadcrumb example">
+          <BreadcrumbItem href="/" home>Home</BreadcrumbItem>
+          <BreadcrumbItem href="/booking">Booking</BreadcrumbItem>
+        </Breadcrumb>
+      </div>
+    </div>
+    <form class="flex gap-2">
+      <Search size="md" bind:value={$searchStore.search} />
+      <Button class="!p-2.5">
+        <SearchOutline />
+      </Button>
+    </form>
   </div>
   <Table>
     <TableHead>
@@ -73,7 +100,7 @@
       <TableHeadCell>Status</TableHeadCell>
     </TableHead>
     <TableBody class="divide-y">
-      {#each booking.booked as booked}
+      {#each $searchStore.filtered as booked}
         <TableBodyRow>
           <TableHeadCell>#</TableHeadCell>
           <TableBodyCell

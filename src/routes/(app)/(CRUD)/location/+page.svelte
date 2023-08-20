@@ -45,6 +45,7 @@
 
   let iLocationName = 0;
   let iAddress = 0;
+  let iMap = 0;
 
   const deleteModal = (id: any) => {
     popupModal = true;
@@ -55,14 +56,17 @@
   let formInput = {
     location_name: "",
     address: "",
+    map: "",
   };
   let resetValue = () => {
     formInput = {
       address: "",
+      map: "",
       location_name: "",
     };
     iLocationName = 0;
     iAddress = 0;
+    iMap = 0;
   };
 
   let formModal = false;
@@ -128,6 +132,7 @@
   let editForm = async (id: string) => {
     iLocationName = 0;
     iAddress = 0;
+    iMap = 0;
     ids = id;
     edit = true;
     formModal = true;
@@ -135,10 +140,10 @@
       headers: { Authorization: `Bearer ${PUBLIC_SECRET_GUEST_KEY}` },
     });
     let d = editData.data.location[0];
-    console.log(editData.data);
     if (editData) {
       formInput.location_name = d.location_name;
       formInput.address = d.address;
+      formInput.map = d.map;
     }
   };
   let addLocation = () => {
@@ -149,7 +154,7 @@
     formModal = true;
   };
   let formSumbit: SubmitFunction = ({ form, data, action, cancel }) => {
-    const { location_name, address } = Object.fromEntries(data);
+    const { location_name, address, map } = Object.fromEntries(data);
     loading = true;
     if (location_name.length < 1) {
       iLocationName = 1;
@@ -164,6 +169,13 @@
       cancel();
     } else {
       iAddress = 2;
+    }
+    if (map.length < 1) {
+      iMap = 1;
+      loading = false;
+      cancel();
+    } else {
+      iMap = 2;
     }
     return async ({ result, update }) => {
       switch (result.type) {
@@ -334,6 +346,25 @@
       {:else if iAddress === 2}
         <Helper class="mt-2" color="green"
           ><span class="font-medium">Well done!</span> Address is valid.</Helper
+        >
+      {/if}
+    </Label>
+    <Label class="space-y-2">
+      <span>Map Link</span>
+      <Textarea
+        type="text"
+        name="map"
+        bind:value={formInput.map}
+        required
+        placeholder="link of the map"
+      />
+      {#if iMap == 1}
+        <Helper class="mt-2" color="red"
+          ><span class="font-medium">Invalid!</span> Map is required!</Helper
+        >
+      {:else if iMap === 2}
+        <Helper class="mt-2" color="green"
+          ><span class="font-medium">Well done!</span> Map is valid.</Helper
         >
       {/if}
     </Label>

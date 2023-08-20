@@ -86,44 +86,54 @@
       </Dropdown>
     </div>
   </div>
-  <div class="flex gap-10 w-full flex-wrap">
+  <div class="grid gap-10 w-full flex-wrap">
     {#each showings as movie}
       {#if movie.ShowingTime.length > 0}
-        <div class="relative">
-          <img
-            src={endpoint + movie.poster.substring(8) + "?h=384&w=216"}
-            alt={movie.title}
-          />
-          <h5
-            class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-          >
-            {movie.title}
-          </h5>
-          <p
-            class="mb-3 font-normal text-gray-700 dark:text-white text-2xl leading-tight flex items-center gap-3"
-          >
-            <TicketOutline /> ${movie.ShowingTime[0].price}
-          </p>
-          <p
-            class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight flex items-center gap-3"
-          >
-            <ClockOutline />
-            {movie.time} Minutes
-          </p>
-          <p
-            class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight flex items-center gap-3"
-          >
-            {movie.genre}
-          </p>
-
-          <div class="flex flex-wrap gap-5">
-            {#each movie.ShowingTime as s}
-              <Button>
-                <a href={`/ticket/${s.showing_id}`} class="text-xl">
-                  {moment(s.showing_date).tz("Atlantic/Reykjavik").format("LT")}
-                </a>
-              </Button>
-            {/each}
+        <div>
+          <div class="flex gap-5">
+            <img
+              src={endpoint + movie.poster.substring(8) + "?h=384&w=216"}
+              alt={movie.title}
+            />
+            <div>
+              <div>
+                <h5
+                  class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                >
+                  {movie.title}
+                </h5>
+                <p
+                  class="mb-3 font-normal text-gray-700 dark:text-white text-2xl leading-tight flex items-center gap-3"
+                >
+                  <TicketOutline /> ${movie.ShowingTime[0].price}
+                </p>
+                <p
+                  class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight flex items-center gap-3"
+                >
+                  <ClockOutline />
+                  {movie.time} Minutes
+                </p>
+                <p
+                  class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight flex items-center gap-3"
+                >
+                  {movie.genre}
+                </p>
+              </div>
+              <div class="flex flex-wrap gap-5 text-black dark:text-white">
+                {#each movie.ShowingTime as s}
+                  <div class="grid gap-5 justify-items-start">
+                    <p>{s.hall.location.location_name}</p>
+                    <Button>
+                      <a href={`/ticket/${s.showing_id}`} class="text-xl">
+                        {moment(s.showing_date)
+                          .tz("Atlantic/Reykjavik")
+                          .format("LT")}
+                      </a>
+                    </Button>
+                  </div>
+                {/each}
+              </div>
+            </div>
           </div>
         </div>
       {/if}
