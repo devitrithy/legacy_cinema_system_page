@@ -163,42 +163,6 @@
       </p>
     </Card>
     <Card
-      color="yellow"
-      class="flex justify-between flex-col hover:shadow-yellow-600"
-    >
-      <div class="flex justify-between items-center">
-        <h5
-          class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-        >
-          Most Watched Movie
-        </h5>
-      </div>
-      <p
-        class="mb-3 font-normal text-2xl text-gray-700 dark:text-gray-400 leading-tight"
-      >
-        <span class="font-bold">{mostWatched[0].movieTitle} Tickets</span>
-      </p>
-    </Card>
-    <Card
-      color="blue"
-      class="flex justify-between flex-col hover:shadow-blue-600"
-    >
-      <div class="flex justify-between items-center">
-        <h5
-          class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-        >
-          Most Booked Cinema | {cinemasMostWatched.sortedShowings[0].location}
-        </h5>
-      </div>
-      <p
-        class="mb-3 font-normal text-2xl text-gray-700 dark:text-gray-400 leading-tight"
-      >
-        <span class="font-bold"
-          >{cinemasMostWatched.sortedShowings[0].bookingCount} Booked</span
-        >
-      </p>
-    </Card>
-    <Card
       color="blue"
       class="flex justify-between flex-col hover:shadow-blue-600"
     >

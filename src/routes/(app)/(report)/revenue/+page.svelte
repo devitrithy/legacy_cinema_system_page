@@ -14,7 +14,6 @@
   } from "flowbite-svelte";
   import type { PageData } from "./$types";
   import moment from "moment-timezone";
-
   export let data: PageData;
   let totalAmount;
   let revenue;
@@ -28,7 +27,6 @@
       maximumFractionDigits: 2,
     }).format(amount);
   };
-  console.log(data.data.sales);
 </script>
 
 <main class=" z-0 mt-20 container mx-auto">

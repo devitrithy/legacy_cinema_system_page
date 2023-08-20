@@ -181,16 +181,20 @@
           <SidebarDropdownItem
             active={activeUrl === "/most-watched-movie" ||
               activeUrl.substring(1, 6) === "most-watched-movie"}
-            ef="/most-watched-movie"
+            href="/most-watched-movie"
             label="Most Watched Movie"
           />
           <SidebarDropdownItem
+            active={activeUrl === "/most-booked-cinema" ||
+              activeUrl.substring(1, 6) === "most-booked-cinema"}
             href="/most-booked-cinema"
             label="Most Booked Cinema"
           />
           <SidebarDropdownItem
-            href="/most-watched-movie"
-            label="Most Watched Movie"
+            active={activeUrl === "/most-watched-genre" ||
+              activeUrl.substring(1, 6) === "most-watched-genre"}
+            href="/most-watched-genre"
+            label="Most Watched Genre"
           />
         </SidebarDropdownWrapper>
       </SidebarGroup>
