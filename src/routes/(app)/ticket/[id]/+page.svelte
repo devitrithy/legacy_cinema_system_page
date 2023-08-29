@@ -198,7 +198,7 @@
         <div class="w-full grid">
           {#if loading}
             <Button type="submit" {disabled} pill>
-              <Spinner class="mr-3" size="4" />
+              <Spinner color="gray" class="mr-3" size="4" />
               Pay</Button
             >
           {:else}

@@ -29,7 +29,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
       return data.json();
     };
     const movie = async () => {
-      const data = await fetch(`${PUBLIC_API_ENDPOINT}/movie`, {
+      const data = await fetch(`${PUBLIC_API_ENDPOINT}/movie/now`, {
         headers: customHeaders,
         credentials: "include",
       });

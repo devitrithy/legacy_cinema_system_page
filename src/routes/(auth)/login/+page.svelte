@@ -43,21 +43,20 @@
         case "success":
           if ($page.url.searchParams.get("r")) {
             const r = $page.url.searchParams.get("r") || "/";
-            console.log(r);
             goto(`/${r.slice(1)}`);
           } else {
             goto("/");
           }
           break;
-        case "error":
-          iUsername = 0;
-          iPassword = 0;
-          iPasswordMessage = "";
-          iUsernameMessage = "";
-          iFail = 1;
-          iFailMessage = "Server is under maintenance please wait ⚠️";
-          loading = false;
-          break;
+        // case "error":
+        //   iUsername = 0;
+        //   iPassword = 0;
+        //   iPasswordMessage = "";
+        //   iUsernameMessage = "";
+        //   iFail = 1;
+        //   iFailMessage = "Server is under maintenance please wait ⚠️";
+        //   loading = false;
+        //   break;
 
         default:
           iUsername = 1;
@@ -118,7 +117,7 @@
           <Button type="submit" class="w-full">Login to your account</Button>
         {:else}
           <Button>
-            <Spinner class="mr-3" size="4" color="white" />
+            <Spinner color="gray" class="mr-3" size="4" />
             Logging in ...
           </Button>
         {/if}

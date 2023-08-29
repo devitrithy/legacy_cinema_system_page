@@ -61,7 +61,7 @@
       });
     }
   );
-  movie.movies.forEach((lo: { movie_id: any; title: any }) => {
+  movie.forEach((lo: { movie_id: any; title: any }) => {
     movieItems.push({
       value: lo.movie_id,
       name: lo.title,

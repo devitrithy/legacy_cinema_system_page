@@ -49,18 +49,6 @@
         </SidebarItem>
         <SidebarItem
           data-sveltekit-prefetch
-          label="Slideshow"
-          {spanClass}
-          href="/slideshow"
-          active={activeUrl === "/slideshow" ||
-            activeUrl.substring(1, 6) === "slideshow"}
-        >
-          <svelte:fragment slot="icon">
-            <ImageOutline />
-          </svelte:fragment>
-        </SidebarItem>
-        <SidebarItem
-          data-sveltekit-prefetch
           label="Movie"
           {spanClass}
           href="/movie"
@@ -82,6 +70,18 @@
         >
           <svelte:fragment slot="icon">
             <ClockOutline />
+          </svelte:fragment>
+        </SidebarItem>
+        <SidebarItem
+          data-sveltekit-prefetch
+          label="Slideshow"
+          {spanClass}
+          href="/slideshow"
+          active={activeUrl === "/slideshow" ||
+            activeUrl.substring(1, 6) === "slideshow"}
+        >
+          <svelte:fragment slot="icon">
+            <ImageOutline />
           </svelte:fragment>
         </SidebarItem>
       </SidebarGroup>

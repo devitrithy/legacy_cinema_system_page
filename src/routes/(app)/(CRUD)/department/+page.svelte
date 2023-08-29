@@ -297,7 +297,8 @@
         >Reset</Button
       >
       <Button type="submit" color="green" class="w-full" shadow>
-        {#if loading}<Spinner class="mr-3" size="4" color="white" /> Submitting{:else}Submit{/if}
+        {#if loading}<Spinner class="mr-3" size="4" color="white" /> Submitting{:else}
+          Submit{/if}
       </Button>
     </div>
   </form>
