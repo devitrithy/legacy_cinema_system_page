@@ -29,7 +29,7 @@ export const actions: Actions = {
     const p = await request.formData();
     let arrayDatas = [];
     let arrayData = p.get("pay")?.toString().split(",");
-    console.log(arrayData);
+    //console.log(arrayData);
     arrayData?.forEach((element) => {
       arrayDatas.push({
         seat: element,
@@ -40,9 +40,9 @@ export const actions: Actions = {
         sid: params.id,
         arrayDatas,
       });
-      console.log(pay);
+      //console.log(pay);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   },
 };

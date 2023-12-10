@@ -17,7 +17,6 @@
 
   export let data: PageData;
   let genre = data.data;
-  console.log(genre);
 </script>
 
 <main class=" z-0 mt-20 container mx-auto">

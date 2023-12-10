@@ -42,7 +42,7 @@
   const deleteModal = (id: any) => {
     popupModal = true;
     ids = id;
-    console.log(ids);
+    //console.log(ids);
   };
   let txtDescription = "";
   let formInput = {

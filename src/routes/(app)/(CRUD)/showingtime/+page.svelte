@@ -74,7 +74,7 @@
   const deleteModal = (id: any) => {
     popupModal = true;
     ids = id;
-    console.log(ids);
+    //console.log(ids);
   };
   let formInput = {
     date: new Date().toISOString().substring(0, 10),
@@ -102,7 +102,7 @@
     formModal = true;
   }
   // Pagination
-  console.log(showing.count);
+  //console.log(showing.count);
   $: activeUrl = $page.url.searchParams.get("page");
   let pages: any[] = [];
   let count = showing.count / 5 + 1;
@@ -162,7 +162,7 @@
       headers: { Authorization: `Bearer ${PUBLIC_SECRET_GUEST_KEY}` },
     });
     let d = editData.data.showingtime[0];
-    console.log(d);
+    //console.log(d);
     formInput.date = new Date(d.showing_date);
     formInput.price = d.price;
     selectHall = d.hall_id;

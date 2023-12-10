@@ -61,7 +61,7 @@
   const deleteModal = (id: any) => {
     popupModal = true;
     ids = id;
-    console.log(ids);
+    //console.log(ids);
   };
   let formInput = {
     hall_name: "",
@@ -145,7 +145,7 @@
       headers: { Authorization: `Bearer ${PUBLIC_SECRET_GUEST_KEY}` },
     });
     let d = editData.data.movie[0];
-    console.log(d);
+    //console.log(d);
     formInput.hall_name = d.hall_name;
     select = d.location_id;
   };
@@ -160,7 +160,7 @@
   let formSumbit: SubmitFunction = ({ form, data, action, cancel }) => {
     const { hall_name, id } = Object.fromEntries(data);
     loading = true;
-    console.log(hall_name.length);
+    //console.log(hall_name.length);
     if (hall_name.length < 1) {
       iHallName = 1;
       loading = false;

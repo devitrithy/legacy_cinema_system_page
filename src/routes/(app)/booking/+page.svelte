@@ -29,7 +29,7 @@
   const recived: SubmitFunction = () => {
     loading = true;
     return async ({ result, update }) => {
-      console.log(result.type);
+      //console.log(result.type);
       switch (result.type) {
         case "success":
           await update();

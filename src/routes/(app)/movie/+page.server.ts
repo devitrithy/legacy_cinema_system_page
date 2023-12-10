@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
       data: data.json(),
     };
   } catch (err) {
-    console.log(err.response.data.message);
+    //console.log(err.response.data.message);
     if (err.response.status === 401) {
       cookies.delete("token");
       throw redirect(303, "/login");
@@ -50,7 +50,7 @@ export const actions = {
           headers: customHeaders,
         })
         .then(function (response) {
-          console.log(response);
+          //console.log(response);
         })
         .catch(function (error) {
           return {
@@ -83,7 +83,7 @@ export const actions = {
           headers: customHeaders,
         })
         .then((response) => {
-          console.log(response.status);
+          //console.log(response.status);
           if (response.status === 400) {
             return fail(400, { message: response.data.message });
           }
@@ -93,7 +93,7 @@ export const actions = {
           };
         })
         .catch((err) => {
-          console.log(err);
+          //console.log(err);
           return fail(400, { message: "Failed to delete movie." });
         });
     } catch (error: any) {
@@ -116,7 +116,7 @@ export const actions = {
           headers: customHeaders,
         })
         .then(function (response) {
-          console.log(response);
+          //console.log(response);
         })
         .catch(function (error) {
           return {

@@ -15,8 +15,8 @@ export const load = (async ({ url, cookies }) => {
       .toISOString()
       .substring(0, 10);
 
-  console.log(startDate);
-  console.log(endDate);
+  //console.log(startDate);
+  //console.log(endDate);
   const data = async () => {
     const res = await fetch(
       `${PUBLIC_API_ENDPOINT}/report/revenue?startDate=${startDate}&endDate=${endDate}`,

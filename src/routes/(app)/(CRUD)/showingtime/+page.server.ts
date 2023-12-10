@@ -48,7 +48,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
       hall: hall(),
     };
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     if (err.response.status === 401) {
       cookies.delete("token");
       throw redirect(303, "/login");
@@ -89,7 +89,7 @@ export const actions = {
           }
         )
         .then(function (response) {
-          console.log(response);
+          //console.log(response);
         })
         .catch(function (error) {
           return {
@@ -158,7 +158,7 @@ export const actions = {
           { headers: customHeaders }
         )
         .then(function (response) {
-          console.log(response);
+          //console.log(response);
         })
         .catch(function (error) {
           return {

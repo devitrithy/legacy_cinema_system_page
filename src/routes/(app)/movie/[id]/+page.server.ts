@@ -11,9 +11,9 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
   const data = await fetch(`${PUBLIC_API_ENDPOINT}/movie/` + id, {
     headers: customHeaders,
   });
-  console.log(data.status);
+  //console.log(data.status);
   if (data.status === 404) {
-    console.log("error loading");
+    //console.log("error loading");
     throw error(404, { message: "Movie not found" });
   }
   const res = await data.json();

@@ -64,6 +64,7 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
     );
     return res.json();
   };
+  //console.log(genre());
   const users = async () => {
     const res = await fetch(`${PUBLIC_API_ENDPOINT}/report/active-users`, {
       headers: customHeaders,

@@ -54,7 +54,7 @@
   const deleteModal = (id: any) => {
     popupModal = true;
     ids = id;
-    console.log(ids);
+    //console.log(ids);
   };
   let files: any, fileInput: Fileupload;
   let formInput = {
@@ -144,7 +144,7 @@
       },
     });
     let d = editData.data.slideshow[0];
-    console.log(editData);
+    //console.log(editData);
     if (editData) {
       formInput.title = d.title;
       formInput.description = d.description;

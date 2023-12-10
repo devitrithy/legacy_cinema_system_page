@@ -38,7 +38,7 @@
       iPasswordMessage = "Password validated.";
     }
     return async ({ result, update }) => {
-      console.log(result.type);
+      //console.log(result.type);
       switch (result.type) {
         case "success":
           if ($page.url.searchParams.get("r")) {

@@ -29,7 +29,7 @@ export const actions: Actions = {
         }
       )
       .then(function (response) {
-        console.log(response);
+        //console.log(response);
       })
       .catch(function (error) {
         return {

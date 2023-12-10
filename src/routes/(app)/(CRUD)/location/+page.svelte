@@ -50,7 +50,7 @@
   const deleteModal = (id: any) => {
     popupModal = true;
     ids = id;
-    console.log(ids);
+    //console.log(ids);
   };
   let files: any, fileInput: Fileupload;
   let formInput = {
@@ -314,8 +314,8 @@
         color={iLocationName == 0
           ? "base"
           : iLocationName == 1
-          ? "red"
-          : "green"}
+            ? "red"
+            : "green"}
         type="text"
         name="location_name"
         bind:value={formInput.location_name}

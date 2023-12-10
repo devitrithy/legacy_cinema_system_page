@@ -163,7 +163,7 @@
       },
     });
     let d = editData.data.movie[0];
-    console.log(editData);
+    //console.log(editData);
     if (editData) {
       formInput.title = d.title;
       releaseDate = d.releaseDate.substring(0, 10);

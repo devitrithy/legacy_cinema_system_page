@@ -99,7 +99,7 @@
   const deleteModal = (id: any) => {
     popupModal = true;
     ids = id;
-    console.log(ids);
+    //console.log(ids);
   };
   let files: any, fileInput: Fileupload;
   let formInput = {
@@ -220,7 +220,7 @@
     emp_id = d.employee_id;
 
     if (editData) {
-      console.log(d);
+      //console.log(d);
       formInput.firstname = d.users.firstname;
       formInput.lastname = d.users.lastname;
       selectedGen = d.users.gender;
@@ -262,7 +262,7 @@
       location_id,
     } = Object.fromEntries(data);
     loading = true;
-    console.log(name);
+    //console.log(name);
     if (firstname.length < 1) {
       iFirstname = 1;
       loading = false;
@@ -442,8 +442,8 @@
               >{user.users.gender === "o"
                 ? "Other"
                 : user.users.gender === "m"
-                ? "Male"
-                : "Female"}</TableBodyCell
+                  ? "Male"
+                  : "Female"}</TableBodyCell
             >
             <TableBodyCell>{user.users.phone_number}</TableBodyCell>
             <TableBodyCell>${user.salary}</TableBodyCell>

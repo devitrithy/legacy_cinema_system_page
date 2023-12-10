@@ -36,7 +36,7 @@ export const actions = {
           description: data.get("description"),
         })
         .then(function (response) {
-          console.log(response);
+          //console.log(response);
         })
         .catch(function (error) {
           return {
@@ -91,7 +91,7 @@ export const actions = {
           description: data.get("description"),
         })
         .then(function (response) {
-          console.log(response);
+          //console.log(response);
         })
         .catch(function (error) {
           return {

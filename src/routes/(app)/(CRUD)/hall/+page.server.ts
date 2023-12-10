@@ -44,7 +44,7 @@ export const actions = {
           { headers: customHeaders }
         )
         .then(function (response) {
-          console.log(response);
+          //console.log(response);
         })
         .catch(function (error) {
           return {
@@ -113,7 +113,7 @@ export const actions = {
           { headers: customHeaders }
         )
         .then(function (response) {
-          console.log(response);
+          //console.log(response);
         })
         .catch(function (error) {
           return {
